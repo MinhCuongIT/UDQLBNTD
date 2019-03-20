@@ -13,12 +13,23 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const HomeStack = createStackNavigator({
   Home: {screen: Home,
     navigationOptions:{
-      header:null},
+      header:null,
+      headerBackTitle: 'Trở về',
     },
-  NewsDetails: {screen: HomeNewsDetails},
+  },
+  NewsDetails: {screen: HomeNewsDetails,
+    navigationOptions:{
+      headerStyle:{
+        backgroundColor: 'tomato',
+      },
+      headerBackTitleStyle:{
+        fontSize:25,
+        fontWeight: 'bold',
+      }
+    },
+  },
 }, {
   initialRouteName: 'Home',
-  headerMode: 'screen',
   headerBackTitleVisible: true,
 });
 
