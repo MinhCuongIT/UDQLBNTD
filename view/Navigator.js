@@ -14,6 +14,8 @@ import LoginPage from "./LoginPage";
 import RegisterChooseTypePage from "./RegisterChooseTypePage";
 import RegisterInformationPage from "./RegisterInformationPage";
 import AddValuePage from "./AddValuePage";
+import ChangePassword from "./ChangePassword";
+import ChangeInfomation from "./ChangeInfomation";
 
 const HomeStack = createStackNavigator({
   Home: {screen: Home,
@@ -67,6 +69,7 @@ const ChartStack = createStackNavigator({
 const ListDoctorsStack = createStackNavigator({
   ListDoctors: {
     screen: ListDoctors,
+
   },
   Chat: {
     screen: ChatScreen,
@@ -75,7 +78,22 @@ const ListDoctorsStack = createStackNavigator({
     initialRouteName: 'ListDoctors',
     // headerBackTitleVisible: true,
 });
-
+//Phần thông tin profile
+const ListProfileStack = createStackNavigator({
+  Profile:{
+    screen:Profile,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  ChangePassword:{
+    screen:ChangePassword,
+  },
+  ChangeInfomation: {
+    screen: ChangeInfomation,
+  },
+},
+  { initialRouteName: 'Profile',});
 const AppNavigator = createMaterialTopTabNavigator({
       Tab1: {
           screen: HomeStack,
@@ -105,7 +123,7 @@ const AppNavigator = createMaterialTopTabNavigator({
           }
       },
       Tab4: {
-          screen: Profile,
+          screen: ListProfileStack,
           navigationOptions: {
               tabBarLabel: "Tài khoản",
               tabBarIcon: ({ tintColor }) => (
