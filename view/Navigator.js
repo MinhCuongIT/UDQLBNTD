@@ -4,7 +4,8 @@ import { TabNavigator } from "react-navigation";
 import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator } from "react-navigation";
 import Home from "./Home";
 import Chart from "./Chart";
-import Message from "./Message";
+import ListDoctors from "./ListDoctors";
+import ChatScreen from './ChatScreen';
 import Profile from "./Profile";
 import HomeNewsDetails from "./HomeNewsDetails";
 import ChartHealthDetail from "./ChartHealthDetail";
@@ -63,6 +64,18 @@ const ChartStack = createStackNavigator({
   headerBackTitleVisible: true,
 });
 
+const ListDoctorsStack = createStackNavigator({
+  ListDoctors: {
+    screen: ListDoctors,
+  },
+  Chat: {
+    screen: ChatScreen,
+  },
+  }, {
+    initialRouteName: 'ListDoctors',
+    // headerBackTitleVisible: true,
+});
+
 const AppNavigator = createMaterialTopTabNavigator({
       Tab1: {
           screen: HomeStack,
@@ -83,7 +96,7 @@ const AppNavigator = createMaterialTopTabNavigator({
           }
       },
       Tab3: {
-          screen: Message,
+          screen: ListDoctorsStack,
           navigationOptions: {
               tabBarLabel: "Bác sĩ",
               tabBarIcon: ({ tintColor }) => (
