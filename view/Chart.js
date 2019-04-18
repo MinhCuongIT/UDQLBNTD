@@ -22,8 +22,12 @@ const instructions = Platform.select({
 type Props = {};
 
 export default class Chart extends Component {
-    handleThongSo = () => {
+    constructor(props){
+        super(props);
+    }
 
+    handleThongSo = () => {
+        this.props.navigation.navigate('ChartHealthDetail')
     };
 
     handleBuaAn = () => {

@@ -7,9 +7,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "react": "16.6.3",
     "react-native": "0.58.6",
+    "react-native-awesome-alerts": "^1.2.0",
+    "react-native-facebook-account-kit": "^1.1.0",
     "react-native-gesture-handler": "^1.0.17",
+    "react-native-highcharts": "^1.0.2",
     "react-native-svg": "^9.2.4",
     "react-native-vector-icons": "^6.4.1",
     "react-navigation": "^3.4.1",

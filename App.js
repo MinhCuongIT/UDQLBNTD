@@ -104,7 +104,7 @@ const instructions = Platform.select({
 
 type Props = {};
 
-export default class Home extends Component<Props> {
+export default class App extends Component<Props> {
   render() {
     return (
       <Navigator/>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">UDQLBNTD</string>
+    <string name="fb_app_id">2133371063448949</string>
+    <string name="ak_client_token">ff292559a482f0387a03ed79783cfb98</string>
 </resources>
