@@ -21,7 +21,28 @@ const instructions = Platform.select({
 
 type Props = {};
 
+class Logo extends Component {
+  render(){
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Image
+          style={{height:50, width: 50, marginLeft: 30}}
+          source={require('../images/logo-bigsize.png')}
+        />
+        <Image
+          style={{height:50, width: 150, marginLeft: 20}}
+        source={require('../images/AppName.png')}
+        />
+      </View>
+    )
+  }
+}
+
 export default class Home extends Component {
+  static navigationOptions = {
+    headerTitle:
+      <Logo/>,
+  }
   constructor(props){
     super(props);
 
@@ -70,43 +91,8 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-
-        {/*Header*/}
-        <View style={styles.logo}>
-          <Image
-            style={{flex:3, height:50}}
-            source={require('../images/logoDemo.png')}
-            resizeMode={'center'}
-          />
-          <Text style={{flex:7, fontSize: 45, padding:10}}>Tên app</Text>
-        </View>
-
-        {/*Body*/}
         <View style={styles.content}>
-          <FlatList
-            data={this.state.data}
-            style={styles.newsList}
-            renderItem={({item}) =>
-              <TouchableOpacity
-                onPress={() => this.handleNewsDetail(item)}
-              >
-                <View style={styles.news}>
-                  <View style={{flex:3,}}>
-                    <ImageBackground source={require('../images/newsDemo.png')}
-                                     style={{width: '100%', height: '100%'}}
-                                     imageStyle={{borderTopLeftRadius:20, borderTopRightRadius:20}}>
-
-                    </ImageBackground>
-                  </View>
-                  <Text style={{flex: 1, color: 'white', fontSize: 20, fontWeight: 'bold', paddingLeft: 20, paddingTop: 10}}>
-                    {item.key}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            }
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.001}
-          />
+          
         </View>
       </View>
     );
