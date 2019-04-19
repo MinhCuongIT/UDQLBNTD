@@ -8,7 +8,7 @@
  */
 
 import React, {Component} from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, ScrollView, Alert} from 'react-native';
 
 import { Button, Avatar, Image } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -30,6 +30,18 @@ export default class Profile extends Component {
     this.props.navigation.navigate('ChangeInfomation')
   };
 
+  handleEditButtonAvatar = () => {
+    alert("Đổi ảnh đại diện");
+  }
+  handleXemAvatar = () => {
+    alert("Xem đại diện");
+  }
+  handleXemAnhBia = () => {
+    alert("Xem ảnh bìa");
+  }
+  handleEditButtonAnhBia = () => {
+    alert("Đổi ảnh bìa");
+  }
 
   render() {
     return (
@@ -39,6 +51,8 @@ export default class Profile extends Component {
           showEditButton activeOpacity={0.7}
           containerStyle={styles.background}
           source={require('../images/hinh_bien.jpg')}
+          onEditPress = {this.handleEditButtonAvatar}
+          onLongPress = {this.handleXemAnhBia}
         />
         <Avatar
           showEditButton
@@ -46,33 +60,48 @@ export default class Profile extends Component {
           size={130}
           activeOpacity={0.7}
           containerStyle={styles.avatar} source={require('../images/MyAvt.jpg')}
+          onEditPress = {this.handleEditButtonAnhBia}
+          onLongPress = {this.handleXemAvatar}
         />
+        {/* Hiển thị phần thông tin tên và sđt */}
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>Trần Minh Cường</Text>
             <Text style={styles.phone}>0975206769</Text>
           </View>
-          <View style={styles.moreAbout}>
-            <Text style={styles.textInfo}>Ngày sinh: 26-12-1997</Text>
-            <Text style={styles.textInfo}>Giới tính: Nam</Text>
-            <Text style={styles.textInfo}>Địa chỉ: Bình Phước</Text>
-            <Text style={styles.textInfo}>CMND:123456789</Text>
-            <Text style={styles.textInfo}>Email:MinhCuongIT97@gmail.com</Text>
-
-            <View style={{ flexDirection: 'row', }}>
-              <Button
-                buttonStyle={styles.my_button}
-                icon={
-                  <Icon
-                    style={{ marginRight: 5, }}
-                    name="gear"
-                    size={15}
-                    color="white"
-                  />
-                }
-                title="Đổi mật khẩu"
-                onPress = {this.handleDoiMatKhau}
-              />
+          {/* Hiển thị thông tin chi tiết */}
+              {/* Thông tin chung */}
+            <View style={styles.cardGeneralInfo}>
+              <Text style={styles.cardTittle}>Thông tin chung</Text>
+              <Text>Giới tính: Nam</Text>
+              <Text>Nơi sinh: Bình Phước</Text>
+              <Text>Nghề nghiệp: Sinh viên</Text>
+              <Text>Nhóm máu: AB</Text>
+              <Text>Tình trạng bệnh: Bình thường</Text>
+            </View>
+            {/* Thông tin liên hệ */}
+            <View style={styles.cardContacts}>
+              <Text style={styles.cardTittle}>Liên hệ</Text>
+              <Text>CMND: 123456789</Text>
+              <Text>Email: MinhCuongIT97@gmail.com</Text>
+            </View>
+            {/* Thông tin tài khoản */}
+            <View style={styles.cardAccountInfo}>
+              {/* Hiển thị hai nút nhấn */}
+              <View style={{ flexDirection: 'row', }}>
+                <Button
+                  buttonStyle={styles.my_button}
+                  icon={
+                    <Icon
+                      style={{ marginRight: 5, }}
+                      name="gear"
+                      size={15}
+                      color="white"
+                    />
+                  }
+                  title="Đổi mật khẩu"
+                  onPress={this.handleDoiMatKhau}
+                />
 
                 <Button
                   buttonStyle={styles.my_button}
@@ -87,8 +116,8 @@ export default class Profile extends Component {
                   title="Chỉnh sửa"
                   onPress={this.handleDoiThongTin}
                 />
+              </View>
             </View>
-          </View>
         </View>
       </View>
       </ScrollView>
@@ -98,23 +127,43 @@ export default class Profile extends Component {
 
 
 const styles = StyleSheet.create({
-  my_button: {
+  cardAccountInfo:{
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    height: 60,
     marginTop: 10,
+    padding: 10,
+  },
+  cardContacts:{
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    height: 90,
+    marginTop: 10,
+    padding:10,
+  },
+
+  cardGeneralInfo: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    height: 150,
+    padding:10,
+  },
+  cardTittle: {
+    color: "#808080",
+    fontSize: 18,
+    marginBottom: 5,
+  },
+
+  container : {
+    backgroundColor: "#DCDCDC",
+  },
+
+  my_button: {
     borderRadius: 50,
-    marginRight: 5,
+    marginRight: 10,
     width: 130,
   },
 
-  moreAbout: {
-    marginTop: 0,
-    alignItems: 'center',
-  },
-
-  textInfo: {
-    fontSize: 16,
-    marginTop: 8,
-    color: "#696969",
-  },
 
   background: {
     height: 120,
@@ -130,6 +179,7 @@ const styles = StyleSheet.create({
   },
   body: {
     marginTop: 10,
+    padding:10,
   },
   bodyContent: {
     flex: 1,
