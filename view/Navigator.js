@@ -7,7 +7,7 @@ import Chart from "./Chart";
 import ListDoctors from "./ListDoctors";
 import ChatScreen from './ChatScreen';
 import Profile from "./Profile";
-import HomeNewsDetails from "./HomeNewsDetails";
+import HomeDetails from "./HomeDetails";
 import ChartHealthDetail from "./ChartHealthDetail";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginPage from "./LoginPage";
@@ -27,15 +27,16 @@ const HomeStack = createStackNavigator({
       },
     },
   },
-  NewsDetails: {screen: HomeNewsDetails,
+  HomeDetails: {screen: HomeDetails,
     navigationOptions:{
       headerStyle:{
-        backgroundColor: 'tomato',
+        backgroundColor: 'rgba(74, 195, 180, 1)',
       },
       headerBackTitleStyle:{
         fontSize:25,
         fontWeight: 'bold',
-      }
+      },
+      headerTintColor: 'white',
     },
   },
 }, {
@@ -133,6 +134,8 @@ const AppNavigator = createMaterialTopTabNavigator({
       }
   },
   {
+    swipeEnabled: false,
+    animationEnabled: false,
     tabBarPosition:"bottom",
     tabBarOptions:{
       style: {
@@ -228,4 +231,4 @@ const MainNavigator = createStackNavigator({
 }, {
   initialRouteName: 'LoginStack',
 });
-export default createAppContainer(MainNavigator);
+export default createAppContainer(AppNavigator);
