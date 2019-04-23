@@ -1,101 +1,197 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 import { StyleSheet, Text, View, FlatList, SectionList, Dimensions, Alert, ActivityIndicator } from 'react-native';
 import { ListItem, SearchBar, Image, Button } from "react-native-elements";
 import Icon from 'react-native-vector-icons/AntDesign'
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
-
+import Swipeout from 'react-native-swipeout';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 var dataSource = [
-    // Tiểu Đường
-    {
+  // Tiểu Đường
+  {
+    data: [
+        {
+          key: '0001',
+          type: 'Diabetes', 
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
+          name: 'Nguyễn Thiện An',
+          subtitle: 'Bác sĩ',
+        },
+        {
+          key: '0002',
+          type: 'Diabetes',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
+          name: 'Nguyễn Văn Chung',
+          subtitle: 'Bác sĩ',
+        },
+        { 
+          key: '0003',
+          type: 'Diabetes',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
+          name: 'Trần Thị Thu Hương',
+          subtitle: 'Bác sĩ',
+        },
+        { 
+          key: '0004',
+          type: 'Diabetes',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
+          name: 'Lê Tiến Đạt',
+          subtitle: 'Bác sĩ',
+        },
+        { 
+          key: '0005',
+          type: 'Diabetes',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
+          name: 'Hoàng Thị Minh Thư',
+          subtitle: 'Bác sĩ',
+        },
+        { 
+          key: '0006',
+          type: 'Diabetes',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
+          name: 'Ngô Bá Kiến',
+          subtitle: 'Bác sĩ',
+        },
+    ],
+    title: 'Tiểu Đường',
+  },
+  // Huyết Áp
+  {
       data: [
-          {
-            id: '0001',
-            type: 'Diabetes', 
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
-            name: 'Nguyễn Thiện An',
-            subtitle: 'Bác sĩ',
-          },
-          {
-            id: '0002',
-            type: 'Diabetes',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
-            name: 'Nguyễn Văn Chung',
+          { 
+            key: '0007',
+            type: 'BloodPressure',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
+            name: 'Trần Thị Thu Phương',
             subtitle: 'Bác sĩ',
           },
           { 
-            id: '0003',
-            type: 'Diabetes',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
-            name: 'Trần Thị Thu Hương',
+            key: '0008',
+            type: 'BloodPressure',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
+            name: 'Lý Thiên Kim',
             subtitle: 'Bác sĩ',
           },
           { 
-            id: '0004',
-            type: 'Diabetes',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
-            name: 'Lê Tiến Đạt',
+            key: '0009',
+            type: 'BloodPressure',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
+            name: 'Huỳnh Ngọc Như',
             subtitle: 'Bác sĩ',
           },
           { 
-            id: '0005',
-            type: 'Diabetes',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
-            name: 'Hoàng Thị Minh Thư',
-            subtitle: 'Bác sĩ',
-          },
-          { 
-            id: '0006',
-            type: 'Diabetes',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
-            name: 'Ngô Bá Kiến',
+            key: '00010',
+            type: 'BloodPressure',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
+            name: 'Trần Thị Xuân Thủy',
             subtitle: 'Bác sĩ',
           },
       ],
-      title: 'Tiểu Đường',
-    },
-    // Huyết Áp
-    {
-        data: [
-            { 
-              id: '0007',
-              type: 'BloodPressure',
-              avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
-              name: 'Trần Thị Thu Phương',
-              subtitle: 'Bác sĩ',
-            },
-            { 
-              id: '0008',
-              type: 'BloodPressure',
-              avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
-              name: 'Lý Thiên Kim',
-              subtitle: 'Bác sĩ',
-            },
-            { 
-              id: '0009',
-              type: 'BloodPressure',
-              avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
-              name: 'Huỳnh Ngọc Như',
-              subtitle: 'Bác sĩ',
-            },
-            { 
-              id: '00010',
-              type: 'BloodPressure',
-              avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
-              name: 'Trần Thị Xuân Thủy',
-              subtitle: 'Bác sĩ',
-            },
-        ],
-        title: 'Huyết Áp',
-    },
+      title: 'Huyết Áp',
+  },
 ];
+
+export class SectionListItem extends PureComponent {
+  constructor (props) {
+    super(props);
+    this.state = {
+      activeRowKey: null,
+    }
+  }
+  render () {
+    const swipeoutSetting = {
+      autoClose: true,
+      onClose: (secId, rowId, direction) => {
+        if (this.state.activeRowKey != null)
+          this.setState({ activeRowKey: null });
+      },
+      onOpen: (secId, rowId, direction) => {
+        this.setState({
+          activeRowKey: this.props.item.key,
+        });
+        // alert(this.props.item.key);
+      },
+      right: [
+        {
+          onPress: () => {
+            const deletingRow = this.state.activeRowKey;
+            Alert.alert(
+              'Xác nhận',
+              'Bạn muốn xóa bác sĩ này?',
+              [
+                { 
+                  text: 'Không', 
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                { 
+                  text: 'Có', 
+                  onPress: () => {
+                    let indexSection  = dataSource.indexOf(this.props.section);
+                    dataSource[indexSection].data.splice(this.props.index, 1);
+                    // alert(dataSource[indexSection].data.length);
+                    this.props.parentSectionList.refreshSectionList(deletingRow);
+                  }
+                }
+              ],
+              { cancelable: true },
+            );
+          },
+          component: (
+            <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                }}
+            >
+              <Icon name='delete' size={30} color='white' />
+            </View>
+          ),
+          type: 'delete',
+        }
+      ],
+      rowId: this.props.index,
+      secId: 1,
+    }
+    return (
+      <Swipeout {...swipeoutSetting}>
+        <ListItem
+          title={
+            <View>
+              <Text style={{fontSize: 20, color: 'black'}}>
+                {this.props.item.name}
+              </Text>
+            </View>
+          }
+          subtitle={this.props.item.subtitle}
+          leftAvatar={{
+                  rounded: true,
+                  size: "medium",
+                  title: this.props.item.name[0],
+                  imageProps: {resizeMode:'contain'},
+                  source: { uri: this.props.item.avatar_url },
+                  activeOpacity: 0.7,
+                  showEditButton: false,
+                  marginLeft: 20,
+                }}
+          contentContainerStyle={{height: 40,}}
+          onPress={() => {
+                this.props.navigation.navigate('Chat', {title: this.props.item.name, avatar: this.props.item.avatar_url})
+              }}
+        />
+      </Swipeout>
+    )
+  }
+}
 
 export default class ListDoctorsStack extends Component {
     constructor(props){
       super(props);
       this.state = {
         sectionListData: [],
-        // isLoading: false,
+        deletedRowKey: null,
         search: '',
       };
       
@@ -114,19 +210,27 @@ export default class ListDoctorsStack extends Component {
           backgroundColor: 'rgba(54, 175, 160, 1)',
         },
         header: (
-          <SearchBar
-            round
-            lightTheme
-            containerStyle={{backgroundColor: 'rgba(54, 175, 160, 1)', width: Dimensions.get('window').width, }}
-            inputContainerStyle={{marginHorizontal: 10, backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50,}}
-            inputStyle={{color: 'white',}}
-            underlineColorAndroid='transparent'
-            placeholder="Nhập tại đây..."
-            searchIcon={{color: 'white',}}
-            placeholderTextColor='rgba(255,255,255,0.5)'
-            onChangeText={navigation.getParam('updateSearch')}
-            value={navigation.getParam('search')}
-          />
+          <View style={{flexDirection: 'row', backgroundColor: 'rgba(54, 175, 160, 1)', width: Dimensions.get('window').width, height: 60}}>
+            <SearchBar
+              round
+              lightTheme
+              containerStyle={{backgroundColor: 'transparent', flex: 1}}
+              inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40,}}
+              inputStyle={{color: 'white',}}
+              underlineColorAndroid='transparent'
+              placeholder="Nhập tại đây..."
+              searchIcon={{color: 'white',}}
+              placeholderTextColor='rgba(255,255,255,0.5)'
+              onChangeText={navigation.getParam('updateSearch')}
+              value={navigation.getParam('search')}
+            />
+            <TouchableOpacity
+              style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 15}}
+              onPress={() => { alert("Thêm thành công"); }}
+            >
+              <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
+            </TouchableOpacity>
+          </View>
         ),
       }
     };
@@ -138,57 +242,12 @@ export default class ListDoctorsStack extends Component {
 
     makeRemoteRequest = () => {
       this.setState({
-        // loading: true,
         sectionListData: dataSource,
       });
       this.arrayholder = dataSource;
     };
   
     keyExtractor = (item, index) => index.toString()
-  
-    _renderItem = ({ item, index, section }) => (
-      <ListItem
-        title={
-          <View>
-            <Text style={{fontSize: 20, color: 'black'}}>
-              {item.name}
-            </Text>
-          </View>
-        }
-        subtitle={item.subtitle}
-        leftAvatar={{
-                rounded: true,
-                size: "medium",
-                title: item.name[0],
-                imageProps: {resizeMode:'contain'},
-                source: { uri: item.avatar_url },
-                activeOpacity: 0.7,
-                showEditButton: false,
-                marginLeft: 20,
-              }}
-        contentContainerStyle={{height: 40,}}
-        onPress={() => {
-              this.props.navigation.navigate('Chat', {title: item.name, avatar: item.avatar_url})
-            }}
-        rightElement={
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 0.3, marginRight: 20, }}>
-            <Icon
-              name="profile"
-              size={25}
-              color="blue"
-              onPress={() => alert("Xem")}
-            />
-            <Icon
-              name="closesquareo"
-              size={25}
-              color="red"
-              onPress={() => {this.deleteUser(item)}}
-            />
-          </View>
-
-        }
-      />
-    )
 
     checkSwitch = ({section}) => {
       switch(section.title) {
@@ -219,16 +278,6 @@ export default class ListDoctorsStack extends Component {
         }
    
     }
-
-    // _renderSectionHeader = ({section}) => (
-    //     <View style={styles.sectionTitleBorderBottom}>
-    //         <Image
-    //           source={require('./img/BloodPressure.png')} 
-    //           style={styles.customImg}
-    //         />
-    //         <Text style={styles.sectionTitle}>{section.title}</Text>
-    //     </View>
-    // )
 
     updateSearch = search => {
       this.setState({
@@ -270,29 +319,26 @@ export default class ListDoctorsStack extends Component {
       // alert(JSON.stringify(this.state.sectionListData));
     }
 
-    deleteUser = user => {
-      let tempArray = dataSource;
-
-      for (let i=0; i<tempArray.length; i++) {
-        let index = tempArray[i].data.indexOf(user);
-        alert(index);
-        if (index > -1) {
-          tempArray[i].data.splice(index, 1);
-          break;
-        }
-      }
-
-      dataSource = tempArray;
-     
-      // this.render();
-      alert(JSON.stringify(tempArray));
+    refreshSectionList = (deletedKey) => {
+      this.setState((prevState) => {
+        return {
+          deletedRowKey: deletedKey,
+        };
+      });
     }
   
     render() {
       return (
         <View style={styles.wrapper}>
             <SectionList
-                renderItem={this._renderItem}
+                renderItem={
+                  // this._renderItem
+                  ({item, index, section}) =>{
+                    return (
+                      <SectionListItem item={item} index={index} navigation={this.props.navigation} section={section} parentSectionList={this} />
+                    )
+                  }
+                }
                 renderSectionHeader={this.checkSwitch}
                 sections={this.state.sectionListData}
                 keyExtractor={this.keyExtractor}

@@ -17,6 +17,7 @@
     "react-native-highcharts": "^1.0.2",
     "react-native-size-matters": "^0.1.7",
     "react-native-svg": "^9.2.4",
+    "react-native-swipeout": "^2.3.6",
     "react-native-vector-icons": "^6.4.1",
     "react-navigation": "^3.4.1",
     "victory-native": "^31.0.0"
