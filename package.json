@@ -11,6 +11,8 @@
     "react": "16.6.3",
     "react-native": "0.58.6",
     "react-native-awesome-alerts": "^1.2.0",
+    "react-native-chart-kit": "^2.5.0",
+    "react-native-elements": "^1.1.0",
     "react-native-facebook-account-kit": "^1.1.0",
     "react-native-gesture-handler": "^1.0.17",
     "react-native-highcharts": "^1.0.2",
