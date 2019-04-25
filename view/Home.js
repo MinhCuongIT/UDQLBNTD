@@ -14,6 +14,7 @@ import {Platform, StyleSheet,
 import {LineChart} from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Avatar, Badge, withBadge} from 'react-native-elements';
+import ActionButton from 'react-native-circular-action-menu';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -160,7 +161,7 @@ export default class Home extends Component {
             />
           </TouchableOpacity>
           <View style={{marginLeft: 20, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={item.type==='ĐƯỜNG HUYẾT (mmol/L)'?styles.normalStatus:styles.errorStatus}></View>
+            <View style={item.type==='ĐƯỜNG HUYẾT (mmol/L)'?styles.errorStatus:styles.normalStatus}></View>
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('HomeDetails')}
               style={styles.btnMess}
@@ -192,7 +193,17 @@ export default class Home extends Component {
             </View>
           </View>
           {listChart}
+          <View style={{height: 25}}/>
         </ScrollView>
+        <ActionButton buttonColor="rgba(231,76,60,1)" position={'right'}>
+          <ActionButton.Item buttonColor='rgba(230, 50, 50, 0.9)' size={50} onPress={() => this.props.navigation.navigate('AddDiabetes')}>
+            <Image source={require('../images/Diabetes.png')} style={styles.actionButtonIcon}/>
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='rgba(230, 130, 100, 0.9)' size={50}>
+            <Image source={require('../images/BloodPressure.png')} style={styles.actionButtonIcon}/>
+          </ActionButton.Item>
+        </ActionButton>
+
       </View>
     );
   }
@@ -270,9 +281,15 @@ const styles = StyleSheet.create({
     // borderWidth: 1.5,
     borderColor: 'rgba(255, 0, 0, 0.7)',
     alignItems: 'center',
-    padding: 5,
+    padding: 7,
     backgroundColor: 'rgba(104, 225, 210, 0.8)',//   'rgba(50, 50, 255, 0.9)',
     color: 'rgba(255, 255, 255, 0.7)',
-    marginHorizontal: 30,
-  }
+    marginHorizontal: 80,
+  },
+  actionButtonIcon: {
+    // fontSize: 20,
+    height: 30,
+    width: 30,
+    // color: 'white',
+  },
 });

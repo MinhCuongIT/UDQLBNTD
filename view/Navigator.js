@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginPage from "./LoginPage";
 import RegisterChooseTypePage from "./RegisterChooseTypePage";
 import RegisterInformationPage from "./RegisterInformationPage";
+import AddDiabetes from "./AddDiabetes";
 import AddValuePage from "./AddValuePage";
 import ChangePassword from "./ChangePassword";
 import ChangeInfomation from "./ChangeInfomation";
@@ -28,6 +29,18 @@ const HomeStack = createStackNavigator({
     },
   },
   HomeDetails: {screen: HomeDetails,
+    navigationOptions:{
+      headerStyle:{
+        backgroundColor: 'rgba(74, 195, 180, 1)',
+      },
+      headerBackTitleStyle:{
+        fontSize:25,
+        fontWeight: 'bold',
+      },
+      headerTintColor: 'white',
+    },
+  },
+  AddDiabetes :{screen: AddDiabetes,
     navigationOptions:{
       headerStyle:{
         backgroundColor: 'rgba(74, 195, 180, 1)',
