@@ -5,6 +5,7 @@ import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator
 import Home from "./Home";
 import Chart from "./Chart";
 import ListDoctors from "./ListDoctors";
+import DoctorProfile from './DoctorProfile';
 import ChatScreen from './ChatScreen';
 import Profile from "./Profile";
 import HomeDetails from "./HomeDetails";
@@ -72,13 +73,15 @@ const ListDoctorsStack = createStackNavigator({
     screen: ListDoctors,
 
   },
-  Chat: {
-    screen: ChatScreen,
+  DoctorProfile: {
+    screen: DoctorProfile,
+    // navigationOptions: { tabBarVisible: false,  }
   },
   }, {
     initialRouteName: 'ListDoctors',
     // headerBackTitleVisible: true,
 });
+
 //Phần thông tin profile
 const ListProfileStack = createStackNavigator({
   Profile:{
@@ -93,8 +96,10 @@ const ListProfileStack = createStackNavigator({
   ChangeInfomation: {
     screen: ChangeInfomation,
   },
-},
-  { initialRouteName: 'Profile',});
+  },{ 
+    initialRouteName: 'Profile',
+});
+
 const AppNavigator = createMaterialTopTabNavigator({
       Tab1: {
           screen: HomeStack,

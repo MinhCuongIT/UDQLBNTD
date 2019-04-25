@@ -6,51 +6,166 @@ import { createAppContainer, createStackNavigator, StackActions, NavigationActio
 import Swipeout from 'react-native-swipeout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+// var dataSource = [
+//   // Tiểu Đường
+//   {
+//     data: [
+//         {
+//           key: '0001',
+//           type: 'Diabetes', 
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
+//           name: 'Nguyễn Thiện An',
+//           subtitle: 'Bác sĩ',
+//         },
+//         {
+//           key: '0002',
+//           type: 'Diabetes',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
+//           name: 'Nguyễn Văn Chung',
+//           subtitle: 'Bác sĩ',
+//         },
+//         { 
+//           key: '0003',
+//           type: 'Diabetes',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
+//           name: 'Trần Thị Thu Hương',
+//           subtitle: 'Bác sĩ',
+//         },
+//         { 
+//           key: '0004',
+//           type: 'Diabetes',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
+//           name: 'Lê Tiến Đạt',
+//           subtitle: 'Bác sĩ',
+//         },
+//         { 
+//           key: '0005',
+//           type: 'Diabetes',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
+//           name: 'Hoàng Thị Minh Thư',
+//           subtitle: 'Bác sĩ',
+//         },
+//         { 
+//           key: '0006',
+//           type: 'Diabetes',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
+//           name: 'Ngô Bá Kiến',
+//           subtitle: 'Bác sĩ',
+//         },
+//     ],
+//     title: 'Tiểu Đường',
+//   },
+//   // Huyết Áp
+//   {
+//       data: [
+//           { 
+//             key: '0007',
+//             type: 'BloodPressure',
+//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
+//             name: 'Trần Thị Thu Phương',
+//             subtitle: 'Bác sĩ',
+//           },
+//           { 
+//             key: '0008',
+//             type: 'BloodPressure',
+//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
+//             name: 'Lý Thiên Kim',
+//             subtitle: 'Bác sĩ',
+//           },
+//           { 
+//             key: '0009',
+//             type: 'BloodPressure',
+//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
+//             name: 'Huỳnh Ngọc Như',
+//             subtitle: 'Bác sĩ',
+//           },
+//           { 
+//             key: '00010',
+//             type: 'BloodPressure',
+//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
+//             name: 'Trần Thị Xuân Thủy',
+//             subtitle: 'Bác sĩ',
+//           },
+//       ],
+//       title: 'Huyết Áp',
+//   },
+// ];
+
 var dataSource = [
   // Tiểu Đường
   {
     data: [
         {
           key: '0001',
-          type: 'Diabetes', 
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
           name: 'Nguyễn Thiện An',
-          subtitle: 'Bác sĩ',
+          gender: 'Nam',
+          birthday: '10/12/1985',
+          id_card: '272466984',
+          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+          number_phone: '0935412084',
+          email: 'nta85@gmail.com',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
+          type: 'Tiểu Đường', 
         },
         {
           key: '0002',
-          type: 'Diabetes',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
           name: 'Nguyễn Văn Chung',
-          subtitle: 'Bác sĩ',
+          gender: 'Nam',
+          birthday: '10/12/1985',
+          id_card: '272466984',
+          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+          number_phone: '0935412084',
+          email: 'nta85@gmail.com',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
+          type: 'Tiểu Đường',
         },
         { 
           key: '0003',
-          type: 'Diabetes',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
           name: 'Trần Thị Thu Hương',
-          subtitle: 'Bác sĩ',
+          gender: 'Nam',
+          birthday: '10/12/1985',
+          id_card: '272466984',
+          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+          number_phone: '0935412084',
+          email: 'nta85@gmail.com',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
+          type: 'Tiểu Đường',
         },
         { 
           key: '0004',
-          type: 'Diabetes',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
           name: 'Lê Tiến Đạt',
-          subtitle: 'Bác sĩ',
+          gender: 'Nam',
+          birthday: '10/12/1985',
+          id_card: '272466984',
+          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+          number_phone: '0935412084',
+          email: 'nta85@gmail.com',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
+          type: 'Tiểu Đường',
         },
         { 
           key: '0005',
-          type: 'Diabetes',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
           name: 'Hoàng Thị Minh Thư',
-          subtitle: 'Bác sĩ',
+          gender: 'Nam',
+          birthday: '10/12/1985',
+          id_card: '272466984',
+          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+          number_phone: '0935412084',
+          email: 'nta85@gmail.com',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
+          type: 'Tiểu Đường',
         },
         { 
           key: '0006',
-          type: 'Diabetes',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
           name: 'Ngô Bá Kiến',
-          subtitle: 'Bác sĩ',
+          gender: 'Nam',
+          birthday: '10/12/1985',
+          id_card: '272466984',
+          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+          number_phone: '0935412084',
+          email: 'nta85@gmail.com',
+          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
+          type: 'Tiểu Đường',
         },
     ],
     title: 'Tiểu Đường',
@@ -60,44 +175,65 @@ var dataSource = [
       data: [
           { 
             key: '0007',
-            type: 'BloodPressure',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
             name: 'Trần Thị Thu Phương',
-            subtitle: 'Bác sĩ',
+            gender: 'Nam',
+            birthday: '10/12/1985',
+            id_card: '272466984',
+            address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+            number_phone: '0935412084',
+            email: 'nta85@gmail.com',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
+            type: 'Huyết Áp',
           },
           { 
             key: '0008',
-            type: 'BloodPressure',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
             name: 'Lý Thiên Kim',
-            subtitle: 'Bác sĩ',
+            gender: 'Nam',
+            birthday: '10/12/1985',
+            id_card: '272466984',
+            address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+            number_phone: '0935412084',
+            email: 'nta85@gmail.com',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
+            type: 'Huyết Áp',
           },
           { 
             key: '0009',
-            type: 'BloodPressure',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
             name: 'Huỳnh Ngọc Như',
-            subtitle: 'Bác sĩ',
+            gender: 'Nam',
+            birthday: '10/12/1985',
+            id_card: '272466984',
+            address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+            number_phone: '0935412084',
+            email: 'nta85@gmail.com',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
+            type: 'Huyết Áp',
           },
           { 
             key: '00010',
-            type: 'BloodPressure',
-            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
             name: 'Trần Thị Xuân Thủy',
-            subtitle: 'Bác sĩ',
+            gender: 'Nam',
+            birthday: '10/12/1985',
+            id_card: '272466984',
+            address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+            number_phone: '0935412084',
+            email: 'nta85@gmail.com',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
+            type: 'Huyết Áp',
           },
       ],
       title: 'Huyết Áp',
   },
 ];
 
-export class SectionListItem extends PureComponent {
+class SectionListItem extends PureComponent {
   constructor (props) {
     super(props);
     this.state = {
       activeRowKey: null,
     }
   }
+  
   render () {
     const swipeoutSetting = {
       autoClose: true,
@@ -155,6 +291,7 @@ export class SectionListItem extends PureComponent {
       rowId: this.props.index,
       secId: 1,
     }
+
     return (
       <Swipeout {...swipeoutSetting}>
         <ListItem
@@ -165,7 +302,7 @@ export class SectionListItem extends PureComponent {
               </Text>
             </View>
           }
-          subtitle={this.props.item.subtitle}
+          subtitle={this.props.item.type}
           leftAvatar={{
                   rounded: true,
                   size: "medium",
@@ -178,7 +315,10 @@ export class SectionListItem extends PureComponent {
                 }}
           contentContainerStyle={{height: 40,}}
           onPress={() => {
-                this.props.navigation.navigate('Chat', {title: this.props.item.name, avatar: this.props.item.avatar_url})
+                this.props.navigation.navigate('DoctorProfile', { 
+                      title: this.props.item.name,
+                      data: this.props.item 
+                    })
               }}
         />
       </Swipeout>
@@ -186,7 +326,7 @@ export class SectionListItem extends PureComponent {
   }
 }
 
-export default class ListDoctorsStack extends Component {
+export default class ListDoctors extends Component {
     constructor(props){
       super(props);
       this.state = {
@@ -201,37 +341,37 @@ export default class ListDoctorsStack extends Component {
   
     static navigationOptions = ({ navigation }) => {
       return {
-        headerTitleStyle: {
-          fontWeight: 'bold',
-          marginLeft: 80,
-          color: 'white',
-        },
+        // headerTitleStyle: {
+        //   fontWeight: 'bold',
+        //   marginLeft: 80,
+        //   color: 'white',
+        // },
         headerStyle: {
-          backgroundColor: 'rgba(54, 175, 160, 1)',
+          backgroundColor: 'rgba(74, 195, 180, 1)',
         },
-        header: (
-          <View style={{flexDirection: 'row', backgroundColor: 'rgba(54, 175, 160, 1)', width: Dimensions.get('window').width, height: 60}}>
-            <SearchBar
-              round
-              lightTheme
-              containerStyle={{backgroundColor: 'transparent', flex: 1}}
-              inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40,}}
-              inputStyle={{color: 'white',}}
-              underlineColorAndroid='transparent'
-              placeholder="Nhập tại đây..."
-              searchIcon={{color: 'white',}}
-              placeholderTextColor='rgba(255,255,255,0.5)'
-              onChangeText={navigation.getParam('updateSearch')}
-              value={navigation.getParam('search')}
-            />
-            <TouchableOpacity
-              style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 15}}
-              onPress={() => { alert("Thêm thành công"); }}
-            >
-              <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
-            </TouchableOpacity>
-          </View>
+        headerTitle: (
+          <SearchBar
+            round
+            lightTheme
+            containerStyle={{backgroundColor: 'rgba(74, 195, 180, 1)', width: Dimensions.get('window').width - 75}}
+            inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40,}}
+            inputStyle={{color: 'white',}}
+            underlineColorAndroid='transparent'
+            placeholder="Nhập tên bác sĩ..."
+            searchIcon={{color: 'white',}}
+            placeholderTextColor='rgba(255,255,255,0.5)'
+            onChangeText={navigation.getParam('updateSearch')}
+            value={navigation.getParam('search')}
+          />
         ),
+        headerRight: (
+          <TouchableOpacity
+            style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 10,}}
+            onPress={() => { alert("Thêm thành công"); }}
+          >
+            <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
+          </TouchableOpacity>
+        )
       }
     };
   
@@ -249,6 +389,7 @@ export default class ListDoctorsStack extends Component {
   
     keyExtractor = (item, index) => index.toString()
 
+    //Hiển thị phân loại bác sĩ theo lĩnh vực
     checkSwitch = ({section}) => {
       switch(section.title) {
    
@@ -279,6 +420,8 @@ export default class ListDoctorsStack extends Component {
    
     }
 
+    //Cập nhật từ khóa trong Search-bar
+    //và tiến hành search trong danh sách bác sĩ
     updateSearch = search => {
       this.setState({
         search: search,
@@ -315,10 +458,9 @@ export default class ListDoctorsStack extends Component {
       this.setState({
         sectionListData: tempArray,
       });
-      
-      // alert(JSON.stringify(this.state.sectionListData));
     }
 
+    // Reload danh sách bác sĩ
     refreshSectionList = (deletedKey) => {
       this.setState((prevState) => {
         return {
@@ -332,7 +474,6 @@ export default class ListDoctorsStack extends Component {
         <View style={styles.wrapper}>
             <SectionList
                 renderItem={
-                  // this._renderItem
                   ({item, index, section}) =>{
                     return (
                       <SectionListItem item={item} index={index} navigation={this.props.navigation} section={section} parentSectionList={this} />
