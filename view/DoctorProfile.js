@@ -36,9 +36,7 @@ class Info extends PureComponent {
   render () {
     return (
         <Card title='Thông Tin Cơ Bản'
-              containerStyle={{
-                borderWidth: 0
-              }}
+              containerStyle={styles.removeCardBorder}
         >
           <CardItem itemDetail={this.props.profile.gender} itemTitle='Giới tính'/>
           <CardItem itemDetail={this.props.profile.birthday} itemTitle='Ngày sinh'/>
@@ -101,6 +99,17 @@ const styles = StyleSheet.create({
       marginHorizontal: 30,
       alignItems: 'center'
   },
+
+  // Custom Card
+  removeCardBorder: {
+    borderColor: 'transparent',
+    shadowColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: .0,
+    shadowRadius: 0,
+    elevation: 0
+  },
+
   info: {
     fontSize: 20,
     color: 'black',
