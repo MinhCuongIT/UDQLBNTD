@@ -122,7 +122,7 @@ var dataSource = [
         { 
           key: '0003',
           name: 'Trần Thị Thu Hương',
-          gender: 'Nam',
+          gender: 'Nữ',
           birthday: '10/12/1985',
           id_card: '272466984',
           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
@@ -146,7 +146,7 @@ var dataSource = [
         { 
           key: '0005',
           name: 'Hoàng Thị Minh Thư',
-          gender: 'Nam',
+          gender: 'Nữ',
           birthday: '10/12/1985',
           id_card: '272466984',
           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
@@ -157,7 +157,7 @@ var dataSource = [
         },
         { 
           key: '0006',
-          name: 'Ngô Bá Kiến',
+          name: 'Ngô Bá Khá',
           gender: 'Nam',
           birthday: '10/12/1985',
           id_card: '272466984',
@@ -176,7 +176,7 @@ var dataSource = [
           { 
             key: '0007',
             name: 'Trần Thị Thu Phương',
-            gender: 'Nam',
+            gender: 'Nữ',
             birthday: '10/12/1985',
             id_card: '272466984',
             address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
@@ -188,7 +188,7 @@ var dataSource = [
           { 
             key: '0008',
             name: 'Lý Thiên Kim',
-            gender: 'Nam',
+            gender: 'Nữ',
             birthday: '10/12/1985',
             id_card: '272466984',
             address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
@@ -200,7 +200,7 @@ var dataSource = [
           { 
             key: '0009',
             name: 'Huỳnh Ngọc Như',
-            gender: 'Nam',
+            gender: 'Nữ',
             birthday: '10/12/1985',
             id_card: '272466984',
             address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
@@ -212,7 +212,7 @@ var dataSource = [
           { 
             key: '00010',
             name: 'Trần Thị Xuân Thủy',
-            gender: 'Nam',
+            gender: 'Nữ',
             birthday: '10/12/1985',
             id_card: '272466984',
             address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 30,
         margin: 10,
-        color: 'black',
+        color: 'gray',
     },
     sectionTitleBorderBottom: {
         flex: 1,

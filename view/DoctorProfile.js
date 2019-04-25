@@ -1,8 +1,7 @@
 import React, {Component, PureComponent} from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Alert} from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Card, ListItem, Avatar } from "react-native-elements";
+import {StyleSheet, Text, View, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { Card, ListItem, Divider } from "react-native-elements";
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 
 class CardItem extends PureComponent {
@@ -15,34 +14,53 @@ class CardItem extends PureComponent {
         <ListItem
           title={
             <View>
-              <Text style={styles.info}>
+              <Text style={styles.customText}>
                 {this.props.itemDetail}
               </Text>
             </View>
           }
           subtitle={this.props.itemTitle}
-          chevron={{ size: 30}}
         />
     )
   }
 }
 
 
-class Info extends PureComponent {
+class MyListCards extends PureComponent {
   constructor (props) {
     super(props);
   }
   
   render () {
     return (
-        <Card title='Thông Tin Cơ Bản'
-              containerStyle={styles.removeCardBorder}
+      <ScrollView>
+        <Card title={
+          <View style={styles.customTitle}>
+            <Icon name="profile" size={20}/>
+            <Text style={[styles.customText, styles.customTextTitle]}>Thông Tin Cơ Bản</Text>
+          </View>
+          }
+            containerStyle={styles.removeCardBorder}
         >
+          <Divider/>
           <CardItem itemDetail={this.props.profile.gender} itemTitle='Giới tính'/>
           <CardItem itemDetail={this.props.profile.birthday} itemTitle='Ngày sinh'/>
           <CardItem itemDetail={this.props.profile.id_card} itemTitle='CMND'/>
           <CardItem itemDetail={this.props.profile.address} itemTitle='Địa chỉ'/>
         </Card>
+        <Card title={
+          <View style={styles.customTitle}>
+            <Icon name="contacts" size={20}/>
+            <Text style={[styles.customText, styles.customTextTitle]}>Liên Hệ</Text>
+          </View>
+          }
+              containerStyle={styles.removeCardBorder}
+        >
+          <Divider/>
+          <CardItem itemDetail={this.props.profile.number_phone} itemTitle='Số điện thoại'/>
+          <CardItem itemDetail={this.props.profile.email} itemTitle='Email'/>
+        </Card>
+      </ScrollView>
     )
   }
 }
@@ -77,7 +95,7 @@ export default class DoctorProfile extends Component {
     render() {
       return (
         <View style={styles.wrapper}>
-            <Info profile={this.state.profile}/>
+            <MyListCards profile={this.state.profile}/>
         </View>
       );
     }
@@ -95,7 +113,7 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection: 'row',
       borderBottomWidth: 0.5,
-      borderBottomColor: 'grey',
+      borderBottomColor: 'gray',
       marginHorizontal: 30,
       alignItems: 'center'
   },
@@ -110,9 +128,20 @@ const styles = StyleSheet.create({
     elevation: 0
   },
 
-  info: {
+  customText: {
     fontSize: 20,
     color: 'black',
-  }
+  },
+
+  customTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15
+  },
+  customTextTitle: {
+    marginLeft: 15,
+    fontWeight: 'bold',
+    color: 'gray'
+  },
 });
   
