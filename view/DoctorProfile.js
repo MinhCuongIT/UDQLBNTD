@@ -5,6 +5,29 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Card, ListItem, Avatar } from "react-native-elements";
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 
+class CardItem extends PureComponent {
+  constructor (props) {
+    super(props);
+  }
+
+  render () {
+    return (
+        <ListItem
+          title={
+            <View>
+              <Text style={styles.info}>
+                {this.props.itemDetail}
+              </Text>
+            </View>
+          }
+          subtitle={this.props.itemTitle}
+          chevron={{ size: 30}}
+        />
+    )
+  }
+}
+
+
 class Info extends PureComponent {
   constructor (props) {
     super(props);
@@ -12,51 +35,15 @@ class Info extends PureComponent {
   
   render () {
     return (
-        <Card title='Thông Tin Cơ Bản'>
-          <ListItem
-            title={
-              <View>
-                <Text style={styles.info}>
-                  {this.props.profile.gender}
-                </Text>
-              </View>
-            }
-            subtitle='Giới tính'
-            chevron={{ size: 30}}
-          />
-          <ListItem
-            title={
-              <View>
-                <Text style={styles.info}>
-                  {this.props.profile.birthday}
-                </Text>
-              </View>
-            }
-            subtitle='Ngày sinh'
-            chevron={{ size: 30}}
-          />
-          <ListItem
-            title={
-              <View>
-                <Text style={styles.info}>
-                  {this.props.profile.id_card}
-                </Text>
-              </View>
-            }
-            subtitle='CMND'
-            chevron={{ size: 30}}
-          />
-          <ListItem
-            title={
-              <View>
-                <Text style={styles.info}>
-                  {this.props.profile.address}
-                </Text>
-              </View>
-            }
-            subtitle='Địa chỉ'
-            chevron={{ size: 30}}
-          />
+        <Card title='Thông Tin Cơ Bản'
+              containerStyle={{
+                borderWidth: 0
+              }}
+        >
+          <CardItem itemDetail={this.props.profile.gender} itemTitle='Giới tính'/>
+          <CardItem itemDetail={this.props.profile.birthday} itemTitle='Ngày sinh'/>
+          <CardItem itemDetail={this.props.profile.id_card} itemTitle='CMND'/>
+          <CardItem itemDetail={this.props.profile.address} itemTitle='Địa chỉ'/>
         </Card>
     )
   }
