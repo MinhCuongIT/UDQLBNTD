@@ -1,8 +1,63 @@
 import React, {Component, PureComponent} from 'react';
 import {StyleSheet, Text, View, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { Card, ListItem, Divider } from "react-native-elements";
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Feather from 'react-native-vector-icons/Feather';
+import { Card, ListItem, Divider, Button } from "react-native-elements";
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
+
+class IntroCard extends PureComponent {
+  constructor (props) {
+    super(props);
+  }
+
+  render () {
+    return (
+      <ListItem
+        containerStyle={{marginHorizontal: 10}}
+        leftAvatar={{ source: { uri: this.props.itemAvatar }, size: 'large' }}
+        title={
+          <View>
+            <Text style={{ fontSize: 25, color: 'black', fontWeight: 'bold' }}>
+              {this.props.itemName}
+            </Text>
+          </View>
+        }
+        subtitle={
+          <View style={styles.customBtns}>
+            <View style={{flex: 0.5}}>
+              <Feather.Button
+                name="phone-call"
+                backgroundColor="transparent"
+                borderRadius={0}
+                size={20}
+                color="rgba(74, 195, 180, 1)"
+                onPress={()=> console.log("hi")}
+              >
+                <Text style={styles.customBtnText}>
+                  Gọi
+                </Text>
+              </Feather.Button>
+            </View>
+            <View style={{flex: 0.5}}>
+              <Feather.Button
+                name="message-circle"
+                backgroundColor="transparent"
+                borderRadius={0}
+                size={20}
+                color="rgba(74, 195, 180, 1)"
+                onPress={()=> console.log("hi")}
+              >
+                <Text style={styles.customBtnText}>
+                  Nhắn tin
+                </Text>
+              </Feather.Button>
+            </View>
+          </View>
+        }
+      />
+    )
+  }
+}
 
 class CardItem extends PureComponent {
   constructor (props) {
@@ -34,9 +89,10 @@ class MyListCards extends PureComponent {
   render () {
     return (
       <ScrollView>
+        <IntroCard itemAvatar={this.props.profile.avatar_url} itemName={this.props.profile.name} />
         <Card title={
           <View style={styles.customTitle}>
-            <Icon name="profile" size={20}/>
+            <AntDesign name="profile" size={20}/>
             <Text style={[styles.customText, styles.customTextTitle]}>Thông Tin Cơ Bản</Text>
           </View>
           }
@@ -50,7 +106,7 @@ class MyListCards extends PureComponent {
         </Card>
         <Card title={
           <View style={styles.customTitle}>
-            <Icon name="contacts" size={20}/>
+            <AntDesign name="contacts" size={20}/>
             <Text style={[styles.customText, styles.customTextTitle]}>Liên Hệ</Text>
           </View>
           }
@@ -59,6 +115,36 @@ class MyListCards extends PureComponent {
           <Divider/>
           <CardItem itemDetail={this.props.profile.number_phone} itemTitle='Số điện thoại'/>
           <CardItem itemDetail={this.props.profile.email} itemTitle='Email'/>
+          {/* <View style={styles.customBtns}>
+            <View style={{flex: 0.5}}>
+              <Feather.Button
+                name="phone-call"
+                backgroundColor="transparent"
+                borderRadius={0}
+                size={20}
+                color="gray"
+                onPress={()=> console.log("hi")}
+              >
+                <Text style={styles.customBtnText}>
+                  Gọi
+                </Text>
+              </Feather.Button>
+            </View>
+            <View style={{flex: 0.5}}>
+              <Feather.Button
+                name="message-circle"
+                backgroundColor="transparent"
+                borderRadius={0}
+                size={20}
+                color="gray"
+                onPress={()=> console.log("hi")}
+              >
+                <Text style={styles.customBtnText}>
+                  Nhắn tin
+                </Text>
+              </Feather.Button>
+            </View>
+          </View> */}
         </Card>
       </ScrollView>
     )
@@ -77,7 +163,7 @@ export default class DoctorProfile extends Component {
   
     static navigationOptions = ({ navigation }) => {
       return {
-        title: navigation.getParam('title'),
+        title: 'Thông Tin Bác Sĩ',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
@@ -87,10 +173,6 @@ export default class DoctorProfile extends Component {
         headerTintColor: 'white',
       };
     };
-
-    // componentDidMount() {
-    //   alert(JSON.stringify(this.state.profile.data));
-    // }
 
     render() {
       return (
@@ -143,5 +225,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'gray'
   },
+
+  // Custom buttons
+  customBtns: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  // customBtnView: {
+  //   flex: 0.5,
+  // },
+  customBtnText: {
+    fontFamily: 'Arial',
+    fontSize: 20,
+    color: '#007AFF',
+    fontWeight: 'bold',
+    paddingHorizontal: 10
+  }
 });
   

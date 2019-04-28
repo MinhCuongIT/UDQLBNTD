@@ -1,95 +1,11 @@
 import React, {Component, PureComponent} from 'react';
 import { StyleSheet, Text, View, FlatList, SectionList, Dimensions, Alert, ActivityIndicator } from 'react-native';
-import { ListItem, SearchBar, Image, Button } from "react-native-elements";
-import Icon from 'react-native-vector-icons/AntDesign'
+import { ListItem, SearchBar, Image, Divider, Button } from "react-native-elements";
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Swipeout from 'react-native-swipeout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-// var dataSource = [
-//   // Tiểu Đường
-//   {
-//     data: [
-//         {
-//           key: '0001',
-//           type: 'Diabetes', 
-//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
-//           name: 'Nguyễn Thiện An',
-//           subtitle: 'Bác sĩ',
-//         },
-//         {
-//           key: '0002',
-//           type: 'Diabetes',
-//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
-//           name: 'Nguyễn Văn Chung',
-//           subtitle: 'Bác sĩ',
-//         },
-//         { 
-//           key: '0003',
-//           type: 'Diabetes',
-//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
-//           name: 'Trần Thị Thu Hương',
-//           subtitle: 'Bác sĩ',
-//         },
-//         { 
-//           key: '0004',
-//           type: 'Diabetes',
-//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
-//           name: 'Lê Tiến Đạt',
-//           subtitle: 'Bác sĩ',
-//         },
-//         { 
-//           key: '0005',
-//           type: 'Diabetes',
-//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
-//           name: 'Hoàng Thị Minh Thư',
-//           subtitle: 'Bác sĩ',
-//         },
-//         { 
-//           key: '0006',
-//           type: 'Diabetes',
-//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
-//           name: 'Ngô Bá Kiến',
-//           subtitle: 'Bác sĩ',
-//         },
-//     ],
-//     title: 'Tiểu Đường',
-//   },
-//   // Huyết Áp
-//   {
-//       data: [
-//           { 
-//             key: '0007',
-//             type: 'BloodPressure',
-//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
-//             name: 'Trần Thị Thu Phương',
-//             subtitle: 'Bác sĩ',
-//           },
-//           { 
-//             key: '0008',
-//             type: 'BloodPressure',
-//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
-//             name: 'Lý Thiên Kim',
-//             subtitle: 'Bác sĩ',
-//           },
-//           { 
-//             key: '0009',
-//             type: 'BloodPressure',
-//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
-//             name: 'Huỳnh Ngọc Như',
-//             subtitle: 'Bác sĩ',
-//           },
-//           { 
-//             key: '00010',
-//             type: 'BloodPressure',
-//             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
-//             name: 'Trần Thị Xuân Thủy',
-//             subtitle: 'Bác sĩ',
-//           },
-//       ],
-//       title: 'Huyết Áp',
-//   },
-// ];
 
 var dataSource = [
   // Tiểu Đường
@@ -265,7 +181,6 @@ class SectionListItem extends PureComponent {
                   onPress: () => {
                     let indexSection  = dataSource.indexOf(this.props.section);
                     dataSource[indexSection].data.splice(this.props.index, 1);
-                    // alert(dataSource[indexSection].data.length);
                     this.props.parentSectionList.refreshSectionList(deletingRow);
                   }
                 }
@@ -282,7 +197,7 @@ class SectionListItem extends PureComponent {
                   flexDirection: 'column',
                 }}
             >
-              <Icon name='delete' size={30} color='white' />
+              <AntDesign name='delete' size={30} color='white' />
             </View>
           ),
           type: 'delete',
@@ -302,7 +217,7 @@ class SectionListItem extends PureComponent {
               </Text>
             </View>
           }
-          subtitle={this.props.item.type}
+          // subtitle={this.props.item.type}
           leftAvatar={{
                   rounded: true,
                   size: "medium",
@@ -315,13 +230,39 @@ class SectionListItem extends PureComponent {
                 }}
           contentContainerStyle={{height: 40,}}
           onPress={() => {
-                this.props.navigation.navigate('DoctorProfile', { 
-                      title: this.props.item.name,
-                      data: this.props.item 
-                    })
+                this.props.navigation.navigate('DoctorProfile', { data: this.props.item })
               }}
         />
       </Swipeout>
+    )
+  }
+}
+
+class SectionHeader extends PureComponent {
+  constructor (props) {
+    super(props);
+  }
+
+  render() {
+    return(
+      <View style={{marginHorizontal: 20}}>
+        <ListItem
+          leftAvatar={{ source: this.props.iconSectionHeader, size: 30 }}
+          title={
+            <View>
+              <Text style={styles.sectionTitle}>{this.props.sectionTitle}</Text>
+            </View>
+          }
+          rightElement={
+            <Ionicons name="md-add-circle"
+              size={30}
+              color='rgba(74, 195, 180, 1)'
+              onPress={() => {Alert.alert("Thêm thành công");}}
+              />
+          }
+        />
+        <Divider />
+      </View>
     )
   }
 }
@@ -341,37 +282,38 @@ export default class ListDoctors extends Component {
   
     static navigationOptions = ({ navigation }) => {
       return {
-        // headerTitleStyle: {
-        //   fontWeight: 'bold',
-        //   marginLeft: 80,
-        //   color: 'white',
-        // },
+        title: 'Danh Sách Bác Sĩ',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          marginLeft: 40,
+          color: 'white',
+        },
         headerStyle: {
           backgroundColor: 'rgba(74, 195, 180, 1)',
         },
-        headerTitle: (
-          <SearchBar
-            round
-            lightTheme
-            containerStyle={{backgroundColor: 'rgba(74, 195, 180, 1)', width: Dimensions.get('window').width - 75}}
-            inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40,}}
-            inputStyle={{color: 'white',}}
-            underlineColorAndroid='transparent'
-            placeholder="Nhập tên bác sĩ..."
-            searchIcon={{color: 'white',}}
-            placeholderTextColor='rgba(255,255,255,0.5)'
-            onChangeText={navigation.getParam('updateSearch')}
-            value={navigation.getParam('search')}
-          />
-        ),
-        headerRight: (
-          <TouchableOpacity
-            style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 10,}}
-            onPress={() => { alert("Thêm thành công"); }}
-          >
-            <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
-          </TouchableOpacity>
-        )
+        // headerTitle: (
+        //   <SearchBar
+        //     round
+        //     lightTheme
+        //     containerStyle={{backgroundColor: 'rgba(74, 195, 180, 1)', width: Dimensions.get('window').width - 75}}
+        //     inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40,}}
+        //     inputStyle={{color: 'white',}}
+        //     underlineColorAndroid='transparent'
+        //     placeholder="Nhập tên bác sĩ..."
+        //     searchIcon={{color: 'white',}}
+        //     placeholderTextColor='rgba(255,255,255,0.5)'
+        //     onChangeText={navigation.getParam('updateSearch')}
+        //     value={navigation.getParam('search')}
+        //   />
+        // ),
+        // headerRight: (
+        //   <TouchableOpacity
+        //     style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 10,}}
+        //     onPress={() => { alert("Thêm thành công"); }}
+        //   >
+        //     <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
+        //   </TouchableOpacity>
+        // )
       }
     };
   
@@ -390,29 +332,13 @@ export default class ListDoctors extends Component {
     keyExtractor = (item, index) => index.toString()
 
     //Hiển thị phân loại bác sĩ theo lĩnh vực
-    checkSwitch = ({section}) => {
+    setSectionHeader = ({section}) => {
       switch(section.title) {
    
         case "Tiểu Đường":
-          return(
-            <View style={styles.sectionTitleBorderBottom}>
-              <Image
-                source={require('../images/Diabetes.png')} 
-                style={styles.customImg}
-              />
-              <Text style={styles.sectionTitle}>{section.title}</Text>
-            </View>);
-        
+          return(<SectionHeader iconSectionHeader={require('../images/Diabetes.png')} sectionTitle={section.title} />);
         case 'Huyết Áp':
-          return(
-            <View style={styles.sectionTitleBorderBottom}>
-              <Image
-                source={require('../images/BloodPressure.png')} 
-                style={styles.customImg}
-              />
-              <Text style={styles.sectionTitle}>{section.title}</Text>
-            </View>);
-
+          return(<SectionHeader iconSectionHeader={require('../images/BloodPressure.png')} sectionTitle={section.title} />);
         default:
           break;
       
@@ -420,45 +346,45 @@ export default class ListDoctors extends Component {
    
     }
 
-    //Cập nhật từ khóa trong Search-bar
-    //và tiến hành search trong danh sách bác sĩ
-    updateSearch = search => {
-      this.setState({
-        search: search,
-      })
-      this.props.navigation.setParams({search: search});    
+    // //Cập nhật từ khóa trong Search-bar
+    // //và tiến hành search trong danh sách bác sĩ
+    // updateSearch = search => {
+    //   this.setState({
+    //     search: search,
+    //   })
+    //   this.props.navigation.setParams({search: search});    
 
-      var newData = [];
+    //   var newData = [];
 
-      for(let i=0; i < this.arrayholder.length; i++){
-        const result = this.arrayholder[i].data.filter(user => {
-          const userData = user.name.toUpperCase();
-          const textData = search.toUpperCase();
-          return userData.indexOf(textData) > -1;
-        });
-        if (result.length > 0)
-            newData = [...newData,...result];
-      }
+    //   for(let i=0; i < this.arrayholder.length; i++){
+    //     const result = this.arrayholder[i].data.filter(user => {
+    //       const userData = user.name.toUpperCase();
+    //       const textData = search.toUpperCase();
+    //       return userData.indexOf(textData) > -1;
+    //     });
+    //     if (result.length > 0)
+    //         newData = [...newData,...result];
+    //   }
 
-      let tempObject_Diabetes = { data: [], title: "Tiểu Đường"},
-          tempObject_BloodPressure = { data: [], title: "Huyết Áp"};
-      for (let i=0; i<newData.length; i++) {
-        if (newData[i].type=='Diabetes'){
-          tempObject_Diabetes.data.push(newData[i]);
-        }
-        else {
-          tempObject_BloodPressure.data.push(newData[i]);
-        }
-      }
+    //   let tempObject_Diabetes = { data: [], title: "Tiểu Đường"},
+    //       tempObject_BloodPressure = { data: [], title: "Huyết Áp"};
+    //   for (let i=0; i<newData.length; i++) {
+    //     if (newData[i].type=='Diabetes'){
+    //       tempObject_Diabetes.data.push(newData[i]);
+    //     }
+    //     else {
+    //       tempObject_BloodPressure.data.push(newData[i]);
+    //     }
+    //   }
 
-      let tempArray = [];
-      tempArray.push(tempObject_Diabetes);
-      tempArray.push(tempObject_BloodPressure);
+    //   let tempArray = [];
+    //   tempArray.push(tempObject_Diabetes);
+    //   tempArray.push(tempObject_BloodPressure);
       
-      this.setState({
-        sectionListData: tempArray,
-      });
-    }
+    //   this.setState({
+    //     sectionListData: tempArray,
+    //   });
+    // }
 
     // Reload danh sách bác sĩ
     refreshSectionList = (deletedKey) => {
@@ -480,7 +406,7 @@ export default class ListDoctors extends Component {
                     )
                   }
                 }
-                renderSectionHeader={this.checkSwitch}
+                renderSectionHeader={this.setSectionHeader}
                 sections={this.state.sectionListData}
                 keyExtractor={this.keyExtractor}
             ></SectionList>
@@ -499,22 +425,14 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         fontWeight: 'bold',
-        fontSize: 30,
-        margin: 10,
+        fontSize: 25,
         color: 'gray',
-    },
-    sectionTitleBorderBottom: {
-        flex: 1,
-        flexDirection: 'row',
-        borderBottomWidth: 0.5,
-        borderBottomColor: 'grey',
-        marginHorizontal: 30,
-        alignItems: 'center'
+        marginLeft: -5
     },
     customImg: {
         borderRadius: 250,
         backgroundColor: 'transparent',
-        width: 35,
-        height: 35,
+        width: 30,
+        height: 30,
     },
 });
