@@ -4,6 +4,7 @@ import { TabNavigator } from "react-navigation";
 import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator } from "react-navigation";
 import Home from "./Home";
 import Chart from "./Chart";
+import User_Family from './User_Family';
 import ListDoctors from "./ListDoctors";
 import DoctorProfile from './DoctorProfile';
 import ChatScreen from './ChatScreen';
@@ -68,6 +69,19 @@ const ChartStack = createStackNavigator({
   headerBackTitleVisible: true,
 });
 
+const User_FamilyStack = createStackNavigator({
+  User_Family: {
+    screen: User_Family,
+
+  },
+  // DoctorProfile: {
+  //   screen: DoctorProfile,
+  // },
+  }, {
+    initialRouteName: 'User_Family',
+    // headerBackTitleVisible: true,
+});
+
 const ListDoctorsStack = createStackNavigator({
   ListDoctors: {
     screen: ListDoctors,
@@ -111,7 +125,7 @@ const AppNavigator = createMaterialTopTabNavigator({
           },
       },
       Tab2: {
-          screen: ChartStack,
+          screen: User_FamilyStack,
           navigationOptions: {
               tabBarLabel: "Người thân",
               tabBarIcon: ({ tintColor }) => (

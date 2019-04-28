@@ -137,6 +137,30 @@ var dataSource = [
             avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
             type: 'Huyết Áp',
           },
+          { 
+            key: '00011',
+            name: 'Tăng Tịnh Thy',
+            gender: 'Nữ',
+            birthday: '10/12/1985',
+            id_card: '272466984',
+            address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+            number_phone: '0935412084',
+            email: 'nta85@gmail.com',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
+            type: 'Huyết Áp',
+          },
+          { 
+            key: '00012',
+            name: 'Ngô Tất Tố',
+            gender: 'Nam',
+            birthday: '10/12/1985',
+            id_card: '272466984',
+            address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+            number_phone: '0935412084',
+            email: 'nta85@gmail.com',
+            avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
+            type: 'Huyết Áp',
+          },
       ],
       title: 'Huyết Áp',
   },
@@ -409,6 +433,7 @@ export default class ListDoctors extends Component {
                 renderSectionHeader={this.setSectionHeader}
                 sections={this.state.sectionListData}
                 keyExtractor={this.keyExtractor}
+                stickySectionHeadersEnabled={true}
             ></SectionList>
         </View>
       );
