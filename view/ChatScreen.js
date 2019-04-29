@@ -109,7 +109,7 @@ export default class ChatScreen extends Component {
           // color: 'white',
         },
         headerStyle: {
-          backgroundColor: 'rgba(54, 175, 160, 1)',
+          backgroundColor: 'rgba(74, 195, 180, 1)',
         },
         headerTintColor: 'white',
       };
