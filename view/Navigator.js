@@ -17,8 +17,6 @@ import RegisterChooseTypePage from "./RegisterChooseTypePage";
 import RegisterInformationPage from "./RegisterInformationPage";
 import AddDiabetes from "./AddDiabetes";
 import AddValuePage from "./AddValuePage";
-import ChangePassword from "./ChangePassword";
-import ChangeInfomation from "./ChangeInfomation";
 
 const HomeStack = createStackNavigator({
   Home: {screen: Home,
@@ -117,13 +115,8 @@ const ListProfileStack = createStackNavigator({
       header: null,
     }
   },
-  ChangePassword:{
-    screen:ChangePassword,
   },
-  ChangeInfomation: {
-    screen: ChangeInfomation,
-  },
-  },{ 
+  { 
     initialRouteName: 'Profile',
 });
 
