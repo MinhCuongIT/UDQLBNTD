@@ -281,7 +281,9 @@ class SectionHeader extends PureComponent {
             <Ionicons name="md-add-circle"
               size={30}
               color='rgba(74, 195, 180, 1)'
-              onPress={() => {Alert.alert("Thêm thành công");}}
+              onPress={() => {
+                this.props.navigation.navigate('AddDoctor');
+              }}
               />
           }
         />
@@ -360,9 +362,9 @@ export default class ListDoctors extends Component {
       switch(section.title) {
    
         case "Tiểu Đường":
-          return(<SectionHeader iconSectionHeader={require('../images/Diabetes.png')} sectionTitle={section.title} />);
+          return(<SectionHeader iconSectionHeader={require('../images/Diabetes.png')} sectionTitle={section.title} navigation={this.props.navigation} />);
         case 'Huyết Áp':
-          return(<SectionHeader iconSectionHeader={require('../images/BloodPressure.png')} sectionTitle={section.title} />);
+          return(<SectionHeader iconSectionHeader={require('../images/BloodPressure.png')} sectionTitle={section.title} navigation={this.props.navigation} />);
         default:
           break;
       

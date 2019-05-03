@@ -7,6 +7,7 @@ import Chart from "./Chart";
 import User_Family from './User_Family';
 import ListDoctors from "./ListDoctors";
 import DoctorProfile from './DoctorProfile';
+import AddDoctor from './AddDoctor';
 import ChatScreen from './ChatScreen';
 import Profile from "./Profile";
 import HomeDetails from "./HomeDetails";
@@ -96,11 +97,16 @@ const User_FamilyStack = createStackNavigator({
 const ListDoctorsStack = createStackNavigator({
   ListDoctors: {
     screen: ListDoctors,
-
   },
   DoctorProfile: {
     screen: DoctorProfile,
     // navigationOptions: { tabBarVisible: false,  }
+  },
+  AddDoctor: {
+    screen: AddDoctor,
+  },
+  Chat: {
+    screen: ChatScreen,
   },
   }, {
     initialRouteName: 'ListDoctors',
