@@ -8,13 +8,15 @@
  */
 
 import React, { Component, PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, ScrollView, Alert } from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, ScrollView, Alert, TouchableOpacity } from 'react-native';
 
 import { Button, Avatar, Image, ListItem, Divider, Card, Icon, Overlay, Input, CheckBox } from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ApiServices from '../services/api';
 
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 
 //Chiều dài và chiều rộng của màn hình
@@ -26,7 +28,7 @@ var dataSource = {
   thongTinChung: {
     anhBia: require("../images/hinh_bien.jpg"),
     avatar: require("../images/MyAvt.jpg"),
-    hoTen: "Trần Minh Cường",
+    hoTen: "",
     sdt: "0975206769",
     cmnd: "123456789",
     gioiTinh: "Nam",
@@ -57,6 +59,7 @@ class CardItem extends PureComponent {
       isVisibleNhomMauScreen: false,
       isVisibleTinhTrangScreen: false,
       isVisibleEmailScreen: false,
+      isMale: true, //set lại tùy 
     }
   }
 
@@ -115,10 +118,13 @@ class CardItem extends PureComponent {
             }}>
               <CheckBox
                 title="Nam"
-                checked
+                checked = {this.state.isMale}
+                onPress={() => {this.setState({isMale: true})}}
               />
               <CheckBox
                 title="Nữ"
+                checked={!this.state.isMale}
+                onPress={() => { this.setState({ isMale: false }) }}
               />
             </View>
             <Button
@@ -330,8 +336,8 @@ class MyListCards extends PureComponent {
         height = {250}>
           <ScrollView>
             <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Đổi mật khẩu</Text>
-            <Input placeholder='Nhập mật khẩu cũ'></Input>
-            <Input placeholder='Nhập mật khẩu mới'></Input>
+            <Input placeholder='Nhập mật khẩu cũ' secureTextEntry={true}></Input>
+            <Input placeholder='Nhập mật khẩu mới' secureTextEntry = {true}></Input>
             <View style={{
               flex: 1,
               flexDirection: 'row',
@@ -397,19 +403,22 @@ class MyListCards extends PureComponent {
             <MaterialCommunityIcons name='textbox-password' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
           }></ListItem>
         {/* Dang xuat */}
-        <ListItem containerStyle={{ marginLeft: 20 }}
+        <TouchableOpacity onPress={() => { alert("Thực hiện đăng xuất khỏi hệ thống!") }}>
+          <ListItem containerStyle={{ marginLeft: 20 }}
 
           title={
-            <View >
+              
               <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', }}>Đăng xuất</Text>
-            </View>}
-          
+          }
           leftIcon={
             <MaterialCommunityIcons name='logout' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
           }
           
-          onPress = {()=>{alert("Thực hiện đăng xuất khỏi hệ thống!")}}
+          // onPress = {()=>{alert("Thực hiện đăng xuất khỏi hệ thống!")}}
           ></ListItem>
+
+        </TouchableOpacity>
+
       </View>
     )
   }
@@ -420,25 +429,98 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      listData: null,
+      listData: {
+        thongTinChung: {
+          anhBia: require("../images/hinh_bien.jpg"),
+          avatar: require("../images/MyAvt.jpg"),
+          hoTen: "",
+          sdt: "0975206769",
+          cmnd: "123456789",
+          gioiTinh: "Nam",
+          ngaySinh: "26/12/1997",
+          diaChi: "Long Hà, Bình Phước",
+          ngheNghiep: "Sinh viên",
+          nhomMau: "AB",
+          tinhTrang: "Bình thường",
+        },
+        lienHe: {
+          email: "minhcuongit97@gmail.com",
+        },
+        taiKhoan: {
+          username: "minhcuong",
+          password: "12345",
+        }
+      },
+
      };
+
+     this.apiServices = ApiServices();
   }
 
-  componentWillMount() {
-    this.setState({
-      listData: dataSource,
-    })
+  componentDidMount() {
+    var info = {
+      MaBenhNhan: '0975206769',
+      Password: '12345'
+    }
+    this.apiServices.getBenhNhanInfo(info)
+      .then((result) => {
+        if (result !== null) {
+          // alert("Doi mat khau thanh cong!");
+          let NgaySinhT = new Date(result.NgaySinh);
+
+          this.setState({
+            listData: {
+              thongTinChung: {
+                anhBia: require("../images/hinh_bien.jpg"),
+                avatar: require("../images/MyAvt.jpg"),
+                hoTen: result.HoTen,
+                sdt: result.MaBenhNhan,
+                cmnd: result.CMND,
+                gioiTinh: result.GioiTinh.data[0]===1?'Nam':'Nữ',
+                ngaySinh: NgaySinhT.getDate() + '/' + (NgaySinhT.getMonth()+1) + '/'+ NgaySinhT.getFullYear(),
+                diaChi: result.DiaChi,
+                ngheNghiep: result.NgheNghiep,
+                nhomMau: result.NhomMau,
+                tinhTrang: result.TinhTrangBenh,
+              },
+              lienHe: {
+                email: result.Email,
+              },
+              taiKhoan: {
+                username: "minhcuong",
+                password: "12345",
+              }
+            }
+          })
+        }
+        else alert("That bai!");
+      })
   }
 
-  handleDoiMatKhau = () => {
-    this.props.navigation.navigate('ChangePassword')
-  };
-  handleDoiThongTin = () => {
-    this.props.navigation.navigate('ChangeInfomation')
-  };
 
   handleEditButtonAvatar = () => {
-    alert("Đổi ảnh đại diện");
+    var info = {
+      MaBenhNhan: '0982860738',
+      Password:'12345'
+    }
+    this.apiServices.getBenhNhanInfo(info)
+    .then((result) => {
+      if (result !== null){
+        // alert("Doi mat khau thanh cong!");
+        this.setState({
+          listData: {
+            ...this.state.listData,
+            thongTinChung: {
+              ...this.state.listData.thongTinChung,
+              hoTen: result.HoTen
+            }
+          }
+        })
+
+        alert(this.state.listData.thongTinChung.hoTen);
+      }
+      else alert("That bai!");
+    })
   }
   handleXemAvatar = () => {
     alert("Xem đại diện");
