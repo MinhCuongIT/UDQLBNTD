@@ -8,9 +8,20 @@
  */
 
 import React, {Component} from 'react';
-import {Dimensions, Platform, StyleSheet, Text, TextInput, View, Alert, TouchableOpacity} from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Alert,
+  TouchableOpacity,
+  AsyncStorage
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
+import ApiService from "../services/api";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -28,7 +39,11 @@ export default class AddDiabetes extends Component {
     this.state = {
       isDateTimePickerVisible: false,
       date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      diabeteValue: '',
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
     };
+
+    this.apiService = ApiService()
   }
 
   showDateTimePicker = () => {
@@ -43,12 +58,23 @@ export default class AddDiabetes extends Component {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
       date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
     })
     this.hideDateTimePicker();
   };
 
-  handleConfirm = () => {
-    this.props.navigation.navigate('Home')
+  handleConfirm = async () => {
+    const userId = await AsyncStorage.getItem('UserId');
+    this.apiService.addHealthValue({
+      MaBenhNhan: userId,
+      Loai: 1,
+      ChiSo: this.state.diabeteValue,
+      NgayNhap: this.state.dateValue,
+    }).then((result) => {
+      if (result !== null){
+        this.props.navigation.navigate('Home')
+      }
+    })
   }
 
   render() {
@@ -73,16 +99,17 @@ export default class AddDiabetes extends Component {
           />
         </View>
         <View style={{marginTop:20}}>
-          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Chỉ số "Đường huyết"</Text>
+          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Chỉ số "Đường huyết" (mmol/L)</Text>
           <TextInput
             style={styles.inputText}
             placeholder={'8.5'}
             placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
             underlineColorAndroid={'transparent'}
-            keyboardType='phone-pad'
-            maxLength={7}
+            keyboardType='numeric'
+            maxLength={5}
+            value={this.state.diabeteValue}
+            onChangeText={(diabeteValue) => this.setState({diabeteValue})}
           />
-          <Text style={styles.inputUnit}>mmol/L</Text>
         </View>
         <TouchableOpacity
           onPress={() => this.handleConfirm()}
@@ -121,11 +148,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 0.2,
     fontSize: 16,
-    paddingRight: 80,
+    paddingLeft: 20,
     // backgroundColor: 'rgba(0, 0, 0, 0.15)',
     color: 'rgba(0, 0, 0, 1)',
     marginHorizontal: 25,
-    textAlign: 'right',
+    // textAlign: 'right',
   },
   dateText: {
     width: Dimensions.get('window').width - 55,
@@ -134,10 +161,10 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     fontSize: 16,
     color: 'rgba(0, 0, 0, 1)',
-    paddingRight: 80,
+    paddingLeft: 20,
     textAlignVertical: 'center',
     marginHorizontal: 25,
-    textAlign: 'right',
+    // textAlign: 'right',
   },
   inputIcon: {
     position: 'absolute',

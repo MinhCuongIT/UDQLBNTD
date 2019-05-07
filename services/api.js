@@ -4,12 +4,13 @@ import axiosGet, { axiosPost } from './axios-fetch'
 export default () => {
   let { baseURL } = config
   let services = {
-    login: (public_key) => {
-      return axiosPost(baseURL + 'login', {
-        public_key: public_key
+    login: (info) => {
+      return axiosPost(baseURL + 'patients/log-in', {
+        MaBenhNhan: info.MaBenhNhan,
+        Password: info.Password,
       }).then((res) => {
         if(res.data.status === 'success'){
-          return res.data.info_user
+          return res.data.patient
         }
         return null
       })
@@ -22,22 +23,13 @@ export default () => {
         MaBenhNhan: info.MaBenhNhan,
         Password: info.Password,
         HoTen: info.HoTen,
-        GioiTinh: null,
-        NgaySinh: null,
-        CMND: null,
-        DiaChi: null,
-        Email: null,
-        NgheNghiep: null,
-        NhomMau: null,
-        DiUngThuoc: null,
-        TinhTrangBenh: null,
+        // GioiTinh: 1,
       }).then((res) => {
         if(res.data.status === 'success'){
           return res.data
         }
         return null})
     },
-
     getBenhNhanInfo: (info) => {
       return axiosGet(baseURL + `patients/find-patient-by-id?MaBenhNhan=${info.MaBenhNhan}`)
         .then((res) => {
@@ -61,8 +53,30 @@ export default () => {
         }
         return null
       })
-      
-    }
+    },
+    addHealthValue: (info) => {
+      return axiosPost(baseURL + `patients/add-my-statistic`, {
+        MaBenhNhan: info.MaBenhNhan,
+        Loai: info.Loai,
+        ChiSo: info.ChiSo,
+        NgayNhap: info.NgayNhap,
+        // GioiTinh: 1,
+      }).then((res) => {
+        if(res.data.status === 'success'){
+          return res.data.my_statistic
+        }
+        return null})
+    },
+    getHealthValue: (info) => {
+      return axiosGet(baseURL + `statistics?MaBenhNhan=${info.MaBenhNhan}&Loai=${info.Loai}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.statistics
+          }
+          return null
+        })
+    },
   }
+
   return services
 }

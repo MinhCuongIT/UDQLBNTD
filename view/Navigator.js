@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { TabNavigator } from "react-navigation";
-import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator } from "react-navigation";
+import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator, createSwitchNavigator } from "react-navigation";
+import AuthLoadingScreen from "./AuthLoadingScreen";
 import Home from "./Home";
 import Chart from "./Chart";
 import User_Family from './User_Family';
@@ -9,6 +10,7 @@ import ListDoctors from "./ListDoctors";
 import DoctorProfile from './DoctorProfile';
 import AddDoctor from './AddDoctor';
 import ChatScreen from './ChatScreen';
+import Message from "./Message";
 import Profile from "./Profile";
 import HomeDetails from "./HomeDetails";
 import ChartHealthDetail from "./ChartHealthDetail";
@@ -247,7 +249,8 @@ const AddValueStack = createStackNavigator({
   headerBackTitleVisible: true,
 });
 
-const MainNavigator = createStackNavigator({
+const MainNavigator = createSwitchNavigator({
+  AuthLoading: AuthLoadingScreen,
   LoginStack: {screen: LoginStack,
     navigationOptions:{
       header:null,
@@ -260,6 +263,6 @@ const MainNavigator = createStackNavigator({
     },
   }
 }, {
-  initialRouteName: 'LoginStack',
+  initialRouteName: 'AuthLoading',
 });
-export default createAppContainer(AppNavigator);
+export default createAppContainer(MainNavigator);

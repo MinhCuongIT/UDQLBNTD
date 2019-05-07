@@ -10,11 +10,12 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet,
   Text, View, Image, FlatList, Dimensions, ImageBackground, TouchableOpacity,
-  Alert, SectionList, ScrollView} from 'react-native';
+  Alert, SectionList, ScrollView, AsyncStorage} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Avatar, Badge, withBadge} from 'react-native-elements';
 import ActionButton from 'react-native-circular-action-menu';
+import ApiService from "../services/api";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -71,6 +72,7 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
+      userName: '',
       isMore: true,
       page: 1,
       loading: false,
@@ -78,44 +80,94 @@ export default class Home extends Component {
       data: [],
       numberNoti: 1,
     };
+
+    this.apiService = ApiService()
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     this.loadItems();
     this.props.navigation.setParams({ numberNoti: this.state.numberNoti });
+    const userId = await AsyncStorage.getItem('UserId');
+    this.apiService.getBenhNhanInfo({
+      MaBenhNhan: userId,
+    }).then((result) => {
+      if (result !== null){
+        this.setState({
+          userName: result[0].HoTen
+        })
+      }
+    })
   }
 
-  loadItems(){
+  async loadItems(){
+    const userId = await AsyncStorage.getItem('UserId');
     let dataT = [];
     for (let i = 0; i < 2; i++) {
-      dataT.push({
-        data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-        datasets: i===0
-          ? [{
-            data: [ 20, 45, 28, 80, 99, 43 ],
-            color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-            strokeWidth: 2
-            }]
-          :
-          [{
-            data: [ 20, 45, 28, 80, 99, 43 ],
-            color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-            strokeWidth: 2
-          }, {
-            data: [ 30, 65, 38, 90, 109, 53 ],
-            color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-            strokeWidth: 2
-          }]
-        },
-        type: i===0?'ĐƯỜNG HUYẾT (mmol/L)':'HUYẾT ÁP (mmHg)'
+      this.apiService.getHealthValue({
+        MaBenhNhan: userId,
+        Loai: i + 1,
+      }).then((result) => {
+        if (result !== null && result.length > 0) {
+          let getData = {
+            data: [],
+            color: (opacity = 1) => `rgba(70, 200, 120, ${opacity})`,
+            strokeWidth: 6
+          }
+          let valueData = {
+            data: {
+              labels: [],
+              datasets: result[0].Loai === 1
+                ? // Đường huyết
+                [
+                  {
+                    data: [ ],
+                    color: (opacity = 0.7) => `rgba(255, 0, 0, ${opacity})`,
+                    strokeWidth: 2
+                  },
+                  {
+                    data: [ ],
+                    color: (opacity = 1) => `rgba(240, 180, 00, ${opacity})`,
+                    strokeWidth: 2
+                  },
+                ]
+                : // Huyết áp
+                [
+                  {
+                    data: [20, 45, 28, 80, 99, 43],
+                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                    strokeWidth: 2
+                  }, {
+                    data: [30, 65, 38, 90, 109, 53],
+                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                    strokeWidth: 2
+                  }
+                ]
+            },
+            type: result[0].Loai === 1
+              ? 'ĐƯỜNG HUYẾT (mmol/L)'
+              : 'HUYẾT ÁP (mmHg)'
+          }
+
+          const highDomain = 10.2
+          const lowDomain = 3.8
+          for (let i = (result.length - 1); i >= 0; i--) {
+            valueData.data.datasets[0].data.push(highDomain);
+            valueData.data.datasets[1].data.push(lowDomain);
+            getData.data.push(result[i].ChiSo)
+            // alert(JSON.stringify(result[i].ChiSo))
+            const getDate = new Date(result[i].NgayNhap)
+            valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
+          }
+          valueData.data.datasets.push(getData);
+          dataT.push(valueData);
+          this.setState(
+            {
+              data: [...this.state.data,...dataT],
+            }
+          );
+        }
       })
     }
-    this.setState(
-      {
-        data: [...this.state.data,...dataT],
-      }
-    );
   }
 
   handleLoadMore = () => {
@@ -147,7 +199,16 @@ export default class Home extends Component {
 
       return (
         <View key={item.type}>
-          <Text style={{margin: 10, marginTop: 20, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
+          <View style={{flexDirection: 'row', margin: 10, marginTop: 20, }}>
+            <Image
+              source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'
+                ? require('../images/Diabetes.png')
+                : require('../images/BloodPressure.png')}
+              style={styles.chartTitleIcon}
+            />
+            <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
+          </View>
+
           <TouchableOpacity
             onPress={() => {this.props.navigation.navigate('HomeDetails')}}
           >
@@ -157,17 +218,18 @@ export default class Home extends Component {
               height={220}
               chartConfig={chartConfig}
               onDataPointClick={(item) => {Alert.alert(item.value.toString())}}
+              withShadow={false}
               bezier
             />
           </TouchableOpacity>
           <View style={{marginLeft: 20, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={item.type==='ĐƯỜNG HUYẾT (mmol/L)'?styles.errorStatus:styles.normalStatus}></View>
+            {/*<View style={item.type==='ĐƯỜNG HUYẾT (mmol/L)'?styles.errorStatus:styles.normalStatus}></View>*/}
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('HomeDetails')}
+              onPress={async () => {await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')}}
               style={styles.btnMess}
             >
               <Text style={{color: 'white', fontSize: 17}}>
-                Nhắn tin
+                Liên hệ bác sĩ
               </Text>
             </TouchableOpacity>
           </View>
@@ -178,7 +240,7 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.content}>
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+          <View style={{flexDirection: 'row', }}>
             <Avatar
               containerStyle={{margin: 10, marginLeft: 40}}
               size={120}
@@ -189,7 +251,7 @@ export default class Home extends Component {
               }}
             />
             <View style={{justifyContent: 'center'}}>
-              <Text style={{padding: 20, fontSize: 25, fontWeight: 'bold'}}> Nguyễn Trần Lê Lý </Text>
+              <Text style={{padding: 20, fontSize: 25, fontWeight: 'bold', margin: 10}}> {this.state.userName} </Text>
             </View>
           </View>
           {listChart}
@@ -291,5 +353,9 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     // color: 'white',
+  },
+  chartTitleIcon: {
+    height: 30,
+    width: 30,
   },
 });

@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import ApiService from '../services/api';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -149,6 +150,8 @@ export default class RegisterInformationPage extends Component {
     this.handleCheckNameValue = this.handleCheckNameValue.bind(this)
     this.handleCheckPassValue = this.handleCheckPassValue.bind(this)
     this.handleCheckRePassValue = this.handleCheckRePassValue.bind(this)
+
+    this.apiService = ApiService()
   }
 
   handleChangeNameValue = (text) => {
@@ -226,16 +229,24 @@ export default class RegisterInformationPage extends Component {
   }
   registerAccount = () => {
     // this.props.navigation.navigate('Login')
-    console.log('hello world')
-    this.setState({
-      showAlert: true
-    });
+    // this.setState({
+    //   showAlert: true
+    // });
+
+    // alert(this.props.navigation.state.params.acc.phone.national_number)
+    this.apiService.register({
+      MaBenhNhan: this.props.navigation.state.params.acc.phone.national_number,
+      HoTen: this.state.nameValue,
+      Password: this.state.passValue,
+    }).then((data) => {alert(JSON.stringify(data))});
   }
 
   hideAlert = () => {
     this.setState({
       showAlert: false
     });
+    // this.props.navigation.navigate('Login')
+
   }
 
   render() {
@@ -262,15 +273,15 @@ export default class RegisterInformationPage extends Component {
           onValidate={this.handleCheckPassValue}
           isHidePass={true}
         />
-        <FloatingTextInput
-          label={'Nhập lại mật khẩu'}
-          valueText={this.state.rePassValue}
-          messageError={this.state.errorMessage.rePass}
-          icon={'lock'}
-          onChange={this.handleChangeRePassValue}
-          onValidate={this.handleCheckRePassValue}
-          isHidePass={true}
-        />
+        {/*<FloatingTextInput*/}
+          {/*label={'Nhập lại mật khẩu'}*/}
+          {/*valueText={this.state.rePassValue}*/}
+          {/*messageError={this.state.errorMessage.rePass}*/}
+          {/*icon={'lock'}*/}
+          {/*onChange={this.handleChangeRePassValue}*/}
+          {/*onValidate={this.handleCheckRePassValue}*/}
+          {/*isHidePass={true}*/}
+        {/*/>*/}
         <TouchableOpacity
           onPress={() => this.registerAccount()}
           style={styles.btnRegister}
@@ -281,18 +292,15 @@ export default class RegisterInformationPage extends Component {
         </TouchableOpacity>
         <AwesomeAlert
           show={this.state.showAlert}
-          showProgress={true}
-          title="AwesomeAlert"
-          message="I have a message for you!"
-          closeOnTouchOutside={true}
+          message="Bạn đã đăng kí thành công!"
+          closeOnTouchOutside={false}
           closeOnHardwareBackPress={false}
           showCancelButton={false}
           showConfirmButton={true}
-          confirmText="comfirm"
-          confirmButtonColor="green"
+          confirmText="Đăng nhập"
+          confirmButtonColor="rgba(54, 175, 160, 1)"
           confirmButtonTextStyle={{fontSize:30}}
           messageStyle={{fontSize: 40}}
-          titleStyle={{backgroundColor: 'green'}}
           onConfirmPressed={() => {
             this.hideAlert();
           }}

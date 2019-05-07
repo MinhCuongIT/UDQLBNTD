@@ -803,6 +803,7 @@ const styles = StyleSheet.create({
   },
   bodyContent: {
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 15,
   },
