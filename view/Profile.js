@@ -113,11 +113,12 @@ class CardItem extends PureComponent {
       birthday: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
       
     })
-    alert(this.state.date);
+    // alert(this.state.birthday);
     this.hideDateTimePicker();
+    this.props.onUpdateBirthday(this.state.birthday);
   };
   handleUpdateGen = () =>{
-    this.setState({ isVisibleGioiTinhScreen: false });
+    this.setState({ isVisibleGioiTinhScreen: false });  //Bấm nút thì tắt màn hình đi
     this.props.onUpdateGen(this.state.isMale? "Nam" : "Nữ");
 
   }
@@ -179,8 +180,6 @@ class CardItem extends PureComponent {
           </ScrollView>
         </Overlay>
 
-        
-
         <Overlay isVisible={this.state.isVisibleDiaChiScreen}
           borderRadius={10}
           height={200}
@@ -193,7 +192,7 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='CMND'>{this.props.itemDetail}</Input>
+              <Input placeholder='Địa chỉ'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
@@ -216,7 +215,7 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='CMND'>{this.props.itemDetail}</Input>
+              <Input placeholder='Nghề nghiệp'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
@@ -239,7 +238,7 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='CMND'>{this.props.itemDetail}</Input>
+              <Input placeholder='Nhóm máu'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
@@ -249,7 +248,6 @@ class CardItem extends PureComponent {
             />
           </ScrollView>
         </Overlay>
-
 
         <Overlay isVisible={this.state.isVisibleEmailScreen}
           borderRadius={10}
@@ -263,7 +261,7 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='CMND'>{this.props.itemDetail}</Input>
+              <Input placeholder='Email'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
@@ -359,7 +357,7 @@ class MyListCards extends PureComponent {
           <Divider />
           <CardItem id={1} onUpdateGen = {this.props.onUpdateGenParent} itemDetail={this.state.profile.thongTinChung.gioiTinh} itemTitle='Giới tính' />
           <CardItem id={2} itemDetail={this.state.profile.thongTinChung.cmnd} itemTitle='CMND' />
-          <CardItem id={3} itemDetail={this.state.profile.thongTinChung.ngaySinh  } itemTitle='Ngày sinh' />
+          <CardItem id={3} onUpdateBirthday={this.props.onUpdateBirthdayParent} itemDetail={this.state.profile.thongTinChung.ngaySinh  } itemTitle='Ngày sinh' />
           <CardItem id={4} itemDetail={this.state.profile.thongTinChung.diaChi} itemTitle='Địa chỉ' />
           <CardItem id={5} itemDetail={this.state.profile.thongTinChung.ngheNghiep} itemTitle='Nghề nghiệp' />
           <CardItem id={6} itemDetail={this.state.profile.thongTinChung.nhomMau} itemTitle='Nhóm máu' />
@@ -444,9 +442,23 @@ export default class Profile extends Component {
 
      };
 
-     this.onUpdateGenParent = this.onUpdateGenParent.bind(this);
-     this.apiServices = ApiServices();
+    this.onUpdateGenParent = this.onUpdateGenParent.bind(this);
+    this.onUpdateBirthdayParent = this.onUpdateBirthdayParent.bind(this);
+    this.apiServices = ApiServices();
   }
+
+  onUpdateBirthdayParent = (textDate) => {
+    this.setState({
+      listData:{
+        ...this.state.listData,
+        thongTinChung:{
+          ...this.state.listData.thongTinChung,
+          ngaySinh: textDate
+        }
+      }
+    })
+  }
+  
   onUpdateGenParent = (sex) => {
     this.setState({
       listData: {
@@ -539,6 +551,11 @@ export default class Profile extends Component {
           profile={this.state.listData} 
           showDialogChangePassword = {this.state.isVisible} 
           onUpdateGenParent={this.onUpdateGenParent}
+          onUpdateBirthdayParent = {this.onUpdateBirthdayParent}
+
+
+
+
         />
       </ScrollView>
     );
