@@ -10,12 +10,13 @@
 import React, { Component, PureComponent } from 'react';
 import { Platform, StyleSheet, Text, View, Dimensions, ScrollView, Alert, TouchableOpacity } from 'react-native';
 
-import { Button, Avatar, Image, ListItem, Divider, Card, Icon, Overlay, Input, CheckBox } from 'react-native-elements';
+import { Button, Avatar, Image, ListItem, Divider, Card, Overlay, Input, CheckBox } from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ApiServices from '../services/api';
 
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 
@@ -24,43 +25,29 @@ var _height = Dimensions.get('window').height;
 var _width = Dimensions.get('window').width;
 
 
-var dataSource = {
-  thongTinChung: {
-    anhBia: require("../images/hinh_bien.jpg"),
-    avatar: require("../images/MyAvt.jpg"),
-    hoTen: "",
-    sdt: "0975206769",
-    cmnd: "123456789",
-    gioiTinh: "Nam",
-    ngaySinh: "26/12/1997",
-    diaChi: "Long Hà, Bình Phước",
-    ngheNghiep: "Sinh viên",
-    nhomMau: "AB",
-    tinhTrang: "Bình thường",
-  },
-  lienHe: {
-    email: "minhcuongit97@gmail.com",
-  },
-  taiKhoan: {
-    username: "minhcuong",
-    password: "12345",
-  }
-}
-
 class CardItem extends PureComponent {
   constructor(props) {
     super(props);
     this.state={
       isVisibleGioiTinhScreen:false,
       isVisibleCMNDScreen: false,
-      isVisibleNgaySinhScreen: false,
       isVisibleDiaChiScreen: false,
       isVisibleNgheNghiepScreen: false,
       isVisibleNhomMauScreen: false,
-      isVisibleTinhTrangScreen: false,
       isVisibleEmailScreen: false,
-      isMale: true, //set lại tùy 
+      isMale: false,  //Tam thoi cu khoi la false
+      
+      isDateTimePickerVisible: false, //ẩn hiện datetime picker
+      birthday: '',
+      itemDetail: props.itemDetail,
     }
+    
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      itemDetail: props.itemDetail,
+    });
   }
 
   xuLyChinhSua(type, oldData) {
@@ -68,6 +55,15 @@ class CardItem extends PureComponent {
       //Sua gioi tinh
       case 1:
         this.setState({isVisibleGioiTinhScreen:true});
+        if (oldData == 'Nam') {
+          this.setState({
+            isMale: true
+          })
+        }else{
+          this.setState({
+            isMale: false
+          })
+        }
         break;
         //Sua CMND
       case 2:
@@ -75,7 +71,8 @@ class CardItem extends PureComponent {
         break;
         //Sua ngay sinh
       case 3:
-        this.setState({ isVisibleNgaySinhScreen: true });
+        // Hiển thị màn hình chọn ngày cho phép người dùng chọn ngày mới
+        this.showDateTimePicker();
         break;
         //Sua dia chi
       case 4:
@@ -100,6 +97,29 @@ class CardItem extends PureComponent {
       default:
         break;
     }
+  }
+// Hiển thị dialog chọn ngày
+  showDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true });
+  };
+  //Ẩn dialog chọn ngày
+  hideDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: false });
+  };
+  //Xử lý chọn ngày
+  handleDatePicked = date => {
+    // Alert.alert("A date has been picked: ", date.toString());
+    this.setState({
+      birthday: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      
+    })
+    alert(this.state.date);
+    this.hideDateTimePicker();
+  };
+  handleUpdateGen = () =>{
+    this.setState({ isVisibleGioiTinhScreen: false });
+    this.props.onUpdateGen(this.state.isMale? "Nam" : "Nữ");
+
   }
   render() {
     return (
@@ -131,7 +151,7 @@ class CardItem extends PureComponent {
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf:'center', marginTop:20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
+              onPress={this.handleUpdateGen}
             />
           </ScrollView>
         </Overlay>
@@ -159,35 +179,14 @@ class CardItem extends PureComponent {
           </ScrollView>
         </Overlay>
 
-        <Overlay isVisible={this.state.isVisibleNgaySinhScreen}
-          borderRadius={10}
-          height={200}
-          onBackdropPress={() => { this.setState({ isVisibleNgaySinhScreen: false }) }}>
-          <ScrollView>
-            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Ngày sinh</Text>
-            <View style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginHorizontal: 20,
-            }}>
-              <Input placeholder='CMND'>{this.props.itemDetail}</Input>
-            </View>
-            <Button
-              type='outline'
-              title="Cập nhật"
-              buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
-            />
-          </ScrollView>
-        </Overlay>
+        
 
         <Overlay isVisible={this.state.isVisibleDiaChiScreen}
           borderRadius={10}
           height={200}
           onBackdropPress={() => { this.setState({ isVisibleDiaChiScreen: false }) }}>
           <ScrollView>
-            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Ngày sinh</Text>
+            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Địa chỉ</Text>
             <View style={{
               flex: 1,
               flexDirection: 'row',
@@ -210,7 +209,7 @@ class CardItem extends PureComponent {
           height={200}
           onBackdropPress={() => { this.setState({ isVisibleNgheNghiepScreen: false }) }}>
           <ScrollView>
-            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Ngày sinh</Text>
+            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Nghề nghiệp</Text>
             <View style={{
               flex: 1,
               flexDirection: 'row',
@@ -233,7 +232,7 @@ class CardItem extends PureComponent {
           height={200}
           onBackdropPress={() => { this.setState({ isVisibleNhomMauScreen: false }) }}>
           <ScrollView>
-            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Ngày sinh</Text>
+            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Nhóm máu</Text>
             <View style={{
               flex: 1,
               flexDirection: 'row',
@@ -251,35 +250,13 @@ class CardItem extends PureComponent {
           </ScrollView>
         </Overlay>
 
-        <Overlay isVisible={this.state.isVisibleTinhTrangScreen}
-          borderRadius={10}
-          height={200}
-          onBackdropPress={() => { this.setState({ isVisibleTinhTrangScreen: false }) }}>
-          <ScrollView>
-            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Ngày sinh</Text>
-            <View style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginHorizontal: 20,
-            }}>
-              <Input placeholder='CMND'>{this.props.itemDetail}</Input>
-            </View>
-            <Button
-              type='outline'
-              title="Cập nhật"
-              buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
-            />
-          </ScrollView>
-        </Overlay>
 
         <Overlay isVisible={this.state.isVisibleEmailScreen}
           borderRadius={10}
           height={200}
           onBackdropPress={() => { this.setState({ isVisibleEmailScreen: false }) }}>
           <ScrollView>
-            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Ngày sinh</Text>
+            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Email</Text>
             <View style={{
               flex: 1,
               flexDirection: 'row',
@@ -301,7 +278,7 @@ class CardItem extends PureComponent {
           title={
             <View>
               <Text style={styles.customText}>
-                {this.props.itemDetail}
+                {this.state.itemDetail}
               </Text>
             </View>
           }
@@ -311,6 +288,11 @@ class CardItem extends PureComponent {
 
           }
 
+        />
+        <DateTimePicker
+          isVisible={this.state.isDateTimePickerVisible}
+          onConfirm={this.handleDatePicked}
+          onCancel={this.hideDateTimePicker}
         />
       </View>
 
@@ -325,7 +307,15 @@ class MyListCards extends PureComponent {
     this.state = {
       isVisiblePasswordScreen: false,
       isVisibleGioiTinhScreen: false,
+      profile: props.profile,
     };
+
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      profile: props.profile,
+    });
   }
 
   render() {
@@ -367,13 +357,12 @@ class MyListCards extends PureComponent {
           containerStyle={styles.removeCardBorder}
         >
           <Divider />
-          <CardItem id={1} itemDetail={this.props.profile.thongTinChung.gioiTinh} itemTitle='Giới tính' />
-          <CardItem id={2} itemDetail={this.props.profile.thongTinChung.cmnd} itemTitle='CMND' />
-          <CardItem id={3} itemDetail={this.props.profile.thongTinChung.ngaySinh} itemTitle='Ngày sinh' />
-          <CardItem id={4} itemDetail={this.props.profile.thongTinChung.diaChi} itemTitle='Địa chỉ' />
-          <CardItem id={5} itemDetail={this.props.profile.thongTinChung.ngheNghiep} itemTitle='Nghề nghiệp' />
-          <CardItem id={6} itemDetail={this.props.profile.thongTinChung.nhomMau} itemTitle='Nhóm máu' />
-          <CardItem id={7} itemDetail={this.props.profile.thongTinChung.tinhTrang} itemTitle='Tình trạng' />
+          <CardItem id={1} onUpdateGen = {this.props.onUpdateGenParent} itemDetail={this.state.profile.thongTinChung.gioiTinh} itemTitle='Giới tính' />
+          <CardItem id={2} itemDetail={this.state.profile.thongTinChung.cmnd} itemTitle='CMND' />
+          <CardItem id={3} itemDetail={this.state.profile.thongTinChung.ngaySinh  } itemTitle='Ngày sinh' />
+          <CardItem id={4} itemDetail={this.state.profile.thongTinChung.diaChi} itemTitle='Địa chỉ' />
+          <CardItem id={5} itemDetail={this.state.profile.thongTinChung.ngheNghiep} itemTitle='Nghề nghiệp' />
+          <CardItem id={6} itemDetail={this.state.profile.thongTinChung.nhomMau} itemTitle='Nhóm máu' />
         </Card>
         <Card title={
           <View style={styles.customTitle}>
@@ -429,62 +418,78 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = { 
+      //Mo hinh du lieu duoi local
       listData: {
         thongTinChung: {
           anhBia: require("../images/hinh_bien.jpg"),
           avatar: require("../images/MyAvt.jpg"),
           hoTen: "",
-          sdt: "0975206769",
-          cmnd: "123456789",
-          gioiTinh: "Nam",
-          ngaySinh: "26/12/1997",
-          diaChi: "Long Hà, Bình Phước",
-          ngheNghiep: "Sinh viên",
-          nhomMau: "AB",
-          tinhTrang: "Bình thường",
+          sdt: "",
+          cmnd: "",
+          gioiTinh: "",
+          ngaySinh: "",
+          diaChi: "",
+          ngheNghiep: "",
+          nhomMau: "",
+          tinhTrang: "",
         },
         lienHe: {
-          email: "minhcuongit97@gmail.com",
+          email: "",
         },
         taiKhoan: {
-          username: "minhcuong",
-          password: "12345",
+          username: "",
+          password: "",
         }
       },
 
      };
 
+     this.onUpdateGenParent = this.onUpdateGenParent.bind(this);
      this.apiServices = ApiServices();
   }
+  onUpdateGenParent = (sex) => {
+    this.setState({
+      listData: {
+        ...this.state.listData,
+        thongTinChung: {
+          ...this.state.listData.thongTinChung,
+          gioiTinh: sex
+        }
+      }
+    })
+    // alert(this.state.listData.thongTinChung.gioiTinh)
 
+  }
+  //Thuc hien cong viec pull data tu server ve client
   componentDidMount() {
     var info = {
+      // Gia su mot benh nhan co ma benh nhan nhu the nay
       MaBenhNhan: '0975206769',
-      Password: '12345'
+      Password: ''
     }
     this.apiServices.getBenhNhanInfo(info)
       .then((result) => {
         if (result !== null) {
           // alert("Doi mat khau thanh cong!");
-          let NgaySinhT = new Date(result.NgaySinh);
+          var pullResult = result[0];
+          let NgaySinhT = new Date(pullResult.NgaySinh);
 
           this.setState({
             listData: {
               thongTinChung: {
                 anhBia: require("../images/hinh_bien.jpg"),
                 avatar: require("../images/MyAvt.jpg"),
-                hoTen: result.HoTen,
-                sdt: result.MaBenhNhan,
-                cmnd: result.CMND,
-                gioiTinh: result.GioiTinh.data[0]===1?'Nam':'Nữ',
+                hoTen: pullResult.HoTen,
+                sdt: pullResult.MaBenhNhan,
+                cmnd: pullResult.CMND,
+                gioiTinh: pullResult.GioiTinh.data[0]===1?'Nam':'Nữ',
                 ngaySinh: NgaySinhT.getDate() + '/' + (NgaySinhT.getMonth()+1) + '/'+ NgaySinhT.getFullYear(),
-                diaChi: result.DiaChi,
-                ngheNghiep: result.NgheNghiep,
-                nhomMau: result.NhomMau,
-                tinhTrang: result.TinhTrangBenh,
+                diaChi: pullResult.DiaChi,
+                ngheNghiep: pullResult.NgheNghiep,
+                nhomMau: pullResult.NhomMau,
               },
               lienHe: {
-                email: result.Email,
+                email: pullResult.Email,
               },
               taiKhoan: {
                 username: "minhcuong",
@@ -493,43 +498,14 @@ export default class Profile extends Component {
             }
           })
         }
-        else alert("That bai!");
+        else alert("Tải dữ liệu thất bại!");
       })
   }
 
 
   handleEditButtonAvatar = () => {
-    var info = {
-      MaBenhNhan: '0982860738',
-      Password:'12345'
-    }
-    this.apiServices.getBenhNhanInfo(info)
-    .then((result) => {
-      if (result !== null){
-        // alert("Doi mat khau thanh cong!");
-        this.setState({
-          listData: {
-            ...this.state.listData,
-            thongTinChung: {
-              ...this.state.listData.thongTinChung,
-              hoTen: result.HoTen
-            }
-          }
-        })
-
-        alert(this.state.listData.thongTinChung.hoTen);
-      }
-      else alert("That bai!");
-    })
-  }
-  handleXemAvatar = () => {
-    alert("Xem đại diện");
-  }
-  handleXemAnhBia = () => {
-    alert("Xem ảnh bìa");
-  }
-  handleEditButtonAnhBia = () => {
-    alert("Đổi ảnh bìa");
+    //Thuc hien cap nhat anh dai dien xuong DB
+    alert('Cap nhat avt');
   }
 
   render() {
@@ -537,14 +513,13 @@ export default class Profile extends Component {
       <ScrollView>
         
         <View>
+        {/* Anh bia */}
           <Avatar
-            showEditButton activeOpacity={0.7}
+            activeOpacity={0.7}
             containerStyle={styles.background}
             source={this.state.listData.thongTinChung.anhBia}
-
-            onEditPress={this.handleEditButtonAvatar}
-            onLongPress={this.handleXemAnhBia}
           />
+          {/* Anh dai dien */}
           <Avatar
             showEditButton
             rounded
@@ -552,8 +527,7 @@ export default class Profile extends Component {
             activeOpacity={0.7}
             containerStyle={styles.avatar}
             source={this.state.listData.thongTinChung.avatar}
-            onEditPress={this.handleEditButtonAnhBia}
-            onLongPress={this.handleXemAvatar}
+            onEditPress={this.handleEditButtonAvatar}
           />
 
         </View>
@@ -561,7 +535,11 @@ export default class Profile extends Component {
           <Text style={styles.name}>{this.state.listData.thongTinChung.hoTen}</Text>
           <Text style={styles.phone}>{this.state.listData.thongTinChung.sdt}</Text>
         </View>
-        <MyListCards profile={this.state.listData} showDialogChangePassword = {this.state.isVisible} />
+        <MyListCards 
+          profile={this.state.listData} 
+          showDialogChangePassword = {this.state.isVisible} 
+          onUpdateGenParent={this.onUpdateGenParent}
+        />
       </ScrollView>
     );
   }
@@ -686,5 +664,11 @@ const styles = StyleSheet.create({
   phone: {
     fontSize: 16,
     color: "#00BFFF",
+  },
+  // Datetime
+  btnCalendar: {
+    position: 'absolute',
+    top: 33,
+    right: 50,
   },
 });

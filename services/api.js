@@ -44,7 +44,7 @@ export default () => {
           if (res.data.status === 'success') {
             return res.data.patient
           }
-          return null
+          return null;
         })
         
     },
@@ -62,7 +62,6 @@ export default () => {
         return null
       })
       
-
     }
   }
   return services
