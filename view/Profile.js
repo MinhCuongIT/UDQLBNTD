@@ -18,6 +18,19 @@ import ApiServices from '../services/api';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
+import ImagePicker from 'react-native-image-picker';
+
+const options = {
+  title: 'Chọn hình đại diện',
+  storageOptions: {
+    skipBackup: false,
+    path: 'images',
+  },
+  mediaType: 'photo',
+  cancelButtonTitle: 'Hủy',
+  takePhotoButtonTitle:'Chụp ảnh mới',
+  chooseFromLibraryButtonTitle:'Chọn từ thư viện'
+};
 
 
 //Chiều dài và chiều rộng của màn hình
@@ -28,17 +41,23 @@ var _width = Dimensions.get('window').width;
 class CardItem extends PureComponent {
   constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       isVisibleGioiTinhScreen:false,
       isVisibleCMNDScreen: false,
       isVisibleDiaChiScreen: false,
       isVisibleNgheNghiepScreen: false,
       isVisibleNhomMauScreen: false,
       isVisibleEmailScreen: false,
-      isMale: false,  //Tam thoi cu khoi la false
       
       isDateTimePickerVisible: false, //ẩn hiện datetime picker
+
+      isMale: false,  //Tam thoi cu khoi la false
       birthday: '',
+      cmnd:'',
+      diaChi:'',
+      ngheNghiep:'',
+      nhomMau:'',
+      email:'',
       itemDetail: props.itemDetail,
     }
     
@@ -117,11 +136,37 @@ class CardItem extends PureComponent {
     this.hideDateTimePicker();
     this.props.onUpdateBirthday(this.state.birthday);
   };
+  //Xử lý cập nhật giới tính
   handleUpdateGen = () =>{
     this.setState({ isVisibleGioiTinhScreen: false });  //Bấm nút thì tắt màn hình đi
     this.props.onUpdateGen(this.state.isMale? "Nam" : "Nữ");
-
   }
+  //Xử lý cập nhật CMND
+  handleUpdateCmnd = () => {
+    this.setState({ isVisibleCMNDScreen: false });  //Bấm nút thì tắt màn hình đi
+    this.props.onUpdateCmnd(this.state.cmnd);
+  }
+  //Xử lý cập nhật dia chi
+  handleUpdateDiaChi = () => {
+    this.setState({ isVisibleDiaChiScreen: false });  //Bấm nút thì tắt màn hình đi
+    this.props.onUpdateDiaChi(this.state.diaChi);
+  }
+  //Xử lý cập nhật nghề nghiệp
+  handleUpdateNgheNghiep = () => {
+    this.setState({ isVisibleNgheNghiepScreen: false });  //Bấm nút thì tắt màn hình đi
+    this.props.onUpdateNgheNghiep(this.state.ngheNghiep);
+  }
+  //Xử lý cập nhật nhóm máu
+  handleUpdateNhomMau = () => {
+    this.setState({ isVisibleNhomMauScreen: false });  //Bấm nút thì tắt màn hình đi
+    this.props.onUpdateNhomMau(this.state.nhomMau);
+  }
+  //Xử lý cập nhật email
+  handleUpdateEmail = () => {
+    this.setState({ isVisibleEmailScreen: false });  //Bấm nút thì tắt màn hình đi
+    this.props.onUpdateEmail(this.state.email);
+  }
+
   render() {
     return (
       <View>
@@ -169,13 +214,13 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='CMND'>{this.props.itemDetail}</Input>
+              <Input onChangeText={(text) => this.setState({ cmnd:text })} placeholder='CMND'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
+              onPress={ this.handleUpdateCmnd }
             />
           </ScrollView>
         </Overlay>
@@ -192,13 +237,13 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='Địa chỉ'>{this.props.itemDetail}</Input>
+              <Input onChangeText={(text) => this.setState({ diaChi: text })} placeholder='Địa chỉ'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
+              onPress={ this.handleUpdateDiaChi }
             />
           </ScrollView>
         </Overlay>
@@ -215,13 +260,13 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='Nghề nghiệp'>{this.props.itemDetail}</Input>
+              <Input onChangeText={(text) => this.setState({ ngheNghiep: text })} placeholder='Nghề nghiệp'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
+              onPress={this.handleUpdateNgheNghiep}
             />
           </ScrollView>
         </Overlay>
@@ -238,13 +283,13 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='Nhóm máu'>{this.props.itemDetail}</Input>
+              <Input onChangeText={(text) => this.setState({ nhomMau: text })} placeholder='Nhóm máu'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
+              onPress={this.handleUpdateNhomMau}
             />
           </ScrollView>
         </Overlay>
@@ -261,13 +306,13 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input placeholder='Email'>{this.props.itemDetail}</Input>
+              <Input onChangeText={(text) => this.setState({ email: text })} placeholder='Email'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={() => { alert("Thực hiện cập nhật!") }}
+              onPress={this.handleUpdateEmail}
             />
           </ScrollView>
         </Overlay>
@@ -356,11 +401,11 @@ class MyListCards extends PureComponent {
         >
           <Divider />
           <CardItem id={1} onUpdateGen = {this.props.onUpdateGenParent} itemDetail={this.state.profile.thongTinChung.gioiTinh} itemTitle='Giới tính' />
-          <CardItem id={2} itemDetail={this.state.profile.thongTinChung.cmnd} itemTitle='CMND' />
+          <CardItem id={2} onUpdateCmnd = {this.props.onUpdateCmndParent} itemDetail={this.state.profile.thongTinChung.cmnd} itemTitle='CMND' />
           <CardItem id={3} onUpdateBirthday={this.props.onUpdateBirthdayParent} itemDetail={this.state.profile.thongTinChung.ngaySinh  } itemTitle='Ngày sinh' />
-          <CardItem id={4} itemDetail={this.state.profile.thongTinChung.diaChi} itemTitle='Địa chỉ' />
-          <CardItem id={5} itemDetail={this.state.profile.thongTinChung.ngheNghiep} itemTitle='Nghề nghiệp' />
-          <CardItem id={6} itemDetail={this.state.profile.thongTinChung.nhomMau} itemTitle='Nhóm máu' />
+          <CardItem id={4} onUpdateDiaChi={this.props.onUpdateDiaChiParent} itemDetail={this.state.profile.thongTinChung.diaChi} itemTitle='Địa chỉ' />
+          <CardItem id={5} onUpdateNgheNghiep={this.props.onUpdateNgheNghiepParent} itemDetail={this.state.profile.thongTinChung.ngheNghiep} itemTitle='Nghề nghiệp' />
+          <CardItem id={6} onUpdateNhomMau={this.props.onUpdateNhomMauParent} itemDetail={this.state.profile.thongTinChung.nhomMau} itemTitle='Nhóm máu' />
         </Card>
         <Card title={
           <View style={styles.customTitle}>
@@ -371,7 +416,7 @@ class MyListCards extends PureComponent {
           containerStyle={styles.removeCardBorder}
         >
           <Divider />
-          <CardItem id={8} itemDetail={this.props.profile.lienHe.email} itemTitle='Email' />
+          <CardItem id={8} onUpdateEmail={this.props.onUpdateEmailParent} itemDetail={this.props.profile.lienHe.email} itemTitle='Email' />
         </Card>
 
         <Divider style={{ marginHorizontal: 30 }} />
@@ -420,7 +465,7 @@ export default class Profile extends Component {
       listData: {
         thongTinChung: {
           anhBia: require("../images/hinh_bien.jpg"),
-          avatar: require("../images/MyAvt.jpg"),
+          avatar: null,
           hoTen: "",
           sdt: "",
           cmnd: "",
@@ -442,9 +487,42 @@ export default class Profile extends Component {
 
      };
 
+    this.onUpdateNgheNghiepParent = this.onUpdateNgheNghiepParent.bind(this);
+    this.onUpdateNhomMauParent = this.onUpdateNhomMauParent.bind(this);
+    this.onUpdateEmailParent = this.onUpdateEmailParent.bind(this);
+    this.onUpdateDiaChiParent = this.onUpdateDiaChiParent.bind(this);
+    this.onUpdateCmndParent = this.onUpdateCmndParent.bind(this);
     this.onUpdateGenParent = this.onUpdateGenParent.bind(this);
     this.onUpdateBirthdayParent = this.onUpdateBirthdayParent.bind(this);
     this.apiServices = ApiServices();
+  }
+
+  handleChange = () => {
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        // var source = { uri: response.uri };
+
+        // You can also display the image using data:
+        var source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+        this.setState({
+          listData:{
+            ...this.state.listData,
+            thongTinChung:{
+              ...this.state.listData.thongTinChung,
+              avatar:source
+            }
+          }
+        });
+        // alert(source.uri);
+      }
+    });
   }
 
   onUpdateBirthdayParent = (textDate) => {
@@ -459,6 +537,66 @@ export default class Profile extends Component {
     })
   }
   
+  onUpdateCmndParent = (text) => {
+    this.setState({
+      listData:{
+        ...this.state.listData,
+        thongTinChung : {
+          ...this.state.listData.thongTinChung,
+          cmnd: text
+        }
+      }
+    })
+  }
+
+  onUpdateDiaChiParent = (text) => {
+    this.setState({
+      listData: {
+        ...this.state.listData,
+        thongTinChung: {
+          ...this.state.listData.thongTinChung,
+          diaChi: text
+        }
+      }
+    })
+  }
+
+  onUpdateNgheNghiepParent = (text) => {
+    this.setState({
+      listData: {
+        ...this.state.listData,
+        thongTinChung: {
+          ...this.state.listData.thongTinChung,
+          ngheNghiep: text
+        }
+      }
+    })
+  }
+
+  onUpdateNhomMauParent = (text) => {
+    this.setState({
+      listData: {
+        ...this.state.listData,
+        thongTinChung: {
+          ...this.state.listData.thongTinChung,
+          nhomMau: text
+        }
+      }
+    })
+  }
+
+  onUpdateEmailParent = (text) => {
+    this.setState({
+      listData: {
+        ...this.state.listData,
+        lienHe: {
+          ...this.state.listData.lienHe,
+          email: text
+        }
+      }
+    })
+  }
+
   onUpdateGenParent = (sex) => {
     this.setState({
       listData: {
@@ -476,7 +614,7 @@ export default class Profile extends Component {
   componentDidMount() {
     var info = {
       // Gia su mot benh nhan co ma benh nhan nhu the nay
-      MaBenhNhan: '0975206769',
+      MaBenhNhan: '0912345678',
       Password: ''
     }
     this.apiServices.getBenhNhanInfo(info)
@@ -490,7 +628,7 @@ export default class Profile extends Component {
             listData: {
               thongTinChung: {
                 anhBia: require("../images/hinh_bien.jpg"),
-                avatar: require("../images/MyAvt.jpg"),
+                avatar: pullResult.Avatar,
                 hoTen: pullResult.HoTen,
                 sdt: pullResult.MaBenhNhan,
                 cmnd: pullResult.CMND,
@@ -514,12 +652,6 @@ export default class Profile extends Component {
       })
   }
 
-
-  handleEditButtonAvatar = () => {
-    //Thuc hien cap nhat anh dai dien xuong DB
-    alert('Cap nhat avt');
-  }
-
   render() {
     return (
       <ScrollView>
@@ -533,13 +665,14 @@ export default class Profile extends Component {
           />
           {/* Anh dai dien */}
           <Avatar
+            title={this.state.listData.thongTinChung.hoTen[0]}
             showEditButton
             rounded
             size={130}
             activeOpacity={0.7}
             containerStyle={styles.avatar}
             source={this.state.listData.thongTinChung.avatar}
-            onEditPress={this.handleEditButtonAvatar}
+            onEditPress={() => this.handleChange()}
           />
 
         </View>
@@ -552,10 +685,11 @@ export default class Profile extends Component {
           showDialogChangePassword = {this.state.isVisible} 
           onUpdateGenParent={this.onUpdateGenParent}
           onUpdateBirthdayParent = {this.onUpdateBirthdayParent}
-
-
-
-
+          onUpdateCmndParent = {this.onUpdateCmndParent}
+          onUpdateDiaChiParent={this.onUpdateDiaChiParent}
+          onUpdateNhomMauParent={this.onUpdateNhomMauParent}
+          onUpdateNgheNghiepParent={this.onUpdateNgheNghiepParent}
+          onUpdateEmailParent={this.onUpdateEmailParent}
         />
       </ScrollView>
     );
