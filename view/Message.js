@@ -19,11 +19,11 @@ const instructions = Platform.select({
 
 type Props = {};
 
-export default class Profile extends Component<Props> {
+export default class Message extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to Profile!</Text>
+        <Text style={styles.welcome}>Welcome to Message!</Text>
       </View>
     );
   }

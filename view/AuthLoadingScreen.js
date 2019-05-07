@@ -8,7 +8,9 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View,
+  ActivityIndicator, StatusBar,
+  AsyncStorage} from 'react-native';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -19,11 +21,23 @@ const instructions = Platform.select({
 
 type Props = {};
 
-export default class Profile extends Component<Props> {
+export default class AuthLoadingScreen extends Component {
+  constructor() {
+    super();
+    this._bootstrapAsync();
+  }
+
+  _bootstrapAsync = async () => {
+    const userId = await AsyncStorage.getItem('UserId');
+    this.props.navigation.navigate(userId ? 'AppStack' : 'LoginStack');
+  };
+
+  // Render any loading content that you like here
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to Profile!</Text>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
       </View>
     );
   }

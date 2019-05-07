@@ -10,12 +10,13 @@
 import React, {Component} from 'react';
 import {
   ImageBackground, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,
-  Dimensions, TouchableWithoutFeedback, Image
+  Dimensions, TouchableWithoutFeedback, Image, AsyncStorage
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import bgImage from '../images/backgroungImage2.jpg'
 import RNAccountKit from 'react-native-facebook-account-kit'
 import Axios from 'axios';
+import ApiService from '../services/api';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -36,7 +37,24 @@ export default class LoginPage extends Component {
     super(props);
     this.state = {
       isHidePass: true,
+      name: '',
+      pass: '',
     };
+
+    this.apiService = ApiService()
+  }
+
+  async componentDidMount(): void {
+    try {
+      const value = await AsyncStorage.getItem('UserId');
+      if (value !== null) {
+        // We have data!!
+        this.props.navigation.navigate('AppStack')
+        console.log(value);
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
   }
 
   componentWillMount(): void {
@@ -69,9 +87,21 @@ export default class LoginPage extends Component {
         } else {
           let acc = await this.sendRequestForPhoneNumber(token.code);
           console.log(acc);
-          this.props.navigation.navigate('RegisterInformationPage')
+          this.props.navigation.navigate('RegisterInformationPage', {acc: acc})
         }
       })
+  }
+
+  handleLogin = () => {
+    this.apiService.login({
+      MaBenhNhan: this.state.name,
+      Password: this.state.pass,
+    }).then(async (data) => {
+      if (data !== null) {
+        await AsyncStorage.setItem('UserId', data.MaBenhNhan)
+        this.props.navigation.navigate('AppStack')
+      }
+    })
   }
 
   eyeHandleIn = () => {
@@ -104,6 +134,10 @@ export default class LoginPage extends Component {
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid={'transparent'}
             keyboardType='phone-pad'
+            value={this.state.name}
+            onChangeText={(text) => this.setState({
+              name: text,
+            })}
           />
         </View>
         <View style={{marginTop:10}}>
@@ -115,6 +149,10 @@ export default class LoginPage extends Component {
             placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             underlineColorAndroid={'transparent'}
             secureTextEntry={this.state.isHidePass}
+            value={this.state.pass}
+            onChangeText={(text) => this.setState({
+              pass: text,
+            })}
           />
 
           <TouchableOpacity
@@ -126,7 +164,7 @@ export default class LoginPage extends Component {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('AppStack')}
+          onPress={() => this.handleLogin()}
           style={styles.btnLogin}
         >
             <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold', padding: 10}}>

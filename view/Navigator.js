@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { TabNavigator } from "react-navigation";
-import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator } from "react-navigation";
+import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator, createSwitchNavigator } from "react-navigation";
+import AuthLoadingScreen from "./AuthLoadingScreen";
 import Home from "./Home";
 import Chart from "./Chart";
-import User_Family from './User_Family';
-import ListDoctors from "./ListDoctors";
-import DoctorProfile from './DoctorProfile';
-import ChatScreen from './ChatScreen';
+import Message from "./Message";
 import Profile from "./Profile";
 import HomeDetails from "./HomeDetails";
 import ChartHealthDetail from "./ChartHealthDetail";
@@ -17,8 +15,6 @@ import RegisterChooseTypePage from "./RegisterChooseTypePage";
 import RegisterInformationPage from "./RegisterInformationPage";
 import AddDiabetes from "./AddDiabetes";
 import AddValuePage from "./AddValuePage";
-import ChangePassword from "./ChangePassword";
-import ChangeInfomation from "./ChangeInfomation";
 
 const HomeStack = createStackNavigator({
   Home: {screen: Home,
@@ -82,51 +78,6 @@ const ChartStack = createStackNavigator({
   headerBackTitleVisible: true,
 });
 
-const User_FamilyStack = createStackNavigator({
-  User_Family: {
-    screen: User_Family,
-
-  },
-  // DoctorProfile: {
-  //   screen: DoctorProfile,
-  // },
-  }, {
-    initialRouteName: 'User_Family',
-    // headerBackTitleVisible: true,
-});
-
-const ListDoctorsStack = createStackNavigator({
-  ListDoctors: {
-    screen: ListDoctors,
-
-  },
-  DoctorProfile: {
-    screen: DoctorProfile,
-    // navigationOptions: { tabBarVisible: false,  }
-  },
-  }, {
-    initialRouteName: 'ListDoctors',
-    // headerBackTitleVisible: true,
-});
-
-//Phần thông tin profile
-const ListProfileStack = createStackNavigator({
-  Profile:{
-    screen:Profile,
-    navigationOptions: {
-      header: null,
-    }
-  },
-  ChangePassword:{
-    screen:ChangePassword,
-  },
-  ChangeInfomation: {
-    screen: ChangeInfomation,
-  },
-  },{ 
-    initialRouteName: 'Profile',
-});
-
 const AppNavigator = createMaterialTopTabNavigator({
       Tab1: {
           screen: HomeStack,
@@ -138,7 +89,7 @@ const AppNavigator = createMaterialTopTabNavigator({
           },
       },
       Tab2: {
-          screen: User_FamilyStack,
+          screen: ChartStack,
           navigationOptions: {
               tabBarLabel: "Người thân",
               tabBarIcon: ({ tintColor }) => (
@@ -147,7 +98,7 @@ const AppNavigator = createMaterialTopTabNavigator({
           }
       },
       Tab3: {
-          screen: ListDoctorsStack,
+          screen: Message,
           navigationOptions: {
               tabBarLabel: "Bác sĩ",
               tabBarIcon: ({ tintColor }) => (
@@ -156,7 +107,7 @@ const AppNavigator = createMaterialTopTabNavigator({
           }
       },
       Tab4: {
-          screen: ListProfileStack,
+          screen: Profile,
           navigationOptions: {
               tabBarLabel: "Tài khoản",
               tabBarIcon: ({ tintColor }) => (
@@ -248,7 +199,8 @@ const AddValueStack = createStackNavigator({
   headerBackTitleVisible: true,
 });
 
-const MainNavigator = createStackNavigator({
+const MainNavigator = createSwitchNavigator({
+  AuthLoading: AuthLoadingScreen,
   LoginStack: {screen: LoginStack,
     navigationOptions:{
       header:null,
@@ -261,6 +213,6 @@ const MainNavigator = createStackNavigator({
     },
   }
 }, {
-  initialRouteName: 'LoginStack',
+  initialRouteName: 'AuthLoading',
 });
-export default createAppContainer(AppNavigator);
+export default createAppContainer(MainNavigator);
