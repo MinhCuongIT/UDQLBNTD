@@ -8,7 +8,7 @@
  */
 
 import React, { Component, PureComponent } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, ScrollView, Alert, TouchableOpacity, AsyncStorage } from 'react-native';
 
 import { Button, Avatar, Image, ListItem, Divider, Card, Overlay, Input, CheckBox } from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -20,6 +20,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import ImagePicker from 'react-native-image-picker';
 
+// Option dành cho việc tải dữ làm avt
 const options = {
   title: 'Chọn hình đại diện',
   storageOptions: {
@@ -28,8 +29,8 @@ const options = {
   },
   mediaType: 'photo',
   cancelButtonTitle: 'Hủy',
-  takePhotoButtonTitle:'Chụp ảnh mới',
-  chooseFromLibraryButtonTitle:'Chọn từ thư viện'
+  takePhotoButtonTitle: 'Chụp ảnh mới',
+  chooseFromLibraryButtonTitle: 'Chọn từ thư viện'
 };
 
 
@@ -42,25 +43,25 @@ class CardItem extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isVisibleGioiTinhScreen:false,
+      isVisibleGioiTinhScreen: false,
       isVisibleCMNDScreen: false,
       isVisibleDiaChiScreen: false,
       isVisibleNgheNghiepScreen: false,
       isVisibleNhomMauScreen: false,
       isVisibleEmailScreen: false,
-      
+
       isDateTimePickerVisible: false, //ẩn hiện datetime picker
 
-      isMale: false,  //Tam thoi cu khoi la false
+      isMale: null,  //Tam thoi cu khoi la false
       birthday: '',
-      cmnd:'',
-      diaChi:'',
-      ngheNghiep:'',
-      nhomMau:'',
-      email:'',
+      cmnd: '',
+      diaChi: '',
+      ngheNghiep: '',
+      nhomMau: '',
+      email: '',
       itemDetail: props.itemDetail,
     }
-    
+
   }
 
   componentWillReceiveProps(props) {
@@ -73,43 +74,43 @@ class CardItem extends PureComponent {
     switch (type) {
       //Sua gioi tinh
       case 1:
-        this.setState({isVisibleGioiTinhScreen:true});
-        if (oldData == 'Nam') {
+        this.setState({ isVisibleGioiTinhScreen: true });
+        if (oldData === "Nam") {
           this.setState({
             isMale: true
           })
-        }else{
+        } else {
           this.setState({
             isMale: false
           })
         }
         break;
-        //Sua CMND
+      //Sua CMND
       case 2:
         this.setState({ isVisibleCMNDScreen: true });
         break;
-        //Sua ngay sinh
+      //Sua ngay sinh
       case 3:
         // Hiển thị màn hình chọn ngày cho phép người dùng chọn ngày mới
         this.showDateTimePicker();
         break;
-        //Sua dia chi
+      //Sua dia chi
       case 4:
         this.setState({ isVisibleDiaChiScreen: true });
         break;
-        //Sua nghe nghiep
+      //Sua nghe nghiep
       case 5:
         this.setState({ isVisibleNgheNghiepScreen: true });
         break;
-        //Sua nhom mau
+      //Sua nhom mau
       case 6:
         this.setState({ isVisibleNhomMauScreen: true });
         break;
-        //Sua tinh trang
+      //Sua tinh trang
       case 7:
         this.setState({ isVisibleTinhTrangScreen: true });
         break;
-        //Sua email
+      //Sua email
       case 8:
         this.setState({ isVisibleEmailScreen: true });
         break;
@@ -117,7 +118,7 @@ class CardItem extends PureComponent {
         break;
     }
   }
-// Hiển thị dialog chọn ngày
+  // Hiển thị dialog chọn ngày
   showDateTimePicker = () => {
     this.setState({ isDateTimePickerVisible: true });
   };
@@ -129,17 +130,17 @@ class CardItem extends PureComponent {
   handleDatePicked = date => {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
-      birthday: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
-      
+      birthday: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+
     })
     // alert(this.state.birthday);
     this.hideDateTimePicker();
     this.props.onUpdateBirthday(this.state.birthday);
   };
   //Xử lý cập nhật giới tính
-  handleUpdateGen = () =>{
+  handleUpdateGen = () => {
     this.setState({ isVisibleGioiTinhScreen: false });  //Bấm nút thì tắt màn hình đi
-    this.props.onUpdateGen(this.state.isMale? "Nam" : "Nữ");
+    this.props.onUpdateGen(this.state.isMale);
   }
   //Xử lý cập nhật CMND
   handleUpdateCmnd = () => {
@@ -184,8 +185,8 @@ class CardItem extends PureComponent {
             }}>
               <CheckBox
                 title="Nam"
-                checked = {this.state.isMale}
-                onPress={() => {this.setState({isMale: true})}}
+                checked={this.state.isMale}
+                onPress={() => { this.setState({ isMale: true }) }}
               />
               <CheckBox
                 title="Nữ"
@@ -196,7 +197,7 @@ class CardItem extends PureComponent {
             <Button
               type='outline'
               title="Cập nhật"
-              buttonStyle={{ width: 120, alignSelf:'center', marginTop:20 }}
+              buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
               onPress={this.handleUpdateGen}
             />
           </ScrollView>
@@ -214,13 +215,13 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input onChangeText={(text) => this.setState({ cmnd:text })} placeholder='CMND'>{this.props.itemDetail}</Input>
+              <Input onChangeText={(text) => this.setState({ cmnd: text })} placeholder='CMND'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={ this.handleUpdateCmnd }
+              onPress={this.handleUpdateCmnd}
             />
           </ScrollView>
         </Overlay>
@@ -243,7 +244,7 @@ class CardItem extends PureComponent {
               type='outline'
               title="Cập nhật"
               buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
-              onPress={ this.handleUpdateDiaChi }
+              onPress={this.handleUpdateDiaChi}
             />
           </ScrollView>
         </Overlay>
@@ -339,7 +340,7 @@ class CardItem extends PureComponent {
         />
       </View>
 
-      
+
     )
   }
 }
@@ -365,22 +366,23 @@ class MyListCards extends PureComponent {
     return (
       <View>
         <Overlay isVisible={this.state.isVisiblePasswordScreen}
-        borderRadius = {10}
-        height = {250}>
+          borderRadius={10}
+          height={250}>
           <ScrollView>
             <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Đổi mật khẩu</Text>
             <Input placeholder='Nhập mật khẩu cũ' secureTextEntry={true}></Input>
-            <Input placeholder='Nhập mật khẩu mới' secureTextEntry = {true}></Input>
+            <Input placeholder='Nhập mật khẩu mới' secureTextEntry={true}></Input>
             <View style={{
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
-              marginTop:10}}>
+              marginTop: 10
+            }}>
               <Button
                 type='outline'
                 title="Đồng ý"
-                buttonStyle = {{width:120}}
-                onPress = {()=>{alert("Thực hiện đổi mật khẩu!")}}
+                buttonStyle={{ width: 120 }}
+                onPress={() => { alert("Thực hiện đổi mật khẩu!") }}
               />
               <Button
                 type='outline'
@@ -400,9 +402,9 @@ class MyListCards extends PureComponent {
           containerStyle={styles.removeCardBorder}
         >
           <Divider />
-          <CardItem id={1} onUpdateGen = {this.props.onUpdateGenParent} itemDetail={this.state.profile.thongTinChung.gioiTinh} itemTitle='Giới tính' />
-          <CardItem id={2} onUpdateCmnd = {this.props.onUpdateCmndParent} itemDetail={this.state.profile.thongTinChung.cmnd} itemTitle='CMND' />
-          <CardItem id={3} onUpdateBirthday={this.props.onUpdateBirthdayParent} itemDetail={this.state.profile.thongTinChung.ngaySinh  } itemTitle='Ngày sinh' />
+          <CardItem id={1} onUpdateGen={this.props.onUpdateGenParent} itemDetail={this.state.profile.thongTinChung.gioiTinh == 1 ? "Nam" : "Nữ"} itemTitle='Giới tính' />
+          <CardItem id={2} onUpdateCmnd={this.props.onUpdateCmndParent} itemDetail={this.state.profile.thongTinChung.cmnd} itemTitle='CMND' />
+          <CardItem id={3} onUpdateBirthday={this.props.onUpdateBirthdayParent} itemDetail={this.state.profile.thongTinChung.ngaySinh} itemTitle='Ngày sinh' />
           <CardItem id={4} onUpdateDiaChi={this.props.onUpdateDiaChiParent} itemDetail={this.state.profile.thongTinChung.diaChi} itemTitle='Địa chỉ' />
           <CardItem id={5} onUpdateNgheNghiep={this.props.onUpdateNgheNghiepParent} itemDetail={this.state.profile.thongTinChung.ngheNghiep} itemTitle='Nghề nghiệp' />
           <CardItem id={6} onUpdateNhomMau={this.props.onUpdateNhomMauParent} itemDetail={this.state.profile.thongTinChung.nhomMau} itemTitle='Nhóm máu' />
@@ -429,7 +431,7 @@ class MyListCards extends PureComponent {
               <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', }}>Đổi mật khẩu</Text>
             </View>}
 
-          onPress={() => { this.setState({ isVisiblePasswordScreen:true})}}
+          onPress={() => { this.setState({ isVisiblePasswordScreen: true }) }}
 
           leftIcon={
             <MaterialCommunityIcons name='textbox-password' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
@@ -438,14 +440,14 @@ class MyListCards extends PureComponent {
         <TouchableOpacity onPress={() => { alert("Thực hiện đăng xuất khỏi hệ thống!") }}>
           <ListItem containerStyle={{ marginLeft: 20 }}
 
-          title={
-              
+            title={
+
               <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', }}>Đăng xuất</Text>
-          }
-          leftIcon={
-            <MaterialCommunityIcons name='logout' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
-          }
-          
+            }
+            leftIcon={
+              <MaterialCommunityIcons name='logout' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
+            }
+
           // onPress = {()=>{alert("Thực hiện đăng xuất khỏi hệ thống!")}}
           ></ListItem>
 
@@ -460,7 +462,7 @@ export default class Profile extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       //Mo hinh du lieu duoi local
       listData: {
         thongTinChung: {
@@ -469,7 +471,7 @@ export default class Profile extends Component {
           hoTen: "",
           sdt: "",
           cmnd: "",
-          gioiTinh: "",
+          gioiTinh: {},
           ngaySinh: "",
           diaChi: "",
           ngheNghiep: "",
@@ -480,12 +482,11 @@ export default class Profile extends Component {
           email: "",
         },
         taiKhoan: {
-          username: "",
-          password: "",
+          password: {},
         }
       },
 
-     };
+    };
 
     this.onUpdateNgheNghiepParent = this.onUpdateNgheNghiepParent.bind(this);
     this.onUpdateNhomMauParent = this.onUpdateNhomMauParent.bind(this);
@@ -499,8 +500,6 @@ export default class Profile extends Component {
 
   handleChange = () => {
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -509,48 +508,96 @@ export default class Profile extends Component {
         // var source = { uri: response.uri };
 
         // You can also display the image using data:
-        var source = { uri: 'data:image/jpeg;base64,' + response.data };
+        var source = response.data;
 
         this.setState({
-          listData:{
+          listData: {
             ...this.state.listData,
-            thongTinChung:{
+            thongTinChung: {
               ...this.state.listData.thongTinChung,
-              avatar:source
+              avatar: source
             }
           }
         });
-        // alert(source.uri);
+
+        //Update xuống DB
+        this.updateBenhNhan({
+          MaBenhNhan: this.state.listData.thongTinChung.sdt,
+          Avatar: this.state.listData.thongTinChung.avatar,
+          HoTen: this.state.listData.thongTinChung.hoTen,
+          GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+          NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+          CMND: this.state.listData.thongTinChung.cmnd,
+          DiaChi: this.state.listData.thongTinChung.diaChi,
+          Email: this.state.listData.lienHe.email,
+          NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+          NhomMau: this.state.listData.thongTinChung.nhomMau,
+          DiUngThuoc: 'Không hỗ trợ',
+        });
       }
     });
   }
 
-  onUpdateBirthdayParent = (textDate) => {
-    this.setState({
-      listData:{
+  onUpdateBirthdayParent = async (textDate) => {
+    await this.setState({
+      listData: {
         ...this.state.listData,
-        thongTinChung:{
+        thongTinChung: {
           ...this.state.listData.thongTinChung,
           ngaySinh: textDate
         }
       }
     })
+
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
   }
-  
-  onUpdateCmndParent = (text) => {
-    this.setState({
-      listData:{
+
+  onUpdateCmndParent = async (text) => {
+    await this.setState({
+      listData: {
         ...this.state.listData,
-        thongTinChung : {
+        thongTinChung: {
           ...this.state.listData.thongTinChung,
           cmnd: text
         }
       }
     })
+
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
   }
 
-  onUpdateDiaChiParent = (text) => {
-    this.setState({
+  onUpdateDiaChiParent = async (text) => {
+    await this.setState({
       listData: {
         ...this.state.listData,
         thongTinChung: {
@@ -559,10 +606,27 @@ export default class Profile extends Component {
         }
       }
     })
-  }
 
-  onUpdateNgheNghiepParent = (text) => {
-    this.setState({
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
+  };
+
+  onUpdateNgheNghiepParent = async (text) => {
+    await this.setState({
       listData: {
         ...this.state.listData,
         thongTinChung: {
@@ -571,10 +635,27 @@ export default class Profile extends Component {
         }
       }
     })
+
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
   }
 
-  onUpdateNhomMauParent = (text) => {
-    this.setState({
+  onUpdateNhomMauParent = async (text) => {
+    await this.setState({
       listData: {
         ...this.state.listData,
         thongTinChung: {
@@ -583,10 +664,27 @@ export default class Profile extends Component {
         }
       }
     })
+
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
   }
 
-  onUpdateEmailParent = (text) => {
-    this.setState({
+  onUpdateEmailParent = async (text) => {
+    await this.setState({
       listData: {
         ...this.state.listData,
         lienHe: {
@@ -595,10 +693,27 @@ export default class Profile extends Component {
         }
       }
     })
+
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
   }
 
-  onUpdateGenParent = (sex) => {
-    this.setState({
+  onUpdateGenParent = async (sex) => {
+    await this.setState({
       listData: {
         ...this.state.listData,
         thongTinChung: {
@@ -607,33 +722,62 @@ export default class Profile extends Component {
         }
       }
     })
-    // alert(this.state.listData.thongTinChung.gioiTinh)
 
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
+  }
+
+  //Cập nhật dữ liệu xuống database khi state có sự thay đổi
+  async updateBenhNhan(benhNhan) {
+    await this.apiServices.updateProfileBenhNhan(benhNhan)
+      .then((result) => {
+        if (result !== null) {
+          // Cập nhật thành công
+          alert("Cập nhật dữ liệu thành công!");
+        }
+        else {
+          // Cập nhật thất bại
+          alert("Cập nhật dữ liệu thất bại!");
+        }
+      })
   }
   //Thuc hien cong viec pull data tu server ve client
-  componentDidMount() {
+  async componentDidMount() {
+    const userId = await AsyncStorage.getItem('UserId');
     var info = {
       // Gia su mot benh nhan co ma benh nhan nhu the nay
-      MaBenhNhan: '0912345678',
-      Password: ''
+      MaBenhNhan: userId,// chỗ này chưa lấy từ global xuống
     }
     this.apiServices.getBenhNhanInfo(info)
       .then((result) => {
         if (result !== null) {
-          // alert("Doi mat khau thanh cong!");
           var pullResult = result[0];
           let NgaySinhT = new Date(pullResult.NgaySinh);
-
+          var source = pullResult.Avatar;
           this.setState({
             listData: {
               thongTinChung: {
                 anhBia: require("../images/hinh_bien.jpg"),
-                avatar: pullResult.Avatar,
+                avatar: source,
                 hoTen: pullResult.HoTen,
                 sdt: pullResult.MaBenhNhan,
                 cmnd: pullResult.CMND,
-                gioiTinh: pullResult.GioiTinh.data[0]===1?'Nam':'Nữ',
-                ngaySinh: NgaySinhT.getDate() + '/' + (NgaySinhT.getMonth()+1) + '/'+ NgaySinhT.getFullYear(),
+                gioiTinh: pullResult.GioiTinh.data[0],
+                ngaySinh: NgaySinhT.getFullYear() + '-' + (NgaySinhT.getMonth() + 1) + '-' + NgaySinhT.getDate(),
                 diaChi: pullResult.DiaChi,
                 ngheNghiep: pullResult.NgheNghiep,
                 nhomMau: pullResult.NhomMau,
@@ -642,8 +786,7 @@ export default class Profile extends Component {
                 email: pullResult.Email,
               },
               taiKhoan: {
-                username: "minhcuong",
-                password: "12345",
+                password: pullResult.Password,
               }
             }
           })
@@ -655,9 +798,9 @@ export default class Profile extends Component {
   render() {
     return (
       <ScrollView>
-        
+
         <View>
-        {/* Anh bia */}
+          {/* Anh bia */}
           <Avatar
             activeOpacity={0.7}
             containerStyle={styles.background}
@@ -671,7 +814,7 @@ export default class Profile extends Component {
             size={130}
             activeOpacity={0.7}
             containerStyle={styles.avatar}
-            source={this.state.listData.thongTinChung.avatar}
+            source={{ uri: 'data:image/jpeg;base64,' + this.state.listData.thongTinChung.avatar }}
             onEditPress={() => this.handleChange()}
           />
 
@@ -680,12 +823,12 @@ export default class Profile extends Component {
           <Text style={styles.name}>{this.state.listData.thongTinChung.hoTen}</Text>
           <Text style={styles.phone}>{this.state.listData.thongTinChung.sdt}</Text>
         </View>
-        <MyListCards 
-          profile={this.state.listData} 
-          showDialogChangePassword = {this.state.isVisible} 
+        <MyListCards
+          profile={this.state.listData}
+          showDialogChangePassword={this.state.isVisible}
           onUpdateGenParent={this.onUpdateGenParent}
-          onUpdateBirthdayParent = {this.onUpdateBirthdayParent}
-          onUpdateCmndParent = {this.onUpdateCmndParent}
+          onUpdateBirthdayParent={this.onUpdateBirthdayParent}
+          onUpdateCmndParent={this.onUpdateCmndParent}
           onUpdateDiaChiParent={this.onUpdateDiaChiParent}
           onUpdateNhomMauParent={this.onUpdateNhomMauParent}
           onUpdateNgheNghiepParent={this.onUpdateNgheNghiepParent}
@@ -695,7 +838,6 @@ export default class Profile extends Component {
     );
   }
 }
-
 
 const styles = StyleSheet.create({
 
@@ -773,10 +915,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#DCDCDC",
   },
-
-
-
-
 
   my_button: {
     borderRadius: 50,

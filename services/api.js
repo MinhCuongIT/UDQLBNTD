@@ -30,6 +30,7 @@ export default () => {
         }
         return null})
     },
+    // Hàm lấy thông tin bệnh nhân
     getBenhNhanInfo: (info) => {
       return axiosGet(baseURL + `patients/find-patient-by-id?MaBenhNhan=${info.MaBenhNhan}`)
         .then((res) => {
@@ -40,7 +41,28 @@ export default () => {
         })
         
     },
-    
+    // Hàm cập nhật thông tin bệnh nhân
+    updateProfileBenhNhan : (benhNhan) => {
+      return axiosPost(baseURL + `patients/update-profile`, {
+        MaBenhNhan: benhNhan.MaBenhNhan,
+        Avatar: benhNhan.Avatar,
+        HoTen: benhNhan.HoTen ,
+        GioiTinh: benhNhan.GioiTinh == 1 ? "1" : "0",
+        NgaySinh: benhNhan.NgaySinh,
+        CMND: benhNhan.CMND,
+        DiaChi: benhNhan.DiaChi,
+        Email: benhNhan.Email,
+        NgheNghiep: benhNhan.NgheNghiep,
+        NhomMau: benhNhan.NhomMau,
+        DiUngThuoc: benhNhan.DiUngThuoc,
+      })
+        .then((res) => {
+          if (res.data.status === 'success') {
+            return res.data.patient
+          }
+          return null
+        })
+    },
 
     changeBenhNhanPassword: (info) =>{
       return axiosPost(baseURL + `patients/change-password`, {
