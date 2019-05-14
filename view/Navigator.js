@@ -19,6 +19,7 @@ import LoginPage from "./LoginPage";
 import RegisterChooseTypePage from "./RegisterChooseTypePage";
 import RegisterInformationPage from "./RegisterInformationPage";
 import AddDiabetes from "./AddDiabetes";
+import AddBloodPressure from "./AddBloodPressure";
 import AddValuePage from "./AddValuePage";
 
 const HomeStack = createStackNavigator({
@@ -44,6 +45,18 @@ const HomeStack = createStackNavigator({
     },
   },
   AddDiabetes :{screen: AddDiabetes,
+    navigationOptions:{
+      headerStyle:{
+        backgroundColor: 'rgba(74, 195, 180, 1)',
+      },
+      headerBackTitleStyle:{
+        fontSize:25,
+        fontWeight: 'bold',
+      },
+      headerTintColor: 'white',
+    },
+  },
+  AddBloodPressure :{screen: AddBloodPressure,
     navigationOptions:{
       headerStyle:{
         backgroundColor: 'rgba(74, 195, 180, 1)',

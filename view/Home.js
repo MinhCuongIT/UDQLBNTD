@@ -10,7 +10,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet,
   Text, View, Image, FlatList, Dimensions, ImageBackground, TouchableOpacity,
-  Alert, SectionList, ScrollView, AsyncStorage} from 'react-native';
+  Alert, SectionList, ScrollView, AsyncStorage, RefreshControl} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Avatar, Badge, withBadge} from 'react-native-elements';
@@ -79,14 +79,19 @@ export default class Home extends Component {
       totalPages: 5,
       data: [],
       numberNoti: 1,
+      refreshing: false,
     };
 
     this.apiService = ApiService()
   }
 
-  async componentDidMount(){
+  componentDidMount(){
     this.loadItems();
     this.props.navigation.setParams({ numberNoti: this.state.numberNoti });
+    this.loadUser();
+  }
+
+  loadUser = async () => {
     const userId = await AsyncStorage.getItem('UserId');
     this.apiService.getBenhNhanInfo({
       MaBenhNhan: userId,
@@ -98,76 +103,114 @@ export default class Home extends Component {
       }
     })
   }
-
   async loadItems(){
     const userId = await AsyncStorage.getItem('UserId');
-    let dataT = [];
+    await this.setState({
+      data: []
+    })
     for (let i = 0; i < 2; i++) {
-      this.apiService.getHealthValue({
-        MaBenhNhan: userId,
-        Loai: i + 1,
-      }).then((result) => {
-        if (result !== null && result.length > 0) {
-          let getData = {
-            data: [],
-            color: (opacity = 1) => `rgba(70, 200, 120, ${opacity})`,
-            strokeWidth: 6
-          }
-          let valueData = {
-            data: {
-              labels: [],
-              datasets: result[0].Loai === 1
-                ? // Đường huyết
-                [
-                  {
-                    data: [ ],
-                    color: (opacity = 0.7) => `rgba(255, 0, 0, ${opacity})`,
-                    strokeWidth: 2
-                  },
-                  {
-                    data: [ ],
-                    color: (opacity = 1) => `rgba(240, 180, 00, ${opacity})`,
-                    strokeWidth: 2
-                  },
-                ]
-                : // Huyết áp
-                [
-                  {
-                    data: [20, 45, 28, 80, 99, 43],
-                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-                    strokeWidth: 2
-                  }, {
-                    data: [30, 65, 38, 90, 109, 53],
-                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-                    strokeWidth: 2
-                  }
-                ]
-            },
-            type: result[0].Loai === 1
-              ? 'ĐƯỜNG HUYẾT (mmol/L)'
-              : 'HUYẾT ÁP (mmHg)'
-          }
-
-          const highDomain = 10.2
-          const lowDomain = 3.8
-          for (let i = (result.length - 1); i >= 0; i--) {
-            valueData.data.datasets[0].data.push(highDomain);
-            valueData.data.datasets[1].data.push(lowDomain);
-            getData.data.push(result[i].ChiSo)
-            // alert(JSON.stringify(result[i].ChiSo))
-            const getDate = new Date(result[i].NgayNhap)
-            valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
-          }
-          valueData.data.datasets.push(getData);
-          dataT.push(valueData);
-          this.setState(
-            {
-              data: [...this.state.data,...dataT],
-            }
-          );
-        }
-      })
+      await this.loadDataItem(userId, i)
     }
+  }
+
+  loadDataItem = async (userId, i) => {
+    let dataT = [];
+    await this.apiService.getHealthValue({
+      MaBenhNhan: userId,
+      Loai: i + 1,
+    }).then(async (result) => {
+      if (result !== null && result.length > 0) {
+        // alert(result[0].Loai + ' ' + result.length)
+        let getData = {
+          data: [],
+          color: (opacity = 1) => `rgba(70, 200, 120, ${opacity})`,
+          strokeWidth: 6
+        }
+        let valueData = {
+          data: {
+            labels: [],
+            datasets: result[0].Loai === 1
+              ? // Đường huyết
+              [
+                {
+                  data: [ ],
+                  color: (opacity = 0.7) => `rgba(255, 0, 0, ${opacity})`,
+                  strokeWidth: 2
+                },
+                {
+                  data: [ ],
+                  color: (opacity = 1) => `rgba(240, 180, 00, ${opacity})`,
+                  strokeWidth: 2
+                },
+              ]
+              : // Huyết áp
+              [
+                {
+                  data: [ ],
+                  color: (opacity = 1) => `rgba(238, 0, 0, ${opacity})`,
+                  strokeWidth: 6
+                }, {
+                data: [ ],
+                color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                strokeWidth: 6
+              }
+              ]
+          },
+          type: result[0].Loai === 1
+            ? 'ĐƯỜNG HUYẾT (mmol/L)'
+            : 'HUYẾT ÁP (mmHg)',
+          id: result[0].Loai,
+          highDomain: result[0].Loai === 1
+            ? 10.2
+            : 0,
+          lowDomain:  result[0].Loai === 1
+            ? 3.8
+            : 0,
+          unit: result[0].Loai === 1
+            ? 'mmol/L'
+            : 'mmHg',
+        }
+
+        const highDomain = valueData.highDomain
+        const lowDomain = valueData.lowDomain
+
+        for (let index = (result.length - 1); index >= 0;) {
+          switch (result[0].Loai) {
+            case 1: {
+              valueData.data.datasets[0].data.push(highDomain);
+              valueData.data.datasets[1].data.push(lowDomain);
+              getData.data.push(result[index].ChiSo)
+              // alert(JSON.stringify(result[i].ChiSo))
+              const getDate = new Date(result[index].NgayNhap)
+              valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
+              index--;
+              break;
+            }
+            case 2: {
+              valueData.data.datasets[0].data.push(result[index].ChiSo);
+              const getDate = new Date(result[index].NgayNhap)
+              valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
+              --index;
+              valueData.data.datasets[1].data.push(result[index].ChiSo);
+              index--;
+              break;
+            }
+          }
+        }
+        switch (result[0].Loai) {
+          case 1: {
+            valueData.data.datasets.push(getData);
+            break;
+          }
+        }
+        dataT.push(valueData);
+        await this.setState(
+          {
+            data: [...this.state.data,...dataT],
+          }
+        );
+      }
+    })
   }
 
   handleLoadMore = () => {
@@ -187,6 +230,13 @@ export default class Home extends Component {
     this.props.navigation.navigate('NewsDetails', {item: item})
   };
 
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this.loadItems().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
+
   render() {
     let listChart = this.state.data.map(item => {
       const chartConfig = {
@@ -196,6 +246,10 @@ export default class Home extends Component {
         strokeWidth: 2
       }
       const screenWidth = Dimensions.get('window').width
+
+      const highDomain = item.highDomain
+      const lowDomain = item.lowDomain
+      const unit = item.unit
 
       return (
         <View key={item.type}>
@@ -210,14 +264,22 @@ export default class Home extends Component {
           </View>
 
           <TouchableOpacity
-            onPress={() => {this.props.navigation.navigate('HomeDetails')}}
+            onPress={() => {this.props.navigation.navigate('HomeDetails', {item: item})}}
           >
             <LineChart
               data={item.data}
               width={screenWidth+1}
               height={220}
               chartConfig={chartConfig}
-              onDataPointClick={(item) => {Alert.alert(item.value.toString())}}
+              onDataPointClick={(item) => {Alert.alert(
+                highDomain!==0
+                ? item.value >= highDomain
+                  ? 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở ngưỡng cao'
+                  : item.value <= lowDomain
+                    ? 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở ngưỡng thấp'
+                    : 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở mức bình thường'
+                : 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ''
+              )}}
               withShadow={false}
               bezier
             />
@@ -229,7 +291,7 @@ export default class Home extends Component {
               style={styles.btnMess}
             >
               <Text style={{color: 'white', fontSize: 17}}>
-                Liên hệ bác sĩ
+                Liên hệ bác sĩ chuyên môn
               </Text>
             </TouchableOpacity>
           </View>
@@ -239,7 +301,15 @@ export default class Home extends Component {
 
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.content}>
+        <ScrollView
+          style={styles.content}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
           <View style={{flexDirection: 'row', }}>
             <Avatar
               containerStyle={{margin: 10, marginLeft: 40}}
@@ -261,7 +331,7 @@ export default class Home extends Component {
           <ActionButton.Item buttonColor='rgba(230, 50, 50, 0.9)' size={50} onPress={() => this.props.navigation.navigate('AddDiabetes')}>
             <Image source={require('../images/Diabetes.png')} style={styles.actionButtonIcon}/>
           </ActionButton.Item>
-          <ActionButton.Item buttonColor='rgba(230, 130, 100, 0.9)' size={50}>
+          <ActionButton.Item buttonColor='rgba(230, 130, 100, 0.9)' size={50} onPress={() => this.props.navigation.navigate('AddBloodPressure')}>
             <Image source={require('../images/BloodPressure.png')} style={styles.actionButtonIcon}/>
           </ActionButton.Item>
         </ActionButton>

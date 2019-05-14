@@ -32,14 +32,15 @@ const instructions = Platform.select({
 
 type Props = {};
 
-export default class AddDiabetes extends Component {
+export default class AddBloodPressure extends Component {
   constructor(props){
     super(props);
     const date = new Date();
     this.state = {
       isDateTimePickerVisible: false,
-      date: date.getHours() + ':' + date.getMinutes() + ' ' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
-      diabeteValue: '',
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      systolicValue: '',
+      diastolicValue: '',
       dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
     };
 
@@ -57,7 +58,7 @@ export default class AddDiabetes extends Component {
   handleDatePicked = date => {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
-      date: date.getHours() + ':' + date.getMinutes() + ' ' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
       dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
     })
     this.hideDateTimePicker();
@@ -67,12 +68,21 @@ export default class AddDiabetes extends Component {
     const userId = await AsyncStorage.getItem('UserId');
     this.apiService.addHealthValue({
       MaBenhNhan: userId,
-      Loai: 1,
-      ChiSo: this.state.diabeteValue,
+      Loai: 2,
+      ChiSo: this.state.systolicValue,
       NgayNhap: this.state.dateValue,
     }).then((result) => {
       if (result !== null){
-        this.props.navigation.navigate('Home')
+        this.apiService.addHealthValue({
+          MaBenhNhan: userId,
+          Loai: 2,
+          ChiSo: this.state.diastolicValue,
+          NgayNhap: this.state.dateValue,
+        }).then((result) => {
+          if (result !== null){
+            this.props.navigation.navigate('Home')
+          }
+        })
       }
     })
   }
@@ -80,7 +90,7 @@ export default class AddDiabetes extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Nhập thông tin đường huyết</Text>
+        <Text style={styles.welcome}>Nhập thông tin huyết áp</Text>
         <View style={{marginTop:20}}>
           <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Ngày ghi</Text>
           <Text style={styles.dateText}>
@@ -96,21 +106,33 @@ export default class AddDiabetes extends Component {
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this.handleDatePicked}
             onCancel={this.hideDateTimePicker}
-            mode={'datetime'}
           />
         </View>
         <View style={{marginTop:20}}>
-          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Chỉ số "Đường huyết" (mmol/L)</Text>
-          <TextInput
-            style={styles.inputText}
-            placeholder={'8.5'}
-            placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
-            underlineColorAndroid={'transparent'}
-            keyboardType='numeric'
-            maxLength={5}
-            value={this.state.diabeteValue}
-            onChangeText={(diabeteValue) => this.setState({diabeteValue})}
-          />
+          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Chỉ số "Huyết áp" (mmHg)</Text>
+          <View style={{flexDirection: 'row'}}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={'120'}
+              placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
+              underlineColorAndroid={'transparent'}
+              keyboardType='numeric'
+              maxLength={5}
+              value={this.state.systolicValue}
+              onChangeText={(systolicValue) => this.setState({systolicValue})}
+            />
+            <Text style={{alignSelf: 'center', fontSize: 24}}> / </Text>
+            <TextInput
+              style={styles.inputText}
+              placeholder={'80'}
+              placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
+              underlineColorAndroid={'transparent'}
+              keyboardType='numeric'
+              maxLength={5}
+              value={this.state.diastolicValue}
+              onChangeText={(diastolicValue) => this.setState({diastolicValue})}
+            />
+          </View>
         </View>
         <TouchableOpacity
           onPress={() => this.handleConfirm()}
@@ -144,7 +166,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputText: {
-    width: Dimensions.get('window').width - 55,
+    width: Dimensions.get('window').width / 2 - 55,
     height: 45,
     borderRadius: 25,
     borderWidth: 0.2,
@@ -152,7 +174,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     // backgroundColor: 'rgba(0, 0, 0, 0.15)',
     color: 'rgba(0, 0, 0, 1)',
-    marginHorizontal: 25,
+    marginHorizontal: 19,
     // textAlign: 'right',
   },
   dateText: {
