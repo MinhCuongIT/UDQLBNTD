@@ -1,12 +1,12 @@
 import React, {Component, PureComponent} from 'react';
-import { StyleSheet, Text, View, FlatList, SectionList, Dimensions, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, SectionList, Dimensions, Alert, AsyncStorage } from 'react-native';
 import { ListItem, SearchBar, Image, Divider, Button } from "react-native-elements";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Swipeout from 'react-native-swipeout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import ApiFindDoctor from '../services/api';
+import ApiDoctor from '../services/api';
 
 var dataSource = [
     // Tiểu Đường
@@ -170,6 +170,11 @@ class FindDoctorSearchBar extends PureComponent {
 class FlatListItem extends PureComponent {
   constructor (props) {
     super(props);
+    this.apiAddMyDoctor = ApiDoctor();
+  }
+
+  AddMyDoctor = (userID, drID) => {
+    
   }
   
   render () {
@@ -186,17 +191,31 @@ class FlatListItem extends PureComponent {
           leftAvatar={{
                   rounded: true,
                   size: "medium",
-                  title: this.props.item.HoTen[0],
+                  // title: this.props.item.HoTen[0],
                   imageProps: {resizeMode:'contain'},
-                //   source: { uri: this.props.item.avatar_url },
+                  source: { uri: this.props.item.Avatar },
                   activeOpacity: 0.7,
                   showEditButton: false,
                   marginLeft: 20,
                 }}
           contentContainerStyle={{height: 40,}}
-        //   onPress={() => {
-        //         this.props.navigation.navigate('DoctorProfile', { data: this.props.item })
-        //       }}
+          rightElement={
+            <Ionicons name="md-add-circle"
+              size={30}
+              color='rgba(74, 195, 180, 1)'
+              onPress={ () => {
+                this.apiAddMyDoctor.addMyDoctor(this.props.userId, this.props.item.MaBacSi)
+                    .then((result) => {
+                        if(result=='success'){
+                          Alert.alert("Gửi yêu cầu thành công")
+                        }
+                        else{
+                          Alert.alert("Gửi yêu cầu thất bại")
+                        }
+                    });
+              } }
+              />
+          }
         />
     )
   }
@@ -208,9 +227,10 @@ export default class AddDoctor extends Component {
       this.state = {
         flatListData: [],
         search_DoctorID: '',
+        userID: '937296327',
       };
 
-      this.apiFindDoctor = ApiFindDoctor();
+      this.apiFindDoctor = ApiDoctor();
 
       this.updateSearch = this.updateSearch.bind(this);
       this.fetchData = this.fetchData.bind(this);
@@ -233,24 +253,32 @@ export default class AddDoctor extends Component {
     // componentWillMount() {
     //     this.fetchData('0946531215');
     // }
+    // async componentDidMount(){
+    //   const userID = await AsyncStorage.getItem('UserId');
+    //   this.setState({
+    //     userId: userID
+    //   })
+    // }
 
     fetchData = () => {
-        this.apiFindDoctor.find_doctor(this.state.search_DoctorID)
+        this.apiFindDoctor.findDoctorByID(this.state.search_DoctorID)
             .then((result) => {
                 this.setState({
-                    flatListData: [...this.state.flatListData,result]
+                    flatListData: result
                 });
+                Alert.alert(JSON.stringify(this.state.flatListData))
             });
     }
 
     updateSearch = search => {
       this.setState({
         search_DoctorID: search,
-      })
+      });
+      // this.fetchData
     }
 
     // componentDidMount() {
-    //   this.updateSearch
+      
     // }
 
     keyExtractor = (item, index) => index.toString()
@@ -262,7 +290,7 @@ export default class AddDoctor extends Component {
             <FlatList
                 renderItem={
                   ({item, index}) => {
-                    return(<FlatListItem item={item} index={index} navigation={this.props.navigation} />)
+                    return(<FlatListItem item={item} index={index} userId={this.state.userID} />)
                   }
                 }
                 data={this.state.flatListData}

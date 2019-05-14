@@ -89,7 +89,7 @@ class MyListCards extends PureComponent {
   render () {
     return (
       <ScrollView>
-        <IntroCard itemAvatar={this.props.profile.avatar_url} itemName={this.props.profile.name} />
+        <IntroCard itemAvatar={this.props.profile.Avatar} itemName={this.props.profile.HoTen} />
         <Card title={
           <View style={styles.customTitle}>
             <AntDesign name="profile" size={20}/>
@@ -99,10 +99,10 @@ class MyListCards extends PureComponent {
             containerStyle={styles.removeCardBorder}
         >
           <Divider/>
-          <CardItem itemDetail={this.props.profile.gender} itemTitle='Giới tính'/>
-          <CardItem itemDetail={this.props.profile.birthday} itemTitle='Ngày sinh'/>
-          <CardItem itemDetail={this.props.profile.id_card} itemTitle='CMND'/>
-          <CardItem itemDetail={this.props.profile.address} itemTitle='Địa chỉ'/>
+          <CardItem itemDetail={this.props.profile.GioiTinh=='0'?'Nam':'Nữ'} itemTitle='Giới tính'/>
+          <CardItem itemDetail={this.props.profile.CMND} itemTitle='CMND'/>
+          <CardItem itemDetail={this.props.profile.BenhVien} itemTitle='Bệnh viện'/>
+          <CardItem itemDetail={this.props.profile.Khoa} itemTitle='Khoa'/>
         </Card>
         <Card title={
           <View style={styles.customTitle}>
@@ -113,38 +113,8 @@ class MyListCards extends PureComponent {
               containerStyle={styles.removeCardBorder}
         >
           <Divider/>
-          <CardItem itemDetail={this.props.profile.number_phone} itemTitle='Số điện thoại'/>
-          <CardItem itemDetail={this.props.profile.email} itemTitle='Email'/>
-          {/* <View style={styles.customBtns}>
-            <View style={{flex: 0.5}}>
-              <Feather.Button
-                name="phone-call"
-                backgroundColor="transparent"
-                borderRadius={0}
-                size={20}
-                color="gray"
-                onPress={()=> console.log("hi")}
-              >
-                <Text style={styles.customBtnText}>
-                  Gọi
-                </Text>
-              </Feather.Button>
-            </View>
-            <View style={{flex: 0.5}}>
-              <Feather.Button
-                name="message-circle"
-                backgroundColor="transparent"
-                borderRadius={0}
-                size={20}
-                color="gray"
-                onPress={()=> console.log("hi")}
-              >
-                <Text style={styles.customBtnText}>
-                  Nhắn tin
-                </Text>
-              </Feather.Button>
-            </View>
-          </View> */}
+          <CardItem itemDetail={this.props.profile.MaBacSi} itemTitle='Số điện thoại'/>
+          <CardItem itemDetail={this.props.profile.Email} itemTitle='Email'/>
         </Card>
       </ScrollView>
     )

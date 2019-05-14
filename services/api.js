@@ -98,6 +98,26 @@ export default () => {
           return null
         })
     },
+
+    // Doctor
+    findDoctorByID: (ID) => {
+      return axiosGet(baseURL + `doctors/find-doctor-by-id?MaBacSi=${ID}`)
+      .then((res) => {
+        if(res.data.status === 'success'){
+          return res.data.doctor
+        }
+        return null
+      })
+    },
+    addMyDoctor: (userID, drID) => {
+      return axiosPost(baseURL + `follows/wait`, {
+        NguoiBiTheoDoi: userID,
+        NguoiTheoDoi: drID
+      })
+      .then((res) => {
+        return res.data.status
+      })
+    }
   }
 
   return services
