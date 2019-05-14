@@ -20,6 +20,10 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import ImagePicker from 'react-native-image-picker';
 
+// Sử dụng thuật toán SHA256
+var SHA256 = require("crypto-js/sha256");
+
+
 // Option dành cho việc tải dữ làm avt
 const options = {
   title: 'Chọn hình đại diện',
@@ -350,8 +354,11 @@ class MyListCards extends PureComponent {
     super(props);
     this.state = {
       isVisiblePasswordScreen: false,
-      isVisibleGioiTinhScreen: false,
+      isLogoutConfirm: false,
       profile: props.profile,
+
+      typePassword: "",
+      newPassword: "",
     };
 
   }
@@ -362,6 +369,34 @@ class MyListCards extends PureComponent {
     });
   }
 
+  // Kiểm tra nhập mật khẩu cũ có đúng hay không?
+  isMatchingPassword = () => {
+    if (this.state.profile.taiKhoan.password == SHA256(this.state.typePassword)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  onUpdatePassword = () => {
+    //Thuc hien doi mat khau
+    this.props.onUpdatePasswordParent(this.state.newPassword);
+  }
+  changePassword = () => {
+    if (this.state.typePassword == "" || this.state.newPassword == "") {
+      alert("Mật khẩu không được rỗng!");
+    } else {
+      //Kiểm tra nhập mật khẩu cũ đúng hay sai
+      if (this.isMatchingPassword()) {
+        this.onUpdatePassword();
+      } else {
+        alert("Mật khẩu cũ không đúng! Vui lòng kiểm tra lại!");
+      }
+
+    }
+  }
+  onLogout = () => {
+    this.props.onLogoutParent();
+  }
   render() {
     return (
       <View>
@@ -370,8 +405,8 @@ class MyListCards extends PureComponent {
           height={250}>
           <ScrollView>
             <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Đổi mật khẩu</Text>
-            <Input placeholder='Nhập mật khẩu cũ' secureTextEntry={true}></Input>
-            <Input placeholder='Nhập mật khẩu mới' secureTextEntry={true}></Input>
+            <Input onChangeText={(text) => this.setState({ typePassword: text })} placeholder='Nhập mật khẩu cũ' secureTextEntry={true}></Input>
+            <Input onChangeText={(text) => this.setState({ newPassword: text })} placeholder='Nhập mật khẩu mới' secureTextEntry={true}></Input>
             <View style={{
               flex: 1,
               flexDirection: 'row',
@@ -382,7 +417,7 @@ class MyListCards extends PureComponent {
                 type='outline'
                 title="Đồng ý"
                 buttonStyle={{ width: 120 }}
-                onPress={() => { alert("Thực hiện đổi mật khẩu!") }}
+                onPress={() => this.changePassword()}
               />
               <Button
                 type='outline'
@@ -393,6 +428,34 @@ class MyListCards extends PureComponent {
             </View>
           </ScrollView>
         </Overlay>
+        
+        <Overlay isVisible={this.state.isLogoutConfirm}
+          borderRadius={10}
+          height={160}>
+          <ScrollView>
+            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Bạn có thực sự muốn đăng xuất không?</Text>
+            <View style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 10
+            }}>
+              <Button
+                type='outline'
+                title="Có"
+                buttonStyle={{ width: 120 }}
+                onPress={()=> this.onLogout()}
+              />
+              <Button
+                type='outline'
+                title="Không"
+                buttonStyle={{ width: 120 }}
+                onPress={() => this.setState({ isLogoutConfirm: false })}
+              />
+            </View>
+          </ScrollView>
+        </Overlay>
+
         <Card title={
           <View style={styles.customTitle}>
             <AntDesign name="profile" size={20} />
@@ -437,18 +500,14 @@ class MyListCards extends PureComponent {
             <MaterialCommunityIcons name='textbox-password' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
           }></ListItem>
         {/* Dang xuat */}
-        <TouchableOpacity onPress={() => { alert("Thực hiện đăng xuất khỏi hệ thống!") }}>
+        <TouchableOpacity onPress={() => { this.setState({ isLogoutConfirm: true })}}>
           <ListItem containerStyle={{ marginLeft: 20 }}
-
             title={
-
               <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', }}>Đăng xuất</Text>
             }
             leftIcon={
               <MaterialCommunityIcons name='logout' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
             }
-
-          // onPress = {()=>{alert("Thực hiện đăng xuất khỏi hệ thống!")}}
           ></ListItem>
 
         </TouchableOpacity>
@@ -487,7 +546,6 @@ export default class Profile extends Component {
       },
 
     };
-
     this.onUpdateNgheNghiepParent = this.onUpdateNgheNghiepParent.bind(this);
     this.onUpdateNhomMauParent = this.onUpdateNhomMauParent.bind(this);
     this.onUpdateEmailParent = this.onUpdateEmailParent.bind(this);
@@ -495,6 +553,8 @@ export default class Profile extends Component {
     this.onUpdateCmndParent = this.onUpdateCmndParent.bind(this);
     this.onUpdateGenParent = this.onUpdateGenParent.bind(this);
     this.onUpdateBirthdayParent = this.onUpdateBirthdayParent.bind(this);
+    this.onUpdatePasswordParent = this.onUpdatePasswordParent.bind(this);
+    this.onLogoutParent = this.onLogoutParent.bind(this);
     this.apiServices = ApiServices();
   }
 
@@ -712,6 +772,41 @@ export default class Profile extends Component {
     await this.updateBenhNhan(patient);
   }
 
+  onUpdatePasswordParent = async (text) => {
+    await this.setState({
+      listData: {
+        ...this.state.listData,
+        taiKhoan: {
+          ...this.state.listData.taiKhoan,
+          password: text
+        }
+      }
+    })
+
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Password: this.state.listData.taiKhoan.password
+    };
+    //Update xuống DB
+    await this.apiServices.changeBenhNhanPassword(patient)
+      .then((result) => {
+        if (result !== null) {
+          // Cập nhật thành công
+          alert("Cập nhật mật khẩu thành công!");
+        }
+        else {
+          // Cập nhật thất bại
+          alert("Cập nhật mật khẩu thất bại!");
+        }
+      })
+  }
+
+  onLogoutParent = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('LoginStack');
+  }
+
   onUpdateGenParent = async (sex) => {
     await this.setState({
       listData: {
@@ -722,6 +817,7 @@ export default class Profile extends Component {
         }
       }
     })
+
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
@@ -747,11 +843,11 @@ export default class Profile extends Component {
       .then((result) => {
         if (result !== null) {
           // Cập nhật thành công
-          alert("Cập nhật dữ liệu thành công!");
+          // alert("Cập nhật dữ liệu thành công!");
         }
         else {
           // Cập nhật thất bại
-          alert("Cập nhật dữ liệu thất bại!");
+          // alert("Cập nhật dữ liệu thất bại!");
         }
       })
   }
@@ -833,6 +929,8 @@ export default class Profile extends Component {
           onUpdateNhomMauParent={this.onUpdateNhomMauParent}
           onUpdateNgheNghiepParent={this.onUpdateNgheNghiepParent}
           onUpdateEmailParent={this.onUpdateEmailParent}
+          onUpdatePasswordParent={this.onUpdatePasswordParent}
+          onLogoutParent={this.onLogoutParent}
         />
       </ScrollView>
     );

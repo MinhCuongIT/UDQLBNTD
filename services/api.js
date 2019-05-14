@@ -63,8 +63,8 @@ export default () => {
           return null
         })
     },
-
-    changeBenhNhanPassword: (info) =>{
+    // Hàm thay đổi mật khẩu
+    changeBenhNhanPassword: (info) => {
       return axiosPost(baseURL + `patients/change-password`, {
         MaBenhNhan: info.MaBenhNhan,
         Password: info.Password
