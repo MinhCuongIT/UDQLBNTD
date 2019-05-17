@@ -32,6 +32,7 @@ export default class HomeDetails extends Component {
       highDomain: props.navigation.state.params.item.highDomain,
       lowDomain: props.navigation.state.params.item.lowDomain,
       unit: props.navigation.state.params.item.unit,
+      date: props.navigation.state.params.item.date,
     };
 
     this.apiService = ApiService()
@@ -65,38 +66,48 @@ export default class HomeDetails extends Component {
     });
   };
 
-  _renderItem = (item, index) => (
-    <View
-      key={index}
-      style={{
-        backgroundColor: 'white',
-        borderWidth: 3,
-        borderColor: '#EFF6F9',//'rgba(0, 0, 0, 0.3)',
-        borderRadius: 20,
-        padding: 20,
-        marginHorizontal: 10,
-        marginVertical: 2,
-        flexDirection: 'row',
-        justifyContent: 'center',
-      }}>
-      <Text style={{flex: 1, fontSize: 20, textAlign: 'center', fontWeight: '600'}}>
-        {this.props.navigation.state.params.item.data.labels[index]}
-      </Text>
-      <View style={{flex: 3, flexDirection: 'column'}}>
-        <Text style={{fontSize: 17, textAlign: 'center', fontWeight: '500'}}>{item}</Text>
-        <Text style={{fontSize: 12, textAlign: 'center',}}>{this.state.unit}</Text>
+  _renderItem = (item, index) => {
+    const date = this.state.date[index]
+    return(
+      <View
+        key={index}
+        style={{
+          backgroundColor: 'white',
+          borderWidth: 3,
+          borderColor: '#EFF6F9',//'rgba(0, 0, 0, 0.3)',
+          borderRadius: 20,
+          padding: 20,
+          marginHorizontal: 10,
+          marginVertical: 2,
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}>
+
+        <View style={{flex: 1.5, flexDirection: 'column'}}>
+          <Text style={{fontSize: 20, textAlign: 'center', fontWeight: '600'}}>
+            {date.getDate() + '/' + (date.getMonth() + 1)}
+          </Text>
+          <Text style={{fontSize: 14, textAlign: 'center', fontWeight: '300'}}>
+            {'lúc ' + date.getHours() + ':' + date.getMinutes()}
+          </Text>
+        </View>
+
+        <View style={{flex: 3, flexDirection: 'column'}}>
+          <Text style={{fontSize: 17, textAlign: 'center', fontWeight: '500'}}>{item}</Text>
+          <Text style={{fontSize: 12, textAlign: 'center',}}>{this.state.unit}</Text>
+        </View>
+        <Image
+          source={this.state.highDomain!==0
+            ? item >= this.state.highDomain
+              ? require('../images/up-arrow.png')
+              : item <= this.state.lowDomain
+                ? require('../images/down-arrow.png')
+                : require('../images/checked.png')
+            : require('../images/checked.png')}
+          style={styles.chartTitleIcon}/>
       </View>
-      <Image
-        source={this.state.highDomain!==0
-          ? item >= this.state.highDomain
-            ? require('../images/up-arrow.png')
-            : item <= this.state.lowDomain
-              ? require('../images/down-arrow.png')
-              : require('../images/checked.png')
-          : require('../images/checked.png')}
-        style={styles.chartTitleIcon}/>
-    </View>
-  );
+    );
+  }
 
   render() {
     const chartConfig = {
@@ -108,8 +119,12 @@ export default class HomeDetails extends Component {
     const screenWidth = Dimensions.get('window').width
 
     let listItems = this.props.navigation.state.params.item.data.datasets[2].data.map((item, index) =>{
+      const value = this.props.navigation.state.params.item.id===1
+        ? item
+        : this.props.navigation.state.params.item.data.datasets[3].data[index] + '/' + item
+
       return (
-        this._renderItem(item, index)
+        this._renderItem(value, index)
       )
     })
 // alert(JSON.stringify(this.props.navigation.state.params.item.data.datasets[2].data))

@@ -16,6 +16,7 @@ import RegisterInformationPage from "./RegisterInformationPage";
 import AddDiabetes from "./AddDiabetes";
 import AddBloodPressure from "./AddBloodPressure";
 import AddValuePage from "./AddValuePage";
+import Notifications from './Notifications';
 
 const HomeStack = createStackNavigator({
   Home: {screen: Home,
@@ -63,6 +64,18 @@ const HomeStack = createStackNavigator({
       headerTintColor: 'white',
     },
   },
+  Notifications: {screen: Notifications,
+    navigationOptions:{
+      headerStyle:{
+        backgroundColor: 'rgba(74, 195, 180, 1)',
+      },
+      headerBackTitleStyle:{
+        fontSize:25,
+        fontWeight: 'bold',
+      },
+      headerTintColor: 'white',
+    },
+  }
 }, {
   initialRouteName: 'Home',
   headerBackTitleVisible: true,

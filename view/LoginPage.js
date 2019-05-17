@@ -10,7 +10,7 @@
 import React, {Component} from 'react';
 import {
   ImageBackground, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,
-  Dimensions, TouchableWithoutFeedback, Image, AsyncStorage
+  Dimensions, TouchableWithoutFeedback, Image, AsyncStorage, ScrollView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import bgImage from '../images/backgroungImage2.jpg'
@@ -39,6 +39,7 @@ export default class LoginPage extends Component {
       isHidePass: true,
       name: '',
       pass: '',
+      errorMessage: '',
     };
 
     this.apiService = ApiService()
@@ -93,15 +94,24 @@ export default class LoginPage extends Component {
   }
 
   handleLogin = () => {
-    this.apiService.login({
-      MaBenhNhan: this.state.name,
-      Password: this.state.pass,
-    }).then(async (data) => {
-      if (data !== null) {
-        await AsyncStorage.setItem('UserId', data.MaBenhNhan)
-        this.props.navigation.navigate('AppStack')
-      }
-    })
+    if (this.state.name==='')
+      this.setState({errorMessage: 'Vui lòng nhập "Số điện thoại" của bạn'})
+    else if (this.state.pass==='')
+      this.setState({errorMessage: 'Vui lòng nhập "Mật khẩu"'})
+    else {
+      this.apiService.login({
+        MaBenhNhan: this.state.name,
+        Password: this.state.pass,
+      }).then(async (data) => {
+        if (data !== null) {
+          await AsyncStorage.setItem('UserId', data.MaBenhNhan)
+          this.props.navigation.navigate('AppStack')
+        }
+        else {
+          this.setState({errorMessage: 'Tài khoản này không tồn tại'})
+        }
+      })
+    }
   }
 
   eyeHandleIn = () => {
@@ -113,9 +123,24 @@ export default class LoginPage extends Component {
   }
 
   render() {
+    const errorMessage = this.state.errorMessage!==''
+      ? <View style={{
+        marginTop: 10,
+        paddingLeft: 40,
+      }}>
+        <Text style={{
+          color: 'red',
+          fontSize: 16,
+        }}>
+            {this.state.errorMessage}</Text>
+      </View>
+      : null
+
     return (
       <ImageBackground source={bgImage} style={styles.backgroundContainer} blurRadius={1}>
         {/*<Text style={styles.welcome}>Welcome</Text>*/}
+        <ScrollView>
+        <View style={{height: Dimensions.get('window').height - 30}}>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ImageBackground
           style={{height: 250, width: 250}}
@@ -163,6 +188,7 @@ export default class LoginPage extends Component {
             <Icon name="eye" size={28} color={'rgba(255, 255, 255, 0.7)'}/>
           </TouchableOpacity>
         </View>
+          {errorMessage}
         <TouchableOpacity
           onPress={() => this.handleLogin()}
           style={styles.btnLogin}
@@ -186,6 +212,8 @@ export default class LoginPage extends Component {
             </Text>
           </TouchableOpacity>
         </View>
+        </View>
+        </ScrollView>
       </ImageBackground>
     );
   }
