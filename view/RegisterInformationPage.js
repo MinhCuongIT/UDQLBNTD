@@ -142,6 +142,10 @@ export default class RegisterInformationPage extends Component {
         rePass: 'Success',
       },
       showAlert: false,
+      isExist: false,
+      userId: this.props.navigation.state.params.acc.phone.national_number[0]==='0'
+        ? this.props.navigation.state.params.acc.phone.national_number
+        : '0' + this.props.navigation.state.params.acc.phone.national_number,
     }
 
     this.handleChangeNameValue = this.handleChangeNameValue.bind(this)
@@ -152,6 +156,17 @@ export default class RegisterInformationPage extends Component {
     this.handleCheckRePassValue = this.handleCheckRePassValue.bind(this)
 
     this.apiService = ApiService()
+  }
+
+  componentDidMount() {
+    this.apiService.getBenhNhanInfo({MaBenhNhan: this.state.userId})
+      .then(result => {
+        if (result !== null){
+          this.setState({
+            isExist: true,
+          })
+        }
+      })
   }
 
   handleChangeNameValue = (text) => {
@@ -227,31 +242,49 @@ export default class RegisterInformationPage extends Component {
         }
       })
   }
-  registerAccount = () => {
+  registerAccount = async () => {
     // this.props.navigation.navigate('Login')
     // this.setState({
     //   showAlert: true
     // });
 
     // alert(this.props.navigation.state.params.acc.phone.national_number)
-    this.apiService.register({
-      MaBenhNhan: this.props.navigation.state.params.acc.phone.national_number,
-      HoTen: this.state.nameValue,
-      Password: this.state.passValue,
-    }).then((data) => {alert(JSON.stringify(data))});
+    await this.handleCheckNameValue()
+    await this.handleCheckPassValue()
+    if (this.state.errorMessage.name==='Success' && this.state.errorMessage.pass==='Success') {
+      this.apiService.register({
+        MaBenhNhan: this.state.userId,
+        HoTen: this.state.nameValue,
+        Password: this.state.passValue,
+      }).then((data) => {
+        this.setState({
+          showAlert: true
+        });
+        // alert(JSON.stringify(data))
+        // this.props.navigation.navigate('Login')
+      });
+    }
   }
 
   hideAlert = () => {
     this.setState({
       showAlert: false
     });
-    // this.props.navigation.navigate('Login')
+    this.props.navigation.navigate('Login')
 
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      this.state.isExist
+      ? <View style={styles.container}>
+          <Text style={{
+            fontSize: 25,
+            fontWeight: '300',
+            marginTop: 30,
+          }}> Tài khoản này đã tồn tại</Text>
+        </View>
+      : <View style={styles.container}>
         <View style={{marginTop: 10}}>
           <Text style={{fontSize: 27, fontWeight: 'bold', color: 'black'}}>Thông tin của bạn</Text>
         </View>
@@ -299,8 +332,8 @@ export default class RegisterInformationPage extends Component {
           showConfirmButton={true}
           confirmText="Đăng nhập"
           confirmButtonColor="rgba(54, 175, 160, 1)"
-          confirmButtonTextStyle={{fontSize:30}}
-          messageStyle={{fontSize: 40}}
+          confirmButtonTextStyle={{fontSize:15}}
+          messageStyle={{fontSize: 20, textAlign: 'center'}}
           onConfirmPressed={() => {
             this.hideAlert();
           }}

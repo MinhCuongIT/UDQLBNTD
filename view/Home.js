@@ -57,7 +57,7 @@ export default class Home extends Component {
       headerTitle: <Logo/>,
       headerRight: (
         <TouchableOpacity
-          onPress={() => navigation.navigate('HomeDetails')}
+          onPress={() => navigation.navigate('Notifications')}
           style={{marginRight: 30}}
         >
           {navigation.getParam('numberNoti')!==0
@@ -80,6 +80,7 @@ export default class Home extends Component {
       data: [],
       numberNoti: 1,
       refreshing: false,
+      haveData: false,
     };
 
     this.apiService = ApiService()
@@ -121,16 +122,29 @@ export default class Home extends Component {
     }).then(async (result) => {
       if (result !== null && result.length > 0) {
         // alert(result[0].Loai + ' ' + result.length)
-        let getData = {
-          data: [],
-          color: (opacity = 1) => `rgba(70, 200, 120, ${opacity})`,
-          strokeWidth: 6
-        }
+        let getData = result[0].Loai === 1
+          //Đường huyết
+        ? {
+            data: [],
+            color: (opacity = 1) => `rgba(70, 200, 120, ${opacity})`,
+            strokeWidth: 6
+          }
+          // Huyết áp
+        : [{
+            data: [],
+            color: (opacity = 1) => `rgba(22, 19, 208, ${opacity})`,
+            strokeWidth: 6
+
+          },
+          {
+            data: [],
+            color: (opacity = 1) => `rgba(212, 25, 28, ${opacity})`,
+            strokeWidth: 6
+          }]
         let valueData = {
           data: {
             labels: [],
-            datasets: result[0].Loai === 1
-              ? // Đường huyết
+            datasets:
               [
                 {
                   data: [ ],
@@ -143,55 +157,45 @@ export default class Home extends Component {
                   strokeWidth: 2
                 },
               ]
-              : // Huyết áp
-              [
-                {
-                  data: [ ],
-                  color: (opacity = 1) => `rgba(238, 0, 0, ${opacity})`,
-                  strokeWidth: 6
-                }, {
-                data: [ ],
-                color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-                strokeWidth: 6
-              }
-              ]
           },
+          date: [],
           type: result[0].Loai === 1
             ? 'ĐƯỜNG HUYẾT (mmol/L)'
             : 'HUYẾT ÁP (mmHg)',
           id: result[0].Loai,
           highDomain: result[0].Loai === 1
-            ? 10.2
-            : 0,
+            ? 10.2 //Đường huyết
+            : 0,   //Huyết áp
           lowDomain:  result[0].Loai === 1
-            ? 3.8
-            : 0,
+            ? 3.8 //Đường huyết
+            : 0,  //Huyết áp
           unit: result[0].Loai === 1
-            ? 'mmol/L'
-            : 'mmHg',
+            ? 'mmol/L' //Đường huyết
+            : 'mmHg',  //Huyết áp
         }
 
         const highDomain = valueData.highDomain
         const lowDomain = valueData.lowDomain
 
         for (let index = (result.length - 1); index >= 0;) {
+          const getDate = new Date(result[index].NgayNhap)
+          valueData.date.push(getDate)
           switch (result[0].Loai) {
             case 1: {
               valueData.data.datasets[0].data.push(highDomain);
               valueData.data.datasets[1].data.push(lowDomain);
               getData.data.push(result[index].ChiSo)
-              // alert(JSON.stringify(result[i].ChiSo))
-              const getDate = new Date(result[index].NgayNhap)
+
               valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
               index--;
               break;
             }
             case 2: {
-              valueData.data.datasets[0].data.push(result[index].ChiSo);
-              const getDate = new Date(result[index].NgayNhap)
-              valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
+              getData[0].data.push(result[index].ChiSo);
               --index;
-              valueData.data.datasets[1].data.push(result[index].ChiSo);
+              getData[1].data.push(result[index].ChiSo);
+
+              valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
               index--;
               break;
             }
@@ -202,6 +206,10 @@ export default class Home extends Component {
             valueData.data.datasets.push(getData);
             break;
           }
+          case 2: {
+            valueData.data.datasets = valueData.data.datasets.concat(getData);
+            break;
+          }
         }
         dataT.push(valueData);
         await this.setState(
@@ -209,6 +217,10 @@ export default class Home extends Component {
             data: [...this.state.data,...dataT],
           }
         );
+
+        this.setState({
+          haveData: true
+        })
       }
     })
   }
@@ -238,66 +250,77 @@ export default class Home extends Component {
   }
 
   render() {
-    let listChart = this.state.data.map(item => {
-      const chartConfig = {
-        backgroundGradientFrom: '#F5FCFF',
-        backgroundGradientTo: '#F5FCFF',
-        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        strokeWidth: 2
-      }
-      const screenWidth = Dimensions.get('window').width
+    let listChart = this.state.haveData
+      ?this.state.data.map(item => {
+        const chartConfig = {
+          backgroundGradientFrom: '#F5FCFF',
+          backgroundGradientTo: '#F5FCFF',
+          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          strokeWidth: 2
+        }
+        const screenWidth = Dimensions.get('window').width
 
-      const highDomain = item.highDomain
-      const lowDomain = item.lowDomain
-      const unit = item.unit
+        const highDomain = item.highDomain
+        const lowDomain = item.lowDomain
+        const unit = item.unit
 
-      return (
-        <View key={item.type}>
-          <View style={{flexDirection: 'row', margin: 10, marginTop: 20, }}>
-            <Image
-              source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'
-                ? require('../images/Diabetes.png')
-                : require('../images/BloodPressure.png')}
-              style={styles.chartTitleIcon}
-            />
-            <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
-          </View>
+        return (
+          <View key={item.type}>
+            <View style={{flexDirection: 'row', margin: 10, marginTop: 20, }}>
+              <Image
+                source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'
+                  ? require('../images/Diabetes.png')
+                  : require('../images/BloodPressure.png')}
+                style={styles.chartTitleIcon}
+              />
+              <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
+            </View>
 
-          <TouchableOpacity
-            onPress={() => {this.props.navigation.navigate('HomeDetails', {item: item})}}
-          >
-            <LineChart
-              data={item.data}
-              width={screenWidth+1}
-              height={220}
-              chartConfig={chartConfig}
-              onDataPointClick={(item) => {Alert.alert(
-                highDomain!==0
-                ? item.value >= highDomain
-                  ? 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở ngưỡng cao'
-                  : item.value <= lowDomain
-                    ? 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở ngưỡng thấp'
-                    : 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở mức bình thường'
-                : 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ''
-              )}}
-              withShadow={false}
-              bezier
-            />
-          </TouchableOpacity>
-          <View style={{marginLeft: 20, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
-            {/*<View style={item.type==='ĐƯỜNG HUYẾT (mmol/L)'?styles.errorStatus:styles.normalStatus}></View>*/}
             <TouchableOpacity
-              onPress={async () => {await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')}}
-              style={styles.btnMess}
+              onPress={() => {this.props.navigation.navigate('HomeDetails', {item: item})}}
             >
-              <Text style={{color: 'white', fontSize: 17}}>
-                Liên hệ bác sĩ chuyên môn
-              </Text>
+              <LineChart
+                data={item.data}
+                width={screenWidth+1}
+                height={220}
+                chartConfig={chartConfig}
+                onDataPointClick={(item) => {Alert.alert(
+                  highDomain!==0
+                  ? item.value >= highDomain
+                    ? 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở ngưỡng cao'
+                    : item.value <= lowDomain
+                      ? 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở ngưỡng thấp'
+                      : 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ', ở mức bình thường'
+                  : 'Giá trị chỉ số là ' + item.value.toString() + ' ' + unit + ''
+                )}}
+                withShadow={false}
+                bezier
+              />
             </TouchableOpacity>
+            <View style={{marginLeft: 20, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
+              {/*<View style={item.type==='ĐƯỜNG HUYẾT (mmol/L)'?styles.errorStatus:styles.normalStatus}></View>*/}
+              <TouchableOpacity
+                onPress={async () => {await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')}}
+                style={styles.btnMess}
+              >
+                <Text style={{color: 'white', fontSize: 17}}>
+                  Liên hệ bác sĩ chuyên môn
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      )
-    })
+        )
+      })
+      : <TouchableOpacity
+        onPress={async () => {await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')}}
+      ><Text style={{
+        margin: 10,
+        marginTop: 30,
+        fontSize: 15,
+        fontWeight: '300',
+      }}>
+        Chưa có dữ liệu về sức khỏe
+      </Text></TouchableOpacity>
 
     return (
       <View style={styles.container}>

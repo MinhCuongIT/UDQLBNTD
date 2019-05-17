@@ -38,10 +38,11 @@ export default class AddBloodPressure extends Component {
     const date = new Date();
     this.state = {
       isDateTimePickerVisible: false,
-      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
       systolicValue: '',
       diastolicValue: '',
-      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+      isNullValue: false,
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
     };
 
     this.apiService = ApiService()
@@ -58,33 +59,40 @@ export default class AddBloodPressure extends Component {
   handleDatePicked = date => {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
-      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
-      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
     })
     this.hideDateTimePicker();
   };
 
   handleConfirm = async () => {
-    const userId = await AsyncStorage.getItem('UserId');
-    this.apiService.addHealthValue({
-      MaBenhNhan: userId,
-      Loai: 2,
-      ChiSo: this.state.systolicValue,
-      NgayNhap: this.state.dateValue,
-    }).then((result) => {
-      if (result !== null){
-        this.apiService.addHealthValue({
-          MaBenhNhan: userId,
-          Loai: 2,
-          ChiSo: this.state.diastolicValue,
-          NgayNhap: this.state.dateValue,
-        }).then((result) => {
-          if (result !== null){
-            this.props.navigation.navigate('Home')
-          }
-        })
-      }
-    })
+    if (this.state.diastolicValue === '' || this.state.systolicValue === ''){
+      this.setState({
+        isNullValue: true,
+      })
+    }
+    else {
+      const userId = await AsyncStorage.getItem('UserId');
+      this.apiService.addHealthValue({
+        MaBenhNhan: userId,
+        Loai: 2,
+        ChiSo: this.state.systolicValue,
+        NgayNhap: this.state.dateValue,
+      }).then((result) => {
+        if (result !== null) {
+          this.apiService.addHealthValue({
+            MaBenhNhan: userId,
+            Loai: 2,
+            ChiSo: this.state.diastolicValue,
+            NgayNhap: this.state.dateValue,
+          }).then((result) => {
+            if (result !== null) {
+              this.props.navigation.navigate('Home')
+            }
+          })
+        }
+      })
+    }
   }
 
   render() {
@@ -106,6 +114,7 @@ export default class AddBloodPressure extends Component {
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this.handleDatePicked}
             onCancel={this.hideDateTimePicker}
+            mode={'datetime'}
           />
         </View>
         <View style={{marginTop:20}}>
@@ -119,7 +128,7 @@ export default class AddBloodPressure extends Component {
               keyboardType='numeric'
               maxLength={5}
               value={this.state.systolicValue}
-              onChangeText={(systolicValue) => this.setState({systolicValue})}
+              onChangeText={(systolicValue) => {if (systolicValue===''|| !isNaN(systolicValue)) this.setState({systolicValue})}}
             />
             <Text style={{alignSelf: 'center', fontSize: 24}}> / </Text>
             <TextInput
@@ -130,10 +139,16 @@ export default class AddBloodPressure extends Component {
               keyboardType='numeric'
               maxLength={5}
               value={this.state.diastolicValue}
-              onChangeText={(diastolicValue) => this.setState({diastolicValue})}
+              onChangeText={(diastolicValue) => {if (diastolicValue===''|| !isNaN(diastolicValue)) this.setState({diastolicValue})}}
             />
           </View>
         </View>
+        {this.state.isNullValue
+          ? <View style={{marginTop:10, alignSelf: 'flex-start'}}>
+            <Text style={{marginLeft: 30, color: 'red',}}>Vui lòng nhập chỉ số</Text>
+          </View>
+          : <View/>
+        }
         <TouchableOpacity
           onPress={() => this.handleConfirm()}
           style={styles.btnConfirm}
