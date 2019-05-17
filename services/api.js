@@ -117,6 +117,15 @@ export default () => {
       .then((res) => {
         return res.data.status
       })
+    },
+    getMyListDoctors: (userID) => {
+      return axiosGet(baseURL + `follows/list-patient-follower?NguoiBiTheoDoi=${userID}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data
+          }
+          return null
+        })
     }
   }
 

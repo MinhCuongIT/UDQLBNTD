@@ -14,11 +14,11 @@ class IntroCard extends PureComponent {
     return (
       <ListItem
         containerStyle={{marginHorizontal: 10}}
-        leftAvatar={{ source: { uri: this.props.itemAvatar }, size: 'large' }}
+        leftAvatar={{ source: { uri: this.props.item.Avatar }, size: 'large' }}
         title={
           <View>
             <Text style={{ fontSize: 25, color: 'black', fontWeight: 'bold' }}>
-              {this.props.itemName}
+              {this.props.item.HoTen}
             </Text>
           </View>
         }
@@ -45,7 +45,9 @@ class IntroCard extends PureComponent {
                 borderRadius={0}
                 size={20}
                 color="rgba(74, 195, 180, 1)"
-                onPress={()=> console.log("hi")}
+                onPress={() => {
+                  this.props.navigation.navigate('Chat', { title: this.props.item.HoTen, data: this.props.item })
+                }}
               >
                 <Text style={styles.customBtnText}>
                   Nhắn tin
@@ -89,7 +91,7 @@ class MyListCards extends PureComponent {
   render () {
     return (
       <ScrollView>
-        <IntroCard itemAvatar={this.props.profile.Avatar} itemName={this.props.profile.HoTen} />
+        <IntroCard item={this.props.profile} navigation={this.props.navigation}/>
         <Card title={
           <View style={styles.customTitle}>
             <AntDesign name="profile" size={20}/>
@@ -147,7 +149,7 @@ export default class DoctorProfile extends Component {
     render() {
       return (
         <View style={styles.wrapper}>
-            <MyListCards profile={this.state.profile}/>
+            <MyListCards profile={this.state.profile} navigation={this.props.navigation}/>
         </View>
       );
     }

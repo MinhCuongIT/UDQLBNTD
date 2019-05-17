@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Swipeout from 'react-native-swipeout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import ApiDoctor from '../services/api';
 
 var dataSource = [
   // Tiểu Đường
@@ -245,7 +246,7 @@ class SectionListItem extends PureComponent {
           leftAvatar={{
                   rounded: true,
                   size: "medium",
-                  title: this.props.item.HoTen[0],
+                  // title: this.props.item.HoTen[0],
                   imageProps: {resizeMode:'contain'},
                   source: { uri: this.props.item.Avatar },
                   activeOpacity: 0.7,
@@ -303,33 +304,7 @@ export default class ListDoctors extends Component {
         userID: '937296327',
       };
       
-      this.arrayholder = [
-        {
-          data: [],
-          title: 'Tiểu Đường'
-        },
-        {
-          data: [
-            {
-              "MaBacSi" : "0121451315",
-              "Password" : null,
-              "HoTen" : "Huỳnh Ngọc Như",
-              "Avatar" : "http://pngimg.com/uploads/pokemon/pokemon_PNG28.png",
-              "CMND" : "215224698",
-              "GioiTinh" : "1",
-              "Email" : "hnn92@gmail.com",
-              "BenhVien" : "Bệnh Viện Y Phạm Ngọc Thạch",
-              "Khoa" : "Huyết Áp",
-              "IsDeleted" : "0"
-            },
-          ],
-          title: 'Huyết Áp'
-        },
-        {
-          data: [],
-          title: 'XXX'
-        }
-      ];
+      this.apiDoctor = ApiDoctor();
     }
 
   
@@ -369,9 +344,47 @@ export default class ListDoctors extends Component {
         // )
       }
     };
+
+    getMyListDoctors = () => {      
+      let arrayholder = [
+        {
+          data: [],
+          title: 'Tiểu Đường'
+        },
+        {
+          data: [],
+          title: 'Huyết Áp'
+        },
+      ];
+
+      this.apiDoctor.getMyListDoctors(this.state.userID)
+        .then((result) => {
+          if(result){
+            for(let i=0; i<result.length; i++){
+              if(result.list_doctors[i].Khoa=='Tiểu Đường'){
+                arrayholder[0].data.push(result.list_doctors[i])
+              }
+              else if(result.list_doctors[i].Khoa=='Huyết Áp'){
+                arrayholder[1].data.push(result.list_doctors[i])
+              }
+            }
+          }
+          this.setState({
+            sectionListData: arrayholder
+          });
+        });
+    }
+
+    // componentWillMount() {
+    //   this.getMyListDoctors();
+    //   this.setState({
+    //     sectionListData: this.arrayholder
+    //   });
+    // }
   
     componentDidMount() {
-      this.makeRemoteRequest();
+      this.getMyListDoctors();
+      // this.makeRemoteRequest();
       // this.props.navigation.setParams({updateSearch: this.updateSearch,});
     }
 
@@ -396,8 +409,6 @@ export default class ListDoctors extends Component {
         case "Tiểu Đường":
           return(<SectionHeader iconSectionHeader={require('../images/Diabetes.png')} sectionTitle={section.title} navigation={this.props.navigation} />);
         case 'Huyết Áp':
-          return(<SectionHeader iconSectionHeader={require('../images/BloodPressure.png')} sectionTitle={section.title} navigation={this.props.navigation} />);
-        case 'XXX':
           return(<SectionHeader iconSectionHeader={require('../images/BloodPressure.png')} sectionTitle={section.title} navigation={this.props.navigation} />);
         default:
           break;
@@ -490,7 +501,7 @@ export default class ListDoctors extends Component {
                 }
                 renderSectionHeader={this.setSectionHeader}
                 stickySectionHeadersEnabled={true}
-                ListFooterComponent={this.footerComponent.bind(this)}
+                // ListFooterComponent={this.footerComponent.bind(this)}
                 ListEmptyComponent={this.emptyListComponent.bind(this)}
             ></SectionList>
         </View>

@@ -54,12 +54,12 @@ export class RightListItems extends PureComponent {
               {this.props.item.content}
             </Text>
           </View>
-          <Avatar
+          {/* <Avatar
                 size="medium"
                 rounded
                 source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqUifDeYJGapfmg23wf6fEGWG9EHJwYdFRyM-dSTr1PANe6Be9Vg'}}
                 activeOpacity={0.7}
-              />
+              /> */}
         </View>
       )
     }
@@ -136,7 +136,7 @@ export default class ChatScreen extends Component {
         return(<RightListItems item={item}/>);
       }
       else{
-        return(<LeftListItems item={item} avatar={this.props.navigation.state.params.avatar}/>);
+        return(<LeftListItems item={item} avatar={this.props.navigation.getParam('data').Avatar}/>);
       }
     }
   
