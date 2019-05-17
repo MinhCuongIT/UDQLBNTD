@@ -14,11 +14,11 @@ class IntroCard extends PureComponent {
     return (
       <ListItem
         containerStyle={{marginHorizontal: 10}}
-        leftAvatar={{ source: { uri: this.props.itemAvatar }, size: 'large' }}
+        leftAvatar={{ source: { uri: this.props.item.Avatar }, size: 'large' }}
         title={
           <View>
             <Text style={{ fontSize: 25, color: 'black', fontWeight: 'bold' }}>
-              {this.props.itemName}
+              {this.props.item.HoTen}
             </Text>
           </View>
         }
@@ -45,7 +45,9 @@ class IntroCard extends PureComponent {
                 borderRadius={0}
                 size={20}
                 color="rgba(74, 195, 180, 1)"
-                onPress={()=> console.log("hi")}
+                onPress={() => {
+                  this.props.navigation.navigate('Chat', { title: this.props.item.HoTen, data: this.props.item })
+                }}
               >
                 <Text style={styles.customBtnText}>
                   Nhắn tin
@@ -89,7 +91,7 @@ class MyListCards extends PureComponent {
   render () {
     return (
       <ScrollView>
-        <IntroCard itemAvatar={this.props.profile.avatar_url} itemName={this.props.profile.name} />
+        <IntroCard item={this.props.profile} navigation={this.props.navigation}/>
         <Card title={
           <View style={styles.customTitle}>
             <AntDesign name="profile" size={20}/>
@@ -99,10 +101,10 @@ class MyListCards extends PureComponent {
             containerStyle={styles.removeCardBorder}
         >
           <Divider/>
-          <CardItem itemDetail={this.props.profile.gender} itemTitle='Giới tính'/>
-          <CardItem itemDetail={this.props.profile.birthday} itemTitle='Ngày sinh'/>
-          <CardItem itemDetail={this.props.profile.id_card} itemTitle='CMND'/>
-          <CardItem itemDetail={this.props.profile.address} itemTitle='Địa chỉ'/>
+          <CardItem itemDetail={this.props.profile.GioiTinh=='0'?'Nam':'Nữ'} itemTitle='Giới tính'/>
+          <CardItem itemDetail={this.props.profile.CMND} itemTitle='CMND'/>
+          <CardItem itemDetail={this.props.profile.BenhVien} itemTitle='Bệnh viện'/>
+          <CardItem itemDetail={this.props.profile.Khoa} itemTitle='Khoa'/>
         </Card>
         <Card title={
           <View style={styles.customTitle}>
@@ -113,38 +115,8 @@ class MyListCards extends PureComponent {
               containerStyle={styles.removeCardBorder}
         >
           <Divider/>
-          <CardItem itemDetail={this.props.profile.number_phone} itemTitle='Số điện thoại'/>
-          <CardItem itemDetail={this.props.profile.email} itemTitle='Email'/>
-          {/* <View style={styles.customBtns}>
-            <View style={{flex: 0.5}}>
-              <Feather.Button
-                name="phone-call"
-                backgroundColor="transparent"
-                borderRadius={0}
-                size={20}
-                color="gray"
-                onPress={()=> console.log("hi")}
-              >
-                <Text style={styles.customBtnText}>
-                  Gọi
-                </Text>
-              </Feather.Button>
-            </View>
-            <View style={{flex: 0.5}}>
-              <Feather.Button
-                name="message-circle"
-                backgroundColor="transparent"
-                borderRadius={0}
-                size={20}
-                color="gray"
-                onPress={()=> console.log("hi")}
-              >
-                <Text style={styles.customBtnText}>
-                  Nhắn tin
-                </Text>
-              </Feather.Button>
-            </View>
-          </View> */}
+          <CardItem itemDetail={this.props.profile.MaBacSi} itemTitle='Số điện thoại'/>
+          <CardItem itemDetail={this.props.profile.Email} itemTitle='Email'/>
         </Card>
       </ScrollView>
     )
@@ -177,7 +149,7 @@ export default class DoctorProfile extends Component {
     render() {
       return (
         <View style={styles.wrapper}>
-            <MyListCards profile={this.state.profile}/>
+            <MyListCards profile={this.state.profile} navigation={this.props.navigation}/>
         </View>
       );
     }
