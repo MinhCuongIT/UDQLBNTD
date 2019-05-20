@@ -5,6 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { Card, ListItem, Divider, Button } from "react-native-elements";
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
+import { DateTime } from './ChatScreen';
 
 class IntroCard extends PureComponent {
   constructor (props) {
@@ -15,7 +16,7 @@ class IntroCard extends PureComponent {
     return (
       <ListItem
         containerStyle={{marginHorizontal: 10}}
-        leftAvatar={{ source: { uri: this.props.item.Avatar }, size: 'large' }}
+        leftAvatar={{ source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar }, size: 'large' }}
         title={
           <View>
             <Text style={{ fontSize: 25, color: 'black', fontWeight: 'bold' }}>
@@ -115,6 +116,11 @@ class MyListCards extends PureComponent {
   }
   
   render () {
+    let birth_dayResponse = new Date(this.props.profile.NgaySinh);
+    let _dd = birth_dayResponse.getDate(),
+        _mm = birth_dayResponse.getMonth() + 1,
+        _yyyy = birth_dayResponse.getFullYear();
+    let birth_day = _dd + '-' + _mm + '-' + _yyyy;
     return (
       <ScrollView>
         <IntroCard item={this.props.profile} navigation={this.props.navigation} myID={this.props.myID} />
@@ -128,9 +134,12 @@ class MyListCards extends PureComponent {
         >
           <Divider/>
           <CardItem itemDetail={this.props.profile.GioiTinh.data==1?'Nam':'Nữ'} itemTitle='Giới tính'/>
+          <CardItem itemDetail={birth_day} itemTitle='Ngày sinh'/>
           <CardItem itemDetail={this.props.profile.CMND} itemTitle='CMND'/>
-          <CardItem itemDetail={this.props.profile.BenhVien} itemTitle='Bệnh viện'/>
-          <CardItem itemDetail={this.props.profile.Khoa} itemTitle='Khoa'/>
+          <CardItem itemDetail={this.props.profile.DiaChi} itemTitle='Địa chỉ'/>
+          <CardItem itemDetail={this.props.profile.NgheNghiep} itemTitle='Nghề nghiệp'/>
+          <CardItem itemDetail={this.props.profile.NhomMau} itemTitle='Nhóm máu'/>
+          <CardItem itemDetail={this.props.profile.DiUngThuoc} itemTitle='Dị ứng thuốc'/>
         </Card>
         <Card title={
           <View style={styles.customTitle}>
@@ -141,7 +150,7 @@ class MyListCards extends PureComponent {
               containerStyle={styles.removeCardBorder}
         >
           <Divider/>
-          <CardItem itemDetail={this.props.profile.MaBacSi} itemTitle='Số điện thoại'/>
+          <CardItem itemDetail={this.props.profile.MaBenhNhan} itemTitle='Số điện thoại'/>
           <CardItem itemDetail={this.props.profile.Email} itemTitle='Email'/>
         </Card>
       </ScrollView>
@@ -150,7 +159,7 @@ class MyListCards extends PureComponent {
 }
 
   
-export default class DoctorProfile extends Component {
+export default class RelativeProfile extends Component {
   
     constructor(props) {
       super(props);
@@ -162,7 +171,7 @@ export default class DoctorProfile extends Component {
   
     static navigationOptions = ({ navigation }) => {
       return {
-        title: 'Thông Tin Bác Sĩ',
+        title: 'Thông Tin Người Thân',
         headerTitleStyle: {
           fontWeight: 'bold',
         },

@@ -1,5 +1,5 @@
 import React, {Component, PureComponent} from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList} from 'react-native';
+import {StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Alert, AsyncStorage } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar } from "react-native-elements";
@@ -80,9 +80,9 @@ export class LeftListItems extends PureComponent {
                 activeOpacity={0.7}
                 />
             <View style={[styles.BubbleChat, styles.leftBubbleChat]}>             
-            <Text style={{paddingTop: 5, color: 'black', fontSize: 17}}>
-                {this.props.item.content}
-            </Text>
+              <Text style={{paddingTop: 5, color: 'black', fontSize: 17}}>
+                  {this.props.item.content}
+              </Text>
             </View>
             <DateTime />
         </View>
@@ -95,6 +95,7 @@ export default class ChatScreen extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        myID: this.props.navigation.getParam('myID'),
         textInput: '',
         items: [],
         // date: [],
@@ -114,6 +115,14 @@ export default class ChatScreen extends Component {
         headerTintColor: 'white',
       };
     };
+
+    async componentDidMount(){
+      // const id = await AsyncStorage.getItem('UserId');
+      // this.setState({
+      //   myID: id
+      // })
+      alert(this.state.myID.toString())
+    }
   
   
     AddItemsToArray = () => {

@@ -6,6 +6,7 @@ import AuthLoadingScreen from "./AuthLoadingScreen";
 import Home from "./Home";
 import Chart from "./Chart";
 import User_Family from './User_Family';
+import RelativeProfile from './RelativeProfile';
 import ListDoctors from "./ListDoctors";
 import DoctorProfile from './DoctorProfile';
 import AddDoctor from './AddDoctor';
@@ -114,9 +115,9 @@ const User_FamilyStack = createStackNavigator({
     screen: User_Family,
 
   },
-  // DoctorProfile: {
-  //   screen: DoctorProfile,
-  // },
+  RelativeProfile: {
+    screen: RelativeProfile,
+  },
   }, {
     initialRouteName: 'User_Family',
     // headerBackTitleVisible: true,

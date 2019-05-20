@@ -118,15 +118,26 @@ export default () => {
         return res.data.status
       })
     },
-    getMyListDoctors: (userID) => {
-      return axiosGet(baseURL + `follows/list-patient-follower?NguoiBiTheoDoi=${userID}`)
+    getMyListDoctors: (myID) => {
+      return axiosGet(baseURL + `follows/list-doctors-of-patient?NguoiBiTheoDoi=${myID}`)
         .then((res) => {
           if(res.data.status === 'success'){
             return res.data
           }
           return null
         })
-    }
+    },
+
+    // Relatives
+    getMyListRelatives: (myID) => {
+      return axiosGet(baseURL + `follows/list-relations-of-patient?NguoiBiTheoDoi=${myID}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data
+          }
+          return null
+        })
+    },
   }
 
   return services

@@ -8,129 +8,129 @@ import Swipeout from 'react-native-swipeout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ApiDoctor from '../services/api';
 
-var dataSource = [
-    // Tiểu Đường
-      {
-          key: '0001',
-          name: 'Nguyễn Thiện An',
-          gender: 'Nam',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
-          type: 'Tiểu Đường', 
-      },
-      {
-          key: '0002',
-          name: 'Nguyễn Văn Chung',
-          gender: 'Nam',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
-          type: 'Tiểu Đường',
-      },
-      { 
-          key: '0003',
-          name: 'Trần Thị Thu Hương',
-          gender: 'Nữ',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
-          type: 'Tiểu Đường',
-      },
-      { 
-          key: '0004',
-          name: 'Lê Tiến Đạt',
-          gender: 'Nam',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
-          type: 'Tiểu Đường',
-      },
-      { 
-          key: '0005',
-          name: 'Hoàng Thị Minh Thư',
-          gender: 'Nữ',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
-          type: 'Tiểu Đường',
-      },
-      { 
-          key: '0006',
-          name: 'Ngô Bá Khá',
-          gender: 'Nam',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
-          type: 'Tiểu Đường',
-      },
-      { 
-          key: '0007',
-          name: 'Trần Thị Thu Phương',
-          gender: 'Nữ',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
-          type: 'Huyết Áp',
-      },
-      { 
-          key: '0008',
-          name: 'Lý Thiên Kim',
-          gender: 'Nữ',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
-          type: 'Huyết Áp',
-      },
-      { 
-          key: '0009',
-          name: 'Huỳnh Ngọc Như',
-          gender: 'Nữ',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
-          type: 'Huyết Áp',
-      },
-      { 
-          key: '00010',
-          name: 'Trần Thị Xuân Thủy',
-          gender: 'Nữ',
-          birthday: '10/12/1985',
-          id_card: '272466984',
-          address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
-          number_phone: '0935412084',
-          email: 'nta85@gmail.com',
-          avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
-          type: 'Huyết Áp',
-      }
-  ];
+// var dataSource = [
+//     // Tiểu Đường
+//       {
+//           key: '0001',
+//           name: 'Nguyễn Thiện An',
+//           gender: 'Nam',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG28.png',
+//           type: 'Tiểu Đường', 
+//       },
+//       {
+//           key: '0002',
+//           name: 'Nguyễn Văn Chung',
+//           gender: 'Nam',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG151.png',
+//           type: 'Tiểu Đường',
+//       },
+//       { 
+//           key: '0003',
+//           name: 'Trần Thị Thu Hương',
+//           gender: 'Nữ',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG150.png',
+//           type: 'Tiểu Đường',
+//       },
+//       { 
+//           key: '0004',
+//           name: 'Lê Tiến Đạt',
+//           gender: 'Nam',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG158.png',
+//           type: 'Tiểu Đường',
+//       },
+//       { 
+//           key: '0005',
+//           name: 'Hoàng Thị Minh Thư',
+//           gender: 'Nữ',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG67.png',
+//           type: 'Tiểu Đường',
+//       },
+//       { 
+//           key: '0006',
+//           name: 'Ngô Bá Khá',
+//           gender: 'Nam',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG49.png',
+//           type: 'Tiểu Đường',
+//       },
+//       { 
+//           key: '0007',
+//           name: 'Trần Thị Thu Phương',
+//           gender: 'Nữ',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG149.png',
+//           type: 'Huyết Áp',
+//       },
+//       { 
+//           key: '0008',
+//           name: 'Lý Thiên Kim',
+//           gender: 'Nữ',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG115.png',
+//           type: 'Huyết Áp',
+//       },
+//       { 
+//           key: '0009',
+//           name: 'Huỳnh Ngọc Như',
+//           gender: 'Nữ',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG105.png',
+//           type: 'Huyết Áp',
+//       },
+//       { 
+//           key: '00010',
+//           name: 'Trần Thị Xuân Thủy',
+//           gender: 'Nữ',
+//           birthday: '10/12/1985',
+//           id_card: '272466984',
+//           address: '121 Hoàng Xuân Nhị, p.Phú Trung, Q.Tân Phú, tp.HCM',
+//           number_phone: '0935412084',
+//           email: 'nta85@gmail.com',
+//           avatar_url: 'http://pngimg.com/uploads/pokemon/pokemon_PNG45.png',
+//           type: 'Huyết Áp',
+//       }
+//   ];
 
 class FindDoctorSearchBar extends PureComponent {
     constructor (props) {
@@ -172,10 +172,6 @@ class FlatListItem extends PureComponent {
     super(props);
     this.apiAddMyDoctor = ApiDoctor();
   }
-
-  AddMyDoctor = (userID, drID) => {
-    
-  }
   
   render () {
     return (
@@ -199,23 +195,9 @@ class FlatListItem extends PureComponent {
                   marginLeft: 20,
                 }}
           contentContainerStyle={{height: 40,}}
-          rightElement={
-            <Ionicons name="md-add-circle"
-              size={30}
-              color='rgba(74, 195, 180, 1)'
-              onPress={ () => {
-                this.apiAddMyDoctor.addMyDoctor(this.props.userId, this.props.item.MaBacSi)
-                    .then((result) => {
-                        if(result=='success'){
-                          Alert.alert("Gửi yêu cầu thành công")
-                        }
-                        else{
-                          Alert.alert("Gửi yêu cầu thất bại")
-                        }
-                    });
-              } }
-              />
-          }
+          onPress={ () => {
+            this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item });
+          } }
         />
     )
   }
@@ -227,7 +209,7 @@ export default class AddDoctor extends Component {
       this.state = {
         flatListData: [],
         search_DoctorID: '',
-        userID: '937296327',
+        myID: this.props.navigation.getParam('myID'),
       };
 
       this.apiFindDoctor = ApiDoctor();
@@ -266,7 +248,6 @@ export default class AddDoctor extends Component {
                 this.setState({
                     flatListData: result
                 });
-                Alert.alert(JSON.stringify(this.state.flatListData))
             });
     }
 
@@ -290,11 +271,12 @@ export default class AddDoctor extends Component {
             <FlatList
                 renderItem={
                   ({item, index}) => {
-                    return(<FlatListItem item={item} index={index} userId={this.state.userID} />)
+                    return(<FlatListItem item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} />)
                   }
                 }
                 data={this.state.flatListData}
                 keyExtractor={this.keyExtractor}
+                KeyBoardShouldPersistTaps='always'
             ></FlatList>
         </View>
       );
