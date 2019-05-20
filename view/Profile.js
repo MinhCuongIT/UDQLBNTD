@@ -79,7 +79,7 @@ class CardItem extends PureComponent {
       //Sua gioi tinh
       case 1:
         this.setState({ isVisibleGioiTinhScreen: true });
-        if (oldData === "Nam") {
+        if (oldData == "Nam") {
           this.setState({
             isMale: true
           })
@@ -144,7 +144,7 @@ class CardItem extends PureComponent {
   //Xử lý cập nhật giới tính
   handleUpdateGen = () => {
     this.setState({ isVisibleGioiTinhScreen: false });  //Bấm nút thì tắt màn hình đi
-    this.props.onUpdateGen(this.state.isMale);
+    this.props.onUpdateGen(this.state.isMale ? 1 : 0);
   }
   //Xử lý cập nhật CMND
   handleUpdateCmnd = () => {
@@ -355,6 +355,7 @@ class MyListCards extends PureComponent {
     this.state = {
       isVisiblePasswordScreen: false,
       isLogoutConfirm: false,
+
       profile: props.profile,
 
       typePassword: "",
@@ -428,7 +429,7 @@ class MyListCards extends PureComponent {
             </View>
           </ScrollView>
         </Overlay>
-        
+
         <Overlay isVisible={this.state.isLogoutConfirm}
           borderRadius={10}
           height={160}>
@@ -444,7 +445,7 @@ class MyListCards extends PureComponent {
                 type='outline'
                 title="Có"
                 buttonStyle={{ width: 120 }}
-                onPress={()=> this.onLogout()}
+                onPress={() => this.onLogout()}
               />
               <Button
                 type='outline'
@@ -500,7 +501,7 @@ class MyListCards extends PureComponent {
             <MaterialCommunityIcons name='textbox-password' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
           }></ListItem>
         {/* Dang xuat */}
-        <TouchableOpacity onPress={() => { this.setState({ isLogoutConfirm: true })}}>
+        <TouchableOpacity onPress={() => { this.setState({ isLogoutConfirm: true }) }}>
           <ListItem containerStyle={{ marginLeft: 20 }}
             title={
               <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', }}>Đăng xuất</Text>
@@ -530,7 +531,7 @@ export default class Profile extends Component {
           hoTen: "",
           sdt: "",
           cmnd: "",
-          gioiTinh: {},
+          gioiTinh: 1,
           ngaySinh: "",
           diaChi: "",
           ngheNghiep: "",
@@ -544,6 +545,9 @@ export default class Profile extends Component {
           password: {},
         }
       },
+
+      isVisibleEditNameScreen: false,
+      fullName: ''
 
     };
     this.onUpdateNgheNghiepParent = this.onUpdateNgheNghiepParent.bind(this);
@@ -836,7 +840,37 @@ export default class Profile extends Component {
     //Update xuống DB
     await this.updateBenhNhan(patient);
   }
+  updateFullName = async () => {
+    this.setState({ isVisibleEditNameScreen: false });  //Ẩn màn hình sửa tên
 
+    await this.setState({
+      listData: {
+        ...this.state.listData,
+        thongTinChung: {
+          ...this.state.listData.thongTinChung,
+          hoTen: this.state.fullName
+        }
+      }
+    })
+
+
+    //Tạo đối tượng bệnh nhân được cập nhật
+    var patient = await {
+      MaBenhNhan: this.state.listData.thongTinChung.sdt,
+      Avatar: this.state.listData.thongTinChung.avatar,
+      HoTen: this.state.listData.thongTinChung.hoTen,
+      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
+      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
+      CMND: this.state.listData.thongTinChung.cmnd,
+      DiaChi: this.state.listData.thongTinChung.diaChi,
+      Email: this.state.listData.lienHe.email,
+      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
+      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      DiUngThuoc: 'Không hỗ trợ',
+    };
+    //Update xuống DB
+    await this.updateBenhNhan(patient);
+  }
   //Cập nhật dữ liệu xuống database khi state có sự thay đổi
   async updateBenhNhan(benhNhan) {
     await this.apiServices.updateProfileBenhNhan(benhNhan)
@@ -864,6 +898,7 @@ export default class Profile extends Component {
           var pullResult = result[0];
           let NgaySinhT = new Date(pullResult.NgaySinh);
           var source = pullResult.Avatar;
+          // alert(pullResult.GioiTinh)
           this.setState({
             listData: {
               thongTinChung: {
@@ -871,15 +906,15 @@ export default class Profile extends Component {
                 avatar: source,
                 hoTen: pullResult.HoTen,
                 sdt: pullResult.MaBenhNhan,
-                cmnd: pullResult.CMND,
-                gioiTinh: pullResult.GioiTinh.data[0],
-                ngaySinh: NgaySinhT.getFullYear() + '-' + (NgaySinhT.getMonth() + 1) + '-' + NgaySinhT.getDate(),
-                diaChi: pullResult.DiaChi,
-                ngheNghiep: pullResult.NgheNghiep,
-                nhomMau: pullResult.NhomMau,
+                cmnd: (pullResult.CMND === null) ? "Chưa có dữ liệu" : pullResult.CMND,
+                gioiTinh: (pullResult.GioiTinh === null) ? 1 : pullResult.GioiTinh.data[0],
+                ngaySinh: (pullResult.NgaySinh === null) ? "Chưa có dữ liệu" : (NgaySinhT.getFullYear() + '-' + (NgaySinhT.getMonth() + 1) + '-' + NgaySinhT.getDate()),
+                diaChi: (pullResult.DiaChi === null) ? "Chưa có dữ liệu" : pullResult.DiaChi,
+                ngheNghiep: (pullResult.NgheNghiep === null) ? "Chưa có dữ liệu" : pullResult.NgheNghiep,
+                nhomMau: (pullResult.NhomMau === null) ? "Chưa có dữ liệu" : pullResult.NhomMau,
               },
               lienHe: {
-                email: pullResult.Email,
+                email: (pullResult.Email === null) ? "Chưa có dữ liệu" : pullResult.Email,
               },
               taiKhoan: {
                 password: pullResult.Password,
@@ -893,8 +928,30 @@ export default class Profile extends Component {
 
   render() {
     return (
+      
       <ScrollView>
-
+        <Overlay isVisible={this.state.isVisibleEditNameScreen}
+          borderRadius={10}
+          height={200}
+          onBackdropPress={() => { this.setState({ isVisibleEditNameScreen: false }) }}>
+          <ScrollView>
+            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginBottom: 25 }}>Sửa tên</Text>
+            <View style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginHorizontal: 20,
+            }}>
+              <Input onChangeText={(text) => this.setState({ fullName: text })} placeholder='Nhập tên của bạn'>{this.state.listData.thongTinChung.hoTen}</Input>
+            </View>
+            <Button
+              type='outline'
+              title="Cập nhật"
+              buttonStyle={{ width: 120, alignSelf: 'center', marginTop: 20 }}
+              onPress={() => this.updateFullName()}
+            />
+          </ScrollView>
+        </Overlay>
         <View>
           {/* Anh bia */}
           <Avatar
@@ -916,7 +973,7 @@ export default class Profile extends Component {
 
         </View>
         <View style={{ marginTop: 40, alignItems: 'center' }}>
-          <Text style={styles.name}>{this.state.listData.thongTinChung.hoTen}</Text>
+          <Text onPress={() => { this.setState({ isVisibleEditNameScreen: true }) }} style={styles.name}>{this.state.listData.thongTinChung.hoTen}</Text>
           <Text style={styles.phone}>{this.state.listData.thongTinChung.sdt}</Text>
         </View>
         <MyListCards
