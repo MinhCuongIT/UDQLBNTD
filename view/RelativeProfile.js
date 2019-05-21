@@ -30,135 +30,129 @@ class IntroCard extends PureComponent {
             this.apiFollow.requestFollow(this.props.myID, this.props.item.MaBenhNhan, 1)
                 .then(async(result) => {
                     if(result=='success'){
-                      Alert.alert("Đã gửi yêu cầu theo dõi")
                       this.props.handle.handleChangeType('cancel')
                       const info = {
-                        MaTaiKhoan: this.props.item.MaBenhNhan,
-                        LoaiNguoiChinh: 1,
-                        MaTaiKhoanLienQuan: this.props.myID,
+                        MaTaiKhoan: this.props.item.MaBenhNhan, // Người nhận Notif
+                        LoaiNguoiChinh: 1,  
+                        MaTaiKhoanLienQuan: this.props.myID,    // Người gửi Notif
                         TenNguoiLienQuan: this.props.myProfile.thongTinChung.hoTen,
                         AvatarNguoiLienQuan: this.props.myProfile.thongTinChung.avatar,
                         LoaiNguoiLienQuan: 1,
-                        LoaiThongBao: 1
+                        LoaiThongBao: 1                         // Thông báo yêu cầu theo dõi sức khỏe người thân
                       }
                       await this.props.socket.emit('create notifications', info);
                     }
-                    else{
-                      Alert.alert("Gửi yêu cầu thất bại")
-                    }
                 });
-            // alert("Comming soon")
           }}
         >
           <Text style={styles.customBtnText}>
-            Thêm
+            Theo dõi
           </Text>
         </MaterialCommunityIcons.Button></View>
 
       : this.props.typeRelationship==='accept'      
       ? 
       <View style={{flexDirection: 'row'}}>
-      <View style={{flex: 1}}>
-      <MaterialCommunityIcons.Button
-          name="account-check-outline"
-          backgroundColor="transparent"
-          borderRadius={0}
-          size={20}
-          color="rgba(74, 195, 180, 1)"
-          onPress={() => {
-            // this.apiAddMyDoctor.addMyDoctor(this.props.myID, this.props.item.MaBacSi)
-            //     .then((result) => {
-            //         if(result=='success'){
-            //           Alert.alert("Đã gửi yêu cầu theo dõi")
-            //         }
-            //         else{
-            //           Alert.alert("Gửi yêu cầu thất bại")
-            //         }
-            //     });
-            alert("Comming soon")
-          }}
-        >
-          <Text style={styles.customBtnText}>
-            Chấp nhận
-          </Text>
-        </MaterialCommunityIcons.Button></View>
         <View style={{flex: 1}}>
-        <MaterialCommunityIcons.Button
-          name="account-remove-outline"
-          backgroundColor="transparent"
-          borderRadius={0}
-          size={20}
-          color="rgba(74, 195, 180, 1)"
-          onPress={() => {
-            // this.apiAddMyDoctor.addMyDoctor(this.props.myID, this.props.item.MaBacSi)
-            //     .then((result) => {
-            //         if(result=='success'){
-            //           Alert.alert("Đã gửi yêu cầu theo dõi")
-            //         }
-            //         else{
-            //           Alert.alert("Gửi yêu cầu thất bại")
-            //         }
-            //     });
-            alert("Comming soon")
-          }}
-        >
-          <Text style={styles.customBtnText}>
-            Từ chối
-          </Text>
-        </MaterialCommunityIcons.Button></View></View>
+          <MaterialCommunityIcons.Button
+              name="account-check-outline"
+              backgroundColor="transparent"
+              borderRadius={0}
+              size={20}
+              color="rgba(74, 195, 180, 1)"
+              onPress={() => {
+                this.apiFollow.acceptFollowRequest(this.props.myID, this.props.item.MaBenhNhan, 1)
+                    .then(async(result) => {
+                        if(result=='success'){
+                          this.props.handle.handleChangeType('followed')
+                          const info = {
+                            MaTaiKhoan: this.props.item.MaBenhNhan,
+                            LoaiNguoiChinh: 1,
+                            MaTaiKhoanLienQuan: this.props.myID,
+                            TenNguoiLienQuan: this.props.myProfile.thongTinChung.hoTen,
+                            AvatarNguoiLienQuan: this.props.myProfile.thongTinChung.avatar,
+                            LoaiNguoiLienQuan: 1,
+                            LoaiThongBao: 3                         // Thông báo chấp nhận lời yêu cầu theo dõi sức khỏe tù người khác
+                          }
+                          await this.props.socket.emit('create notifications', info);
+                        }
+                    });
+              }}
+            >
+              <Text style={styles.customBtnText}>
+                Chấp nhận
+              </Text>
+            </MaterialCommunityIcons.Button>
+          </View>
+        <View style={{flex: 1}}>
+          <MaterialCommunityIcons.Button
+            name="account-remove-outline"
+            backgroundColor="transparent"
+            borderRadius={0}
+            size={20}
+            color="rgba(74, 195, 180, 1)"
+            onPress={() => {
+              this.apiFollow.refuseFollowRequest(this.props.myID, this.props.item.MaBenhNhan, 1)
+                  .then(async(result) => {
+                      if(result=='success'){
+                        this.props.handle.handleChangeType('add')
+                      }
+                  });
+            }}
+          >
+            <Text style={styles.customBtnText}>
+              Từ chối
+            </Text>
+          </MaterialCommunityIcons.Button>
+        </View>
+      </View>
 
       : this.props.typeRelationship==='cancel'
       ? 
       <View style={{flexDirection: 'row'}}>
-      <MaterialCommunityIcons.Button
+        <MaterialCommunityIcons.Button
           name="account-minus-outline"
           backgroundColor="transparent"
           borderRadius={0}
           size={20}
           color="rgba(74, 195, 180, 1)"
           onPress={() => {
-            // this.apiAddMyDoctor.addMyDoctor(this.props.myID, this.props.item.MaBacSi)
-            //     .then((result) => {
-            //         if(result=='success'){
-            //           Alert.alert("Đã gửi yêu cầu theo dõi")
-            //         }
-            //         else{
-            //           Alert.alert("Gửi yêu cầu thất bại")
-            //         }
-            //     });
-            alert("Comming soon")
+            this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBenhNhan, 1)
+                  .then(async(result) => {
+                      if(result=='success'){
+                        this.props.handle.handleChangeType('add')
+                      }
+                  });
           }}
         >
           <Text style={styles.customBtnText}>
             Hủy lời mời
           </Text>
-        </MaterialCommunityIcons.Button></View>
+        </MaterialCommunityIcons.Button>
+      </View>
 
       :  
       <View style={{flexDirection: 'row'}}>
-      <MaterialCommunityIcons.Button
-            name="account-off-outline"
-            backgroundColor="transparent"
-            borderRadius={0}
-            size={20}
-            color="rgba(74, 195, 180, 1)"
-            onPress={() => {
-              // this.apiAddMyDoctor.addMyDoctor(this.props.myID, this.props.item.MaBacSi)
-              //     .then((result) => {
-              //         if(result=='success'){
-              //           Alert.alert("Đã gửi yêu cầu theo dõi")
-              //         }
-              //         else{
-              //           Alert.alert("Gửi yêu cầu thất bại")
-              //         }
-              //     });
-              alert("Comming soon")
-            }}
-          >
-            <Text style={styles.customBtnText}>
-              Bỏ theo dõi
-            </Text>
-          </MaterialCommunityIcons.Button></View>
+        <MaterialCommunityIcons.Button
+          name="account-off-outline"
+          backgroundColor="transparent"
+          borderRadius={0}
+          size={20}
+          color="rgba(74, 195, 180, 1)"
+          onPress={() => {
+            this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBenhNhan, 1)
+                .then(async(result) => {
+                    if(result=='success'){
+                      this.props.handle.handleChangeType('add')
+                    }
+                });
+          }}
+        >
+          <Text style={styles.customBtnText}>
+            Bỏ theo dõi
+          </Text>
+        </MaterialCommunityIcons.Button>
+      </View>
     
     return (
       <ListItem
