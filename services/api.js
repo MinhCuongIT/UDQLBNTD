@@ -67,11 +67,12 @@ export default () => {
     changeBenhNhanPassword: (info) => {
       return axiosPost(baseURL + `patients/change-password`, {
         MaBenhNhan: info.MaBenhNhan,
-        Password: info.Password
+        NewPassword: info.Password,
+        OldPassword: info.OldPassword
       })
       .then((res) => {
         if (res.data.status === 'success') {
-          return res.data.patient
+          return res.data.status
         }
         return null
       })

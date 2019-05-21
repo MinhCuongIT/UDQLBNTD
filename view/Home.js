@@ -142,8 +142,32 @@ export default class Home extends Component {
       MaBenhNhan: userId,
     }).then((result) => {
       if (result !== null){
-        this.setState({
-          userName: result[0].HoTen
+        // this.setState({
+        //   userName: result[0].HoTen
+        // })
+        var pullResult = result[0];
+        let NgaySinhT = new Date(pullResult.NgaySinh);
+        var source = pullResult.Avatar;
+        // alert(pullResult.GioiTinh)
+        this.props.screenProps.setUser({
+          thongTinChung: {
+            anhBia: require("../images/hinh_bien.jpg"),
+            avatar: source,
+            hoTen: pullResult.HoTen,
+            sdt: pullResult.MaBenhNhan,
+            cmnd: (pullResult.CMND === null) ? "Chưa có dữ liệu" : pullResult.CMND,
+            gioiTinh: (pullResult.GioiTinh === null) ? 1 : pullResult.GioiTinh.data[0],
+            ngaySinh: (pullResult.NgaySinh === null) ? "Chưa có dữ liệu" : (NgaySinhT.getFullYear() + '-' + (NgaySinhT.getMonth() + 1) + '-' + NgaySinhT.getDate()),
+            diaChi: (pullResult.DiaChi === null) ? "Chưa có dữ liệu" : pullResult.DiaChi,
+            ngheNghiep: (pullResult.NgheNghiep === null) ? "Chưa có dữ liệu" : pullResult.NgheNghiep,
+            nhomMau: (pullResult.NhomMau === null) ? "Chưa có dữ liệu" : pullResult.NhomMau,
+          },
+          lienHe: {
+            email: (pullResult.Email === null) ? "Chưa có dữ liệu" : pullResult.Email,
+          },
+          taiKhoan: {
+            password: pullResult.Password,
+          }
         })
       }
     })
@@ -398,13 +422,10 @@ export default class Home extends Component {
               containerStyle={{margin: 10, marginLeft: 40}}
               size={120}
               rounded
-              source={{
-                uri:
-                  'https://img.pokemondb.net/artwork/large/charizard-mega-y.jpg',
-              }}
+              source={{ uri: 'data:image/jpeg;base64,' + this.props.screenProps.user.thongTinChung.avatar }}
             />
             <View style={{justifyContent: 'center'}}>
-              <Text style={{padding: 20, fontSize: 25, fontWeight: 'bold', margin: 10}}> {this.state.userName} </Text>
+              <Text style={{ padding: 20, fontSize: 25, fontWeight: 'bold', margin: 10 }}> {this.props.screenProps.user.thongTinChung.hoTen} </Text>
             </View>
           </View>
           {listChart}

@@ -96,6 +96,7 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 import Navigator from "./view/Navigator";
 import ApiService from "./services/api";
 import socketIOClient from "socket.io-client";
+import { config } from './services/config';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -106,13 +107,34 @@ const instructions = Platform.select({
 
 type Props = {};
 
-const socket = socketIOClient('http://192.168.1.4:5500/');
+let { baseURL } = config;
+const socket = socketIOClient(baseURL);
 export default class Home extends Component {
   constructor(props){
     super(props);
 
     this.state = {
-      user: {},
+      user: {
+        thongTinChung: {
+          anhBia: require("./images/hinh_bien.jpg"),
+          avatar: null,
+          hoTen: "",
+          sdt: "",
+          cmnd: "",
+          gioiTinh: 1,
+          ngaySinh: "",
+          diaChi: "",
+          ngheNghiep: "",
+          nhomMau: "",
+          tinhTrang: "",
+        },
+        lienHe: {
+          email: "",
+        },
+        taiKhoan: {
+          password: {},
+        }
+      },
       numberNoti: 0,
       socket: socket,
       data: [],
@@ -120,9 +142,16 @@ export default class Home extends Component {
     };
   }
 
+
+  setUser = (user) => {
+    this.setState({
+      user: user,
+    })
+  }
+
   setData = (data) => {
     this.setState({
-      data: data
+      data: data,
     })
   }
 
@@ -258,6 +287,7 @@ export default class Home extends Component {
           setData: this.setData,
           setHaveData: this.setHaveData,
           setDiabetesData: this.setDiabetesData,
+          setUser: this.setUser,
         }}
       />
     );

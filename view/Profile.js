@@ -380,7 +380,7 @@ class MyListCards extends PureComponent {
   }
   onUpdatePassword = () => {
     //Thuc hien doi mat khau
-    this.props.onUpdatePasswordParent(this.state.newPassword);
+    this.props.onUpdatePasswordParent(this.state.newPassword, this.state.typePassword);
   }
   changePassword = () => {
     if (this.state.typePassword == "" || this.state.newPassword == "") {
@@ -523,31 +523,31 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //Mo hinh du lieu duoi local
-      listData: {
-        thongTinChung: {
-          anhBia: require("../images/hinh_bien.jpg"),
-          avatar: null,
-          hoTen: "",
-          sdt: "",
-          cmnd: "",
-          gioiTinh: 1,
-          ngaySinh: "",
-          diaChi: "",
-          ngheNghiep: "",
-          nhomMau: "",
-          tinhTrang: "",
-        },
-        lienHe: {
-          email: "",
-        },
-        taiKhoan: {
-          password: {},
-        }
-      },
+      // //Mo hinh du lieu duoi local
+      // listData: {
+      //   thongTinChung: {
+      //     anhBia: require("../images/hinh_bien.jpg"),
+      //     avatar: null,
+      //     hoTen: "",
+      //     sdt: "",
+      //     cmnd: "",
+      //     gioiTinh: 1,
+      //     ngaySinh: "",
+      //     diaChi: "",
+      //     ngheNghiep: "",
+      //     nhomMau: "",
+      //     tinhTrang: "",
+      //   },
+      //   lienHe: {
+      //     email: "",
+      //   },
+      //   taiKhoan: {
+      //     password: {},
+      //   }
+      // },
 
       isVisibleEditNameScreen: false,
-      fullName: ''
+      fullName: '',
 
     };
     this.onUpdateNgheNghiepParent = this.onUpdateNgheNghiepParent.bind(this);
@@ -574,28 +574,26 @@ export default class Profile extends Component {
         // You can also display the image using data:
         var source = response.data;
 
-        this.setState({
-          listData: {
-            ...this.state.listData,
-            thongTinChung: {
-              ...this.state.listData.thongTinChung,
-              avatar: source
-            }
+        this.props.screenProps.setUser({
+          ...this.props.screenProps.user,
+          thongTinChung: {
+            ...this.props.screenProps.user.thongTinChung,
+            avatar: source
           }
         });
 
         //Update xuống DB
         this.updateBenhNhan({
-          MaBenhNhan: this.state.listData.thongTinChung.sdt,
-          Avatar: this.state.listData.thongTinChung.avatar,
-          HoTen: this.state.listData.thongTinChung.hoTen,
-          GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-          NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-          CMND: this.state.listData.thongTinChung.cmnd,
-          DiaChi: this.state.listData.thongTinChung.diaChi,
-          Email: this.state.listData.lienHe.email,
-          NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-          NhomMau: this.state.listData.thongTinChung.nhomMau,
+          MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+          Avatar: this.props.screenProps.user.thongTinChung.avatar,
+          HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+          GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+          NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+          CMND: this.props.screenProps.user.thongTinChung.cmnd,
+          DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+          Email: this.props.screenProps.user.lienHe.email,
+          NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+          NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
           DiUngThuoc: 'Không hỗ trợ',
         });
       }
@@ -605,9 +603,9 @@ export default class Profile extends Component {
   onUpdateBirthdayParent = async (textDate) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         thongTinChung: {
-          ...this.state.listData.thongTinChung,
+          ...this.props.screenProps.user.thongTinChung,
           ngaySinh: textDate
         }
       }
@@ -615,16 +613,16 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
@@ -634,9 +632,9 @@ export default class Profile extends Component {
   onUpdateCmndParent = async (text) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         thongTinChung: {
-          ...this.state.listData.thongTinChung,
+          ...this.props.screenProps.user.thongTinChung,
           cmnd: text
         }
       }
@@ -644,16 +642,16 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
@@ -663,9 +661,9 @@ export default class Profile extends Component {
   onUpdateDiaChiParent = async (text) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         thongTinChung: {
-          ...this.state.listData.thongTinChung,
+          ...this.props.screenProps.user.thongTinChung,
           diaChi: text
         }
       }
@@ -673,16 +671,16 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
@@ -692,9 +690,9 @@ export default class Profile extends Component {
   onUpdateNgheNghiepParent = async (text) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         thongTinChung: {
-          ...this.state.listData.thongTinChung,
+          ...this.props.screenProps.user.thongTinChung,
           ngheNghiep: text
         }
       }
@@ -702,16 +700,16 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
@@ -721,9 +719,9 @@ export default class Profile extends Component {
   onUpdateNhomMauParent = async (text) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         thongTinChung: {
-          ...this.state.listData.thongTinChung,
+          ...this.props.screenProps.user.thongTinChung,
           nhomMau: text
         }
       }
@@ -731,16 +729,16 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
@@ -750,9 +748,9 @@ export default class Profile extends Component {
   onUpdateEmailParent = async (text) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         lienHe: {
-          ...this.state.listData.lienHe,
+          ...this.props.screenProps.user.lienHe,
           email: text
         }
       }
@@ -760,42 +758,43 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
     await this.updateBenhNhan(patient);
   }
 
-  onUpdatePasswordParent = async (text) => {
+  onUpdatePasswordParent = async (newPassword, oldPassword) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         taiKhoan: {
-          ...this.state.listData.taiKhoan,
-          password: text
+          ...this.props.screenProps.user.taiKhoan,
+          password: newPassword
         }
-      }
+      },
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Password: this.state.listData.taiKhoan.password
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      NewPassword: this.props.screenProps.user.taiKhoan.password,
+      OldPassword: oldPassword
     };
     //Update xuống DB
     await this.apiServices.changeBenhNhanPassword(patient)
       .then((result) => {
-        if (result !== null) {
+        if (result === "success") {
           // Cập nhật thành công
           alert("Cập nhật mật khẩu thành công!");
         }
@@ -814,9 +813,9 @@ export default class Profile extends Component {
   onUpdateGenParent = async (sex) => {
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         thongTinChung: {
-          ...this.state.listData.thongTinChung,
+          ...this.props.screenProps.user.thongTinChung,
           gioiTinh: sex
         }
       }
@@ -825,16 +824,16 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
@@ -845,9 +844,9 @@ export default class Profile extends Component {
 
     await this.setState({
       listData: {
-        ...this.state.listData,
+        ...this.props.screenProps.user,
         thongTinChung: {
-          ...this.state.listData.thongTinChung,
+          ...this.props.screenProps.user.thongTinChung,
           hoTen: this.state.fullName
         }
       }
@@ -856,16 +855,16 @@ export default class Profile extends Component {
 
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
-      MaBenhNhan: this.state.listData.thongTinChung.sdt,
-      Avatar: this.state.listData.thongTinChung.avatar,
-      HoTen: this.state.listData.thongTinChung.hoTen,
-      GioiTinh: this.state.listData.thongTinChung.gioiTinh,
-      NgaySinh: this.state.listData.thongTinChung.ngaySinh,
-      CMND: this.state.listData.thongTinChung.cmnd,
-      DiaChi: this.state.listData.thongTinChung.diaChi,
-      Email: this.state.listData.lienHe.email,
-      NgheNghiep: this.state.listData.thongTinChung.ngheNghiep,
-      NhomMau: this.state.listData.thongTinChung.nhomMau,
+      MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+      Avatar: this.props.screenProps.user.thongTinChung.avatar,
+      HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+      GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd,
+      DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+      Email: this.props.screenProps.user.lienHe.email,
+      NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+      NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
       DiUngThuoc: 'Không hỗ trợ',
     };
     //Update xuống DB
@@ -942,7 +941,7 @@ export default class Profile extends Component {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input onChangeText={(text) => this.setState({ fullName: text })} placeholder='Nhập tên của bạn'>{this.state.listData.thongTinChung.hoTen}</Input>
+              <Input onChangeText={(text) => this.setState({ fullName: text })} placeholder='Nhập tên của bạn'>{this.props.screenProps.user.thongTinChung.hoTen}</Input>
             </View>
             <Button
               type='outline'
@@ -957,27 +956,27 @@ export default class Profile extends Component {
           <Avatar
             activeOpacity={0.7}
             containerStyle={styles.background}
-            source={this.state.listData.thongTinChung.anhBia}
+            source={this.props.screenProps.user.thongTinChung.anhBia}
           />
           {/* Anh dai dien */}
           <Avatar
-            title={this.state.listData.thongTinChung.hoTen[0]}
+            title={this.props.screenProps.user.thongTinChung.hoTen[0]}
             showEditButton
             rounded
             size={130}
             activeOpacity={0.7}
             containerStyle={styles.avatar}
-            source={{ uri: 'data:image/jpeg;base64,' + this.state.listData.thongTinChung.avatar }}
+            source={{ uri: 'data:image/jpeg;base64,' + this.props.screenProps.user.thongTinChung.avatar }}
             onEditPress={() => this.handleChange()}
           />
 
         </View>
         <View style={{ marginTop: 40, alignItems: 'center' }}>
-          <Text onPress={() => { this.setState({ isVisibleEditNameScreen: true }) }} style={styles.name}>{this.state.listData.thongTinChung.hoTen}</Text>
-          <Text style={styles.phone}>{this.state.listData.thongTinChung.sdt}</Text>
+          <Text onPress={() => { this.setState({ isVisibleEditNameScreen: true }) }} style={styles.name}>{this.props.screenProps.user.thongTinChung.hoTen}</Text>
+          <Text style={styles.phone}>{this.props.screenProps.user.thongTinChung.sdt}</Text>
         </View>
         <MyListCards
-          profile={this.state.listData}
+          profile={this.props.screenProps.user}
           showDialogChangePassword={this.state.isVisible}
           onUpdateGenParent={this.onUpdateGenParent}
           onUpdateBirthdayParent={this.onUpdateBirthdayParent}
