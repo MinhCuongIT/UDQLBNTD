@@ -602,14 +602,12 @@ export default class Profile extends Component {
   }
 
   onUpdateBirthdayParent = async (textDate) => {
-    await this.setState({
-      listData: {
+    await this.props.screenProps.setUser({
         ...this.props.screenProps.user,
         thongTinChung: {
           ...this.props.screenProps.user.thongTinChung,
           ngaySinh: textDate
         }
-      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -631,14 +629,12 @@ export default class Profile extends Component {
   }
 
   onUpdateCmndParent = async (text) => {
-    await this.setState({
-      listData: {
+    await this.props.screenProps.setUser({
         ...this.props.screenProps.user,
         thongTinChung: {
           ...this.props.screenProps.user.thongTinChung,
           cmnd: text
         }
-      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -660,14 +656,12 @@ export default class Profile extends Component {
   }
 
   onUpdateDiaChiParent = async (text) => {
-    await this.setState({
-      listData: {
+    await this.props.screenProps.setUser({
         ...this.props.screenProps.user,
         thongTinChung: {
           ...this.props.screenProps.user.thongTinChung,
           diaChi: text
         }
-      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -689,14 +683,12 @@ export default class Profile extends Component {
   };
 
   onUpdateNgheNghiepParent = async (text) => {
-    await this.setState({
-      listData: {
+    await this.props.screenProps.setUser({
         ...this.props.screenProps.user,
         thongTinChung: {
           ...this.props.screenProps.user.thongTinChung,
           ngheNghiep: text
         }
-      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -718,14 +710,12 @@ export default class Profile extends Component {
   }
 
   onUpdateNhomMauParent = async (text) => {
-    await this.setState({
-      listData: {
+    await this.props.screenProps.setUser({
         ...this.props.screenProps.user,
         thongTinChung: {
           ...this.props.screenProps.user.thongTinChung,
           nhomMau: text
         }
-      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -747,13 +737,11 @@ export default class Profile extends Component {
   }
 
   onUpdateEmailParent = async (text) => {
-    await this.setState({
-      listData: {
-        ...this.props.screenProps.user,
-        lienHe: {
-          ...this.props.screenProps.user.lienHe,
-          email: text
-        }
+    await this.props.screenProps.setUser({
+      ...this.props.screenProps.user,
+      lienHe: {
+        ...this.props.screenProps.user.lienHe,
+        email: text
       }
     })
 
@@ -814,13 +802,11 @@ export default class Profile extends Component {
   }
 
   onUpdateGenParent = async (sex) => {
-    await this.setState({
-      listData: {
-        ...this.props.screenProps.user,
-        thongTinChung: {
-          ...this.props.screenProps.user.thongTinChung,
-          gioiTinh: sex
-        }
+    await this.props.screenProps.setUser({
+      ...this.props.screenProps.user,
+      thongTinChung: {
+        ...this.props.screenProps.user.thongTinChung,
+        gioiTinh: sex
       }
     })
 
@@ -845,13 +831,11 @@ export default class Profile extends Component {
   updateFullName = async () => {
     this.setState({ isVisibleEditNameScreen: false });  //Ẩn màn hình sửa tên
 
-    await this.setState({
-      listData: {
-        ...this.props.screenProps.user,
-        thongTinChung: {
-          ...this.props.screenProps.user.thongTinChung,
-          hoTen: this.state.fullName
-        }
+    await this.props.screenProps.setUser({
+      ...this.props.screenProps.user,
+      thongTinChung: {
+        ...this.props.screenProps.user.thongTinChung,
+        hoTen: this.state.fullName
       }
     })
 
