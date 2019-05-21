@@ -77,6 +77,19 @@ export default () => {
         return null
       })
     },
+    // Hàm thay đổi mật khẩu
+    forgetBenhNhanPassword: (info) => {
+      return axiosPost(baseURL + `patients/forget-password`, {
+        MaBenhNhan: info.MaBenhNhan,
+        NewPassword: info.NewPassword,
+      })
+        .then((res) => {
+          if (res.data.status === 'success') {
+            return res.data.status
+          }
+          return null
+        })
+    },
     addHealthValue: (info) => {
       return axiosPost(baseURL + `patients/add-my-statistic`, {
         MaBenhNhan: info.MaBenhNhan,
