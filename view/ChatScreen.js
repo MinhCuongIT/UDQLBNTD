@@ -52,7 +52,8 @@ export class RightListItems extends PureComponent {
     }
   
     render() {
-      let _time = this.props.item.NgayGioGui;
+      let _time = new Date(this.props.item.NgayGioGui);
+      // alert(this.props.item.NgayGioGui);
       return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-end',}}>
           <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
@@ -76,7 +77,7 @@ export class LeftListItems extends PureComponent {
     }
 
     render() {
-        let _time = this.props.item.NgayGioGui;
+        let _time = new Date(this.props.item.NgayGioGui);
         return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-start',}}>
             <Avatar
@@ -169,6 +170,7 @@ export default class ChatScreen extends Component {
 
       this.props.screenProps.socket.on('chat message', (msg) => {
         if(msg!==null){
+          msg.NgayGioGui=msg.DateValue
           this.setState({
             chatMessages: [msg, ...this.state.chatMessages]
           });
@@ -188,6 +190,7 @@ export default class ChatScreen extends Component {
           LoaiNguoiNhan: this.props.navigation.getParam('type'),// 
           NoiDung: this.state.txtInput,
           NgayGioGui: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes(),
+          DateValue: today,
         },
         txtInput: '',
       }, async () => {
