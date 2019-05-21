@@ -128,7 +128,17 @@ export default class User_Family extends Component {
         },
         headerStyle: {
           backgroundColor: 'rgba(74, 195, 180, 1)',
-        }
+        },
+        headerRight: (
+          <TouchableOpacity
+            style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 10,}}
+            onPress={ () => {
+              navigation.navigate('AddRelative');
+            } }
+          >
+            <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
+          </TouchableOpacity>
+        )
       }
     };
   

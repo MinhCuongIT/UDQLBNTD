@@ -102,6 +102,7 @@ export default () => {
           return null
         })
     },
+
     // Doctor
     findDoctorByID: (ID) => {
       return axiosGet(baseURL + `doctors/find-doctor-by-id?MaBacSi=${ID}`)
@@ -173,7 +174,39 @@ export default () => {
           return res.data
         }
         return null})
-    }
+    },
+
+    findRelativeByID: (ID) => {
+      return axiosGet(baseURL + `patients/find-patient-by-id?MaBenhNhan=${ID}`)
+      .then((res) => {
+        if(res.data.status === 'success'){
+          return res.data.patient
+        }
+        return null
+      })
+    },
+    checkMyRelationship: (userID, rlID) => {
+      return axiosGet(baseURL + `follows/check-relationship-of-patient?MaBenhNhan1=${userID}&MaBenhNhan2=${rlID}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.typeRelationship
+          }
+          return null
+        })
+    },
+    requestFollow: (userID, rlID, type) => {
+      return axiosPost(baseURL + `follows/wait`, {
+        NguoiTheoDoi: userID,
+        NguoiBiTheoDoi: rlID,
+        Type: 1
+      })
+      .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.status
+          }
+          return null
+      })
+    },
   }
 
   return services
