@@ -93,12 +93,14 @@ export default () => {
       return axiosGet(baseURL + `statistics?MaBenhNhan=${info.MaBenhNhan}&Loai=${info.Loai}`)
         .then((res) => {
           if(res.data.status === 'success'){
-            return res.data.statistics
+            if (info.Loai === 1)
+              return res.data.blood_sugar
+            else if (info.Loai === 2)
+              return res.data.blood_pressure
           }
           return null
         })
     },
-
     // Doctor
     findDoctorByID: (ID) => {
       return axiosGet(baseURL + `doctors/find-doctor-by-id?MaBacSi=${ID}`)
@@ -138,6 +140,26 @@ export default () => {
           return null
         })
     },
+    getListNotifications: (info) => {
+      return axiosGet(baseURL + `notifications?MaTaiKhoan=${info.MaTaiKhoan}&LoaiNguoiChinh=${info.LoaiNguoiChinh}&page=${info.page}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data
+          }
+          return null
+        })
+    },
+    seenThisNotification: (info) => {
+      return axiosPost(baseURL + `notifications/seenThisNotification`, {
+        MaTaiKhoan: info.MaTaiKhoan,
+        Id: info.Id,
+        LoaiNguoiChinh: info.LoaiNguoiChinh,
+      }).then((res) => {
+        if(res.data.status === 'success'){
+          return res.data
+        }
+        return null})
+    }
   }
 
   return services

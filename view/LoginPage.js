@@ -105,6 +105,10 @@ export default class LoginPage extends Component {
       }).then(async (data) => {
         if (data !== null) {
           await AsyncStorage.setItem('UserId', data.MaBenhNhan)
+          // this.props.screenProps.socket.emit('register socket', {
+          //     id: data.MaBenhNhan,
+          //     loai: 1,
+          //   });
           this.props.navigation.navigate('AppStack')
         }
         else {

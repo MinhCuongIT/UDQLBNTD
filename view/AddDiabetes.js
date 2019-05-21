@@ -42,6 +42,7 @@ export default class AddDiabetes extends Component {
       diabeteValue: '',
       dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
       isNullDiaveteValue: false,
+      dateState: date,
     };
 
     this.apiService = ApiService()
@@ -58,6 +59,7 @@ export default class AddDiabetes extends Component {
   handleDatePicked = date => {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
+      dateState: date,
       date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
       dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
     })
@@ -65,6 +67,7 @@ export default class AddDiabetes extends Component {
   };
 
   handleConfirm = async () => {
+    // alert(this.props.screenProps.data[0].date)
     if (this.state.diabeteValue === ''){
       this.setState({
         isNullDiaveteValue: true,
@@ -77,8 +80,12 @@ export default class AddDiabetes extends Component {
         Loai: 1,
         ChiSo: this.state.diabeteValue,
         NgayNhap: this.state.dateValue,
-      }).then((result) => {
+      }).then(async(result) => {
         if (result !== null) {
+          await this.props.screenProps.setDiabetesData({
+            ChiSo: this.state.diabeteValue,
+            NgayNhap: this.state.dateState,
+          })
           this.props.navigation.navigate('Home')
         }
       })

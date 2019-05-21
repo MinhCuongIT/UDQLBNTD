@@ -10,12 +10,14 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet,
   Text, View, Image, FlatList, Dimensions, ImageBackground, TouchableOpacity,
-  Alert, SectionList, ScrollView, AsyncStorage, RefreshControl} from 'react-native';
+  Alert, SectionList, ScrollView, AsyncStorage, RefreshControl,
+  YellowBox } from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Avatar, Badge, withBadge} from 'react-native-elements';
 import ActionButton from 'react-native-circular-action-menu';
 import ApiService from "../services/api";
+import socketIOClient from "socket.io-client";
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -24,6 +26,9 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
+YellowBox.ignoreWarnings([
+  'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
+]);
 type Props = {};
 
 class Logo extends Component {
@@ -68,6 +73,7 @@ export default class Home extends Component {
     }
   }
 
+  _isMounted = false;
   constructor(props){
     super(props);
 
@@ -77,19 +83,57 @@ export default class Home extends Component {
       page: 1,
       loading: false,
       totalPages: 5,
-      data: [],
-      numberNoti: 1,
+      // data: [],
+      numberNoti: 0,
       refreshing: false,
-      haveData: false,
+      // haveData: false,
     };
 
     this.apiService = ApiService()
   }
 
-  componentDidMount(){
+  async componentDidMount(){
+    // const info = {
+    //   MaTaiKhoan: "111",
+    //   MaTaiKhoanLienQuan: "789",
+    //   LoaiNguoiLienQuan: 1,
+    //   LoaiThongBao: 2
+    // }
+    this._isMounted = true;
+    const userId = await AsyncStorage.getItem('UserId');
+    // const socket = socketIOClient(`http://192.168.1.4:5500/1/${userId}`);
+    // await this.props.screenProps.setSocket(socket)
+    await this.props.screenProps.socket.emit('join room', {
+      MaTaiKhoan: userId,
+      LoaiTaiKhoan: 1,
+    });
+
+    await this.props.screenProps.socket.emit('get notifications number', {
+      MaTaiKhoan: userId,
+      LoaiTaiKhoan: 1,
+    });
+    await this.props.screenProps.socket.on('get notifications number', (info) => {
+      if (this._isMounted)
+        this.setState({
+          numberNoti: info
+        })
+
+      this.props.navigation.setParams({ numberNoti: this.state.numberNoti });
+    })
+
+    await this.props.screenProps.socket.on('update notifications number', () => {
+      this.props.screenProps.socket.emit('get notifications number', {
+        MaTaiKhoan: userId,
+        LoaiTaiKhoan: 1,
+      });
+    })
+
     this.loadItems();
-    this.props.navigation.setParams({ numberNoti: this.state.numberNoti });
     this.loadUser();
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   loadUser = async () => {
@@ -106,9 +150,10 @@ export default class Home extends Component {
   }
   async loadItems(){
     const userId = await AsyncStorage.getItem('UserId');
-    await this.setState({
-      data: []
-    })
+    // await this.setState({
+    //   data: []
+    // })
+    this.props.screenProps.setData([]);
     for (let i = 0; i < 2; i++) {
       await this.loadDataItem(userId, i)
     }
@@ -191,9 +236,9 @@ export default class Home extends Component {
               break;
             }
             case 2: {
-              getData[0].data.push(result[index].ChiSo);
-              --index;
-              getData[1].data.push(result[index].ChiSo);
+              getData[0].data.push(result[index].blood_pressure01.ChiSo);
+              // --index;
+              getData[1].data.push(result[index].blood_pressure02.ChiSo);
 
               valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
               index--;
@@ -212,15 +257,17 @@ export default class Home extends Component {
           }
         }
         dataT.push(valueData);
-        await this.setState(
-          {
-            data: [...this.state.data,...dataT],
-          }
-        );
+        // await this.setState(
+        //   {
+        //     data: [...this.state.data,...dataT],
+        //   }
+        // );
+        await this.props.screenProps.setData([...this.props.screenProps.data,...dataT])
 
-        this.setState({
-          haveData: true
-        })
+        // this.setState({
+        //   haveData: true
+        // })
+        this.props.screenProps.setHaveData(true)
       }
     })
   }
@@ -242,16 +289,29 @@ export default class Home extends Component {
     this.props.navigation.navigate('NewsDetails', {item: item})
   };
 
-  _onRefresh = () => {
-    this.setState({refreshing: true});
-    this.loadItems().then(() => {
-      this.setState({refreshing: false});
-    });
+  _onRefresh = async () => {
+    // this.setState({refreshing: true});
+    // this.loadItems().then(() => {
+    //   this.setState({refreshing: false});
+    // });
+
+    const userId = await AsyncStorage.getItem('UserId')
+    const info = {
+      MaTaiKhoan: userId,
+      LoaiNguoiChinh: 1,
+      MaTaiKhoanLienQuan: "0123456",
+      TenNguoiLienQuan: 'Trần Thị B',
+      AvatarNguoiLienQuan: 'https://img.pokemondb.net/artwork/large/charizard-mega-y.jpg',
+      LoaiNguoiLienQuan: 2,
+      LoaiThongBao: 1
+    }
+    await this.props.screenProps.socket.emit('create notifications', info);
+
   }
 
   render() {
-    let listChart = this.state.haveData
-      ?this.state.data.map(item => {
+    let listChart = this.props.screenProps.haveData//this.state.haveData
+      ?this.props.screenProps.data.map(item => {
         const chartConfig = {
           backgroundGradientFrom: '#F5FCFF',
           backgroundGradientTo: '#F5FCFF',
@@ -263,7 +323,7 @@ export default class Home extends Component {
         const highDomain = item.highDomain
         const lowDomain = item.lowDomain
         const unit = item.unit
-
+// alert(item.date)
         return (
           <View key={item.type}>
             <View style={{flexDirection: 'row', margin: 10, marginTop: 20, }}>

@@ -75,14 +75,14 @@ export default class AddBloodPressure extends Component {
       const userId = await AsyncStorage.getItem('UserId');
       this.apiService.addHealthValue({
         MaBenhNhan: userId,
-        Loai: 2,
+        Loai: 2.1,
         ChiSo: this.state.systolicValue,
         NgayNhap: this.state.dateValue,
       }).then((result) => {
         if (result !== null) {
           this.apiService.addHealthValue({
             MaBenhNhan: userId,
-            Loai: 2,
+            Loai: 2.2,
             ChiSo: this.state.diastolicValue,
             NgayNhap: this.state.dateValue,
           }).then((result) => {
