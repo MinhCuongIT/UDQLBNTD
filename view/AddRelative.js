@@ -6,10 +6,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Swipeout from 'react-native-swipeout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import ApiDoctor from '../services/api';
+import ApiRelative from '../services/api';
 
 
-class FindDoctorSearchBar extends PureComponent {
+class FindRelativeSearchBar extends PureComponent {
     constructor (props) {
         super(props);
       }
@@ -72,23 +72,23 @@ class FlatListItem extends PureComponent {
                 }}
           contentContainerStyle={{height: 40,}}
           onPress={ () => {
-            this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item });
+            this.props.navigation.navigate('RelativeProfile', { data: this.props.item });
           } }
         />
     )
   }
 }
 
-export default class AddDoctor extends Component {
+export default class AddRelative extends Component {
     constructor(props){
       super(props);
       this.state = {
         flatListData: [],
-        search_DoctorID: '',
-        myID: this.props.navigation.getParam('myID'),
+        search_RelativeID: '',
+        // myID: this.props.navigation.getParam('myID'),
       };
 
-      this.apiFindDoctor = ApiDoctor();
+      this.apiFindRelative = ApiRelative();
 
       this.updateSearch = this.updateSearch.bind(this);
       this.fetchData = this.fetchData.bind(this);
@@ -97,7 +97,7 @@ export default class AddDoctor extends Component {
   
     static navigationOptions = ({ navigation }) => {
       return {
-        title: 'Thêm Bác Sĩ',
+        title: 'Thêm Người Thân',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
@@ -108,18 +108,8 @@ export default class AddDoctor extends Component {
       }
     };
 
-    // componentWillMount() {
-    //     this.fetchData('0946531215');
-    // }
-    // async componentDidMount(){
-    //   const userID = await AsyncStorage.getItem('UserId');
-    //   this.setState({
-    //     userId: userID
-    //   })
-    // }
-
     fetchData = () => {
-        this.apiFindDoctor.findDoctorByID(this.state.search_DoctorID)
+        this.apiFindRelative.findRelativeByID(this.state.search_RelativeID)
             .then((result) => {
                 this.setState({
                     flatListData: result
@@ -129,25 +119,20 @@ export default class AddDoctor extends Component {
 
     updateSearch = search => {
       this.setState({
-        search_DoctorID: search,
+        search_RelativeID: search,
       });
-      // this.fetchData
     }
-
-    // componentDidMount() {
-      
-    // }
 
     keyExtractor = (item, index) => index.toString()
   
     render() {
       return (
         <View style={styles.wrapper}>
-            <FindDoctorSearchBar search={this.state.search_DoctorID} updateSearch={this.updateSearch} fetchData={this.fetchData} />
+            <FindRelativeSearchBar search={this.state.search_RelativeID} updateSearch={this.updateSearch} fetchData={this.fetchData} />
             <FlatList
                 renderItem={
                   ({item, index}) => {
-                    return(<FlatListItem item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} />)
+                    return(<FlatListItem item={item} index={index} navigation={this.props.navigation} />)
                   }
                 }
                 data={this.state.flatListData}
