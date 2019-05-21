@@ -48,7 +48,7 @@ class IntroCard extends PureComponent {
                 size={20}
                 color="rgba(74, 195, 180, 1)"
                 onPress={() => {
-                  this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item })
+                  this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 1 })
                 }}
               >
                 {/* <Text style={styles.customBtnText}>

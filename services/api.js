@@ -138,6 +138,17 @@ export default () => {
           return null
         })
     },
+
+    // Chat
+    getMessages: (sender, receiver, page) => {
+      return axiosGet(baseURL + `chats?MaNguoiGui=${sender.id}&LoaiNguoiGui=${sender.type}&MaNguoiNhan=${receiver.id}&LoaiNguoiNhan=${receiver.type}&page=${page}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.chats
+          }
+          return null
+        })
+    },
   }
 
   return services
