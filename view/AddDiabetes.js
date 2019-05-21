@@ -38,9 +38,11 @@ export default class AddDiabetes extends Component {
     const date = new Date();
     this.state = {
       isDateTimePickerVisible: false,
-      date: date.getHours() + ':' + date.getMinutes() + ' ' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
       diabeteValue: '',
-      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
+      isNullDiaveteValue: false,
+      dateState: date,
     };
 
     this.apiService = ApiService()
@@ -57,24 +59,37 @@ export default class AddDiabetes extends Component {
   handleDatePicked = date => {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
-      date: date.getHours() + ':' + date.getMinutes() + ' ' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
-      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
+      dateState: date,
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
     })
     this.hideDateTimePicker();
   };
 
   handleConfirm = async () => {
-    const userId = await AsyncStorage.getItem('UserId');
-    this.apiService.addHealthValue({
-      MaBenhNhan: userId,
-      Loai: 1,
-      ChiSo: this.state.diabeteValue,
-      NgayNhap: this.state.dateValue,
-    }).then((result) => {
-      if (result !== null){
-        this.props.navigation.navigate('Home')
-      }
-    })
+    // alert(this.props.screenProps.data[0].date)
+    if (this.state.diabeteValue === ''){
+      this.setState({
+        isNullDiaveteValue: true,
+      })
+    }
+    else {
+      const userId = await AsyncStorage.getItem('UserId');
+      this.apiService.addHealthValue({
+        MaBenhNhan: userId,
+        Loai: 1,
+        ChiSo: this.state.diabeteValue,
+        NgayNhap: this.state.dateValue,
+      }).then(async(result) => {
+        if (result !== null) {
+          await this.props.screenProps.setDiabetesData({
+            ChiSo: this.state.diabeteValue,
+            NgayNhap: this.state.dateState,
+          })
+          this.props.navigation.navigate('Home')
+        }
+      })
+    }
   }
 
   render() {
@@ -109,9 +124,15 @@ export default class AddDiabetes extends Component {
             keyboardType='numeric'
             maxLength={5}
             value={this.state.diabeteValue}
-            onChangeText={(diabeteValue) => this.setState({diabeteValue})}
+            onChangeText={(diabeteValue) => {if (diabeteValue===''|| !isNaN(diabeteValue)) this.setState({diabeteValue})}}
           />
         </View>
+        {this.state.isNullDiaveteValue
+          ? <View style={{marginTop:10, alignSelf: 'flex-start'}}>
+            <Text style={{marginLeft: 30, color: 'red',}}>Vui lòng nhập chỉ số</Text>
+          </View>
+        : <View/>
+        }
         <TouchableOpacity
           onPress={() => this.handleConfirm()}
           style={styles.btnConfirm}
