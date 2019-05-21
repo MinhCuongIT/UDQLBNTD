@@ -94,6 +94,10 @@ export default class Notifications extends Component {
         message2 += ' cho bạn lời khuyên'
         break;
       }
+      case 3:  {
+        message2 += ' chấp nhận lời mời theo dõi của bạn'
+        break;
+      }
     }
 
     const message = (
@@ -158,6 +162,21 @@ export default class Notifications extends Component {
             }
             case 2:  {
               // message2 += ' cho bạn lời khuyên'
+              break;
+            }
+            case 3: {
+              // message2 += ' muốn theo dõi sức khỏe của bạn'
+              if (item.typePeople===1){
+                this.apiService.getBenhNhanInfo({MaBenhNhan: item.idNguoiLienQuan})
+                .then((result) => {
+                  if (result !== null)
+                  {
+                    // alert(JSON.stringify(result))
+                    const data = result[0]
+                    this.props.navigation.navigate('RelativeProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                  }
+                })
+              }
               break;
             }
           }

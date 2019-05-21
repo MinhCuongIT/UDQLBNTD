@@ -207,8 +207,65 @@ export default () => {
           return null
         })
     },
+    // Gửi request follow tới người khác
     requestFollow: (userID, rlID, type) => {
       return axiosPost(baseURL + `follows/wait`, {
+        NguoiTheoDoi: userID,
+        NguoiBiTheoDoi: rlID,
+        Type: 1
+      })
+      .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.status
+          }
+          return null
+      })
+    },
+    // Chấp nhận request follow từ người khác
+    acceptFollowRequest: (userID, rlID, type) => {
+      return axiosPost(baseURL + `follows/followed`, {
+        NguoiTheoDoi: rlID,
+        NguoiBiTheoDoi: userID,
+        Type: type
+      })
+      .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.status
+          }
+          return null
+      })
+    },
+    // Từ chối request follow từ người khác
+    refuseFollowRequest: (userID, rlID, type) => {
+      return axiosPost(baseURL + `follows/unfollowed`, {
+        NguoiTheoDoi: rlID,
+        NguoiBiTheoDoi: userID,
+        Type: type
+      })
+      .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.status
+          }
+          return null
+      })
+    },
+    // // Hủy việc gửi request follow tới người khác
+    // cancelFollowRequest: (userID, rlID, type) => {
+    //   return axiosPost(baseURL + `follows/unfollowed`, {
+    //     NguoiTheoDoi: userID,
+    //     NguoiBiTheoDoi: rlID,
+    //     Type: 1
+    //   })
+    //   .then((res) => {
+    //       if(res.data.status === 'success'){
+    //         return res.data.status
+    //       }
+    //       return null
+    //   })
+    // },
+    // Hủy follow với người khác / Hủy việc gửi request follow tới người khác
+    unFollowed: (userID, rlID, type) => {
+      return axiosPost(baseURL + `follows/unfollowed`, {
         NguoiTheoDoi: userID,
         NguoiBiTheoDoi: rlID,
         Type: 1
