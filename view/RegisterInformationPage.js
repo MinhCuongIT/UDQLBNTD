@@ -18,7 +18,8 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
-  View
+  View,
+  AsyncStorage,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -269,9 +270,16 @@ export default class RegisterInformationPage extends Component {
   hideAlert = () => {
     this.setState({
       showAlert: false
-    });
-    this.props.navigation.navigate('Login')
+    }, async () => {
 
+      //Đổi mật khẩu thành công thì login vào hệ thống luôn chứ không cần 
+      await AsyncStorage.setItem('UserId', this.state.userId)
+      // this.props.screenProps.socket.emit('register socket', {
+      //     id: data.MaBenhNhan,
+      //     loai: 1,
+      //   });
+      this.props.navigation.navigate('AppStack')
+    });
   }
 
   render() {

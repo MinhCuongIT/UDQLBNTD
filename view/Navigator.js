@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { TabNavigator } from "react-navigation";
 import { createStackNavigator, createAppContainer, createMaterialTopTabNavigator, createSwitchNavigator } from "react-navigation";
 import AuthLoadingScreen from "./AuthLoadingScreen";
@@ -19,14 +19,16 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginPage from "./LoginPage";
 import RegisterChooseTypePage from "./RegisterChooseTypePage";
 import RegisterInformationPage from "./RegisterInformationPage";
+import ForgetInformationPage from "./ForgetInformationPage";
 import AddDiabetes from "./AddDiabetes";
 import AddBloodPressure from "./AddBloodPressure";
 import AddValuePage from "./AddValuePage";
 import Notifications from './Notifications';
 
 const HomeStack = createStackNavigator({
-  Home: {screen: Home,
-    navigationOptions:{
+  Home: {
+    screen: Home,
+    navigationOptions: {
       // header:null,
       headerBackTitle: 'Trở về',
       headerStyle: {
@@ -34,81 +36,87 @@ const HomeStack = createStackNavigator({
       },
     },
   },
-  HomeDetails: {screen: HomeDetails,
-    navigationOptions:{
-      headerStyle:{
+  HomeDetails: {
+    screen: HomeDetails,
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'rgba(74, 195, 180, 1)',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
       },
       headerTintColor: 'white',
     },
   },
-  AddDiabetes :{screen: AddDiabetes,
-    navigationOptions:{
-      headerStyle:{
+  AddDiabetes: {
+    screen: AddDiabetes,
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'rgba(74, 195, 180, 1)',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
       },
       headerTintColor: 'white',
     },
   },
-  AddBloodPressure :{screen: AddBloodPressure,
-    navigationOptions:{
-      headerStyle:{
+  AddBloodPressure: {
+    screen: AddBloodPressure,
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'rgba(74, 195, 180, 1)',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
       },
       headerTintColor: 'white',
     },
   },
-  Notifications: {screen: Notifications,
-    navigationOptions:{
-      headerStyle:{
+  Notifications: {
+    screen: Notifications,
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'rgba(74, 195, 180, 1)',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
       },
       headerTintColor: 'white',
     },
   }
 }, {
-  initialRouteName: 'Home',
-  headerBackTitleVisible: true,
-});
+    initialRouteName: 'Home',
+    headerBackTitleVisible: true,
+  });
 
 const ChartStack = createStackNavigator({
-  Chart: {screen: Chart,
-    navigationOptions:{
-      header:null,
+  Chart: {
+    screen: Chart,
+    navigationOptions: {
+      header: null,
       headerBackTitle: 'Trở về',
     },
   },
-  ChartHealthDetail: {screen: ChartHealthDetail,
-    navigationOptions:{
-      headerStyle:{
+  ChartHealthDetail: {
+    screen: ChartHealthDetail,
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'tomato',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
       }
     },
   },
 }, {
-  initialRouteName: 'Chart',
-  headerBackTitleVisible: true,
-});
+    initialRouteName: 'Chart',
+    headerBackTitleVisible: true,
+  });
 
 const User_FamilyStack = createStackNavigator({
   User_Family: {
@@ -118,10 +126,10 @@ const User_FamilyStack = createStackNavigator({
   RelativeProfile: {
     screen: RelativeProfile,
   },
-  }, {
+}, {
     initialRouteName: 'User_Family',
     // headerBackTitleVisible: true,
-});
+  });
 
 const ListDoctorsStack = createStackNavigator({
   ListDoctors: {
@@ -137,72 +145,72 @@ const ListDoctorsStack = createStackNavigator({
   Chat: {
     screen: ChatScreen,
   },
-  }, {
+}, {
     initialRouteName: 'ListDoctors',
     // headerBackTitleVisible: true,
-});
+  });
 
 //Phần thông tin profile
 const ListProfileStack = createStackNavigator({
-  Profile:{
-    screen:Profile,
+  Profile: {
+    screen: Profile,
     navigationOptions: {
       header: null,
     }
   },
-  },
-  { 
+},
+  {
     initialRouteName: 'Profile',
-});
+  });
 
 const AppNavigator = createMaterialTopTabNavigator({
-      Tab1: {
-          screen: HomeStack,
-          navigationOptions: {
-              tabBarLabel: "Trang chủ",
-              tabBarIcon: ({ tintColor }) => (
-                <Icon name="home" size={25} color={tintColor} />
-              )
-          },
-      },
-      Tab2: {
-          screen: User_FamilyStack,
-          navigationOptions: {
-              tabBarLabel: "Người thân",
-              tabBarIcon: ({ tintColor }) => (
-                <Icon name="users" size={25} color={tintColor} />
-              )
-          }
-      },
-      Tab3: {
-          screen: ListDoctorsStack,
-          navigationOptions: {
-              tabBarLabel: "Bác sĩ",
-              tabBarIcon: ({ tintColor }) => (
-                <Icon name="user-md" size={25} color={tintColor} />
-              )
-          }
-      },
-      Tab4: {
-          screen: ListProfileStack,
-          navigationOptions: {
-              tabBarLabel: "Tài khoản",
-              tabBarIcon: ({ tintColor }) => (
-                <Icon name="user" size={25} color={tintColor} />
-              )
-          }
-      }
+  Tab1: {
+    screen: HomeStack,
+    navigationOptions: {
+      tabBarLabel: "Trang chủ",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="home" size={25} color={tintColor} />
+      )
+    },
   },
+  Tab2: {
+    screen: User_FamilyStack,
+    navigationOptions: {
+      tabBarLabel: "Người thân",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="users" size={25} color={tintColor} />
+      )
+    }
+  },
+  Tab3: {
+    screen: ListDoctorsStack,
+    navigationOptions: {
+      tabBarLabel: "Bác sĩ",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="user-md" size={25} color={tintColor} />
+      )
+    }
+  },
+  Tab4: {
+    screen: ListProfileStack,
+    navigationOptions: {
+      tabBarLabel: "Tài khoản",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="user" size={25} color={tintColor} />
+      )
+    }
+  }
+},
   {
     swipeEnabled: false,
     animationEnabled: false,
-    tabBarPosition:"bottom",
-    tabBarOptions:{
+    tabBarPosition: "bottom",
+    tabBarOptions: {
       style: {
         backgroundColor: 'white',//'mediumspringgreen',
       },
-      showIcon:true,
-      labelStyle:{
+      showIcon: true,
+      labelStyle: {
         fontSize: 10
       },
       inactiveTintColor: 'rgba(54, 175, 160, 0.5)',
@@ -216,22 +224,23 @@ AppNavigator.navigationOptions = {
 // export default MainNavigator;
 
 const LoginStack = createStackNavigator({
-  Login: {screen: LoginPage,
-    navigationOptions:{
-      header:null,
+  Login: {
+    screen: LoginPage,
+    navigationOptions: {
+      header: null,
       headerBackTitle: 'Trở về',
     },
   },
   RegisterChooseTypePage: {
     screen: RegisterChooseTypePage,
-    navigationOptions:{
-      headerStyle:{
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'rgba(54, 175, 160, 1)',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
-        color:'white',
+        color: 'white',
       },
       headerBackTitle: 'Trở về',
       headerTintColor: 'white'
@@ -239,32 +248,48 @@ const LoginStack = createStackNavigator({
   },
   RegisterInformationPage: {
     screen: RegisterInformationPage,
-    navigationOptions:{
-      headerStyle:{
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'rgba(54, 175, 160, 1)',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
-        color:'white',
+        color: 'white',
       },
       headerTintColor: 'white'
     },
   },
-}, {
-  initialRouteName: 'Login',
-  headerBackTitleVisible: true,
-});
-
-const AddValueStack = createStackNavigator({
-  AddValue: {screen: AddValuePage,
-    navigationOptions:{
-      // header:null,
-      headerStyle:{
+  ForgetInformationPage: {
+    screen: ForgetInformationPage,
+    navigationOptions: {
+      headerStyle: {
         backgroundColor: 'rgba(54, 175, 160, 1)',
       },
-      headerBackTitleStyle:{
-        fontSize:25,
+      headerBackTitleStyle: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: 'white',
+      },
+      headerTintColor: 'white'
+    },
+  }
+},
+  {
+    initialRouteName: 'Login',
+    headerBackTitleVisible: true,
+  });
+
+const AddValueStack = createStackNavigator({
+  AddValue: {
+    screen: AddValuePage,
+    navigationOptions: {
+      // header:null,
+      headerStyle: {
+        backgroundColor: 'rgba(54, 175, 160, 1)',
+      },
+      headerBackTitleStyle: {
+        fontSize: 25,
         fontWeight: 'bold',
       },
       headerBackTitle: 'Trở về',
@@ -272,24 +297,25 @@ const AddValueStack = createStackNavigator({
     },
   },
 }, {
-  initialRouteName: 'AddValue',
-  headerBackTitleVisible: true,
-});
+    initialRouteName: 'AddValue',
+    headerBackTitleVisible: true,
+  });
 
 const MainNavigator = createSwitchNavigator({
   AuthLoading: AuthLoadingScreen,
-  LoginStack: {screen: LoginStack,
-    navigationOptions:{
-      header:null,
+  LoginStack: {
+    screen: LoginStack,
+    navigationOptions: {
+      header: null,
     },
   },
-  AppStack : {
+  AppStack: {
     screen: AppNavigator,
-    navigationOptions:{
-      header:null,
+    navigationOptions: {
+      header: null,
     },
   }
 }, {
-  initialRouteName: 'AuthLoading',
-});
+    initialRouteName: 'AuthLoading',
+  });
 export default createAppContainer(MainNavigator);

@@ -419,6 +419,7 @@ export default class Home extends Component {
         >
           <View style={{flexDirection: 'row', }}>
             <Avatar
+              title={this.props.screenProps.user.thongTinChung.hoTen[0]}
               containerStyle={{margin: 10, marginLeft: 40}}
               size={120}
               rounded
