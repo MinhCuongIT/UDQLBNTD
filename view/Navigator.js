@@ -118,6 +118,9 @@ const User_FamilyStack = createStackNavigator({
   RelativeProfile: {
     screen: RelativeProfile,
   },
+  // Chat: {
+  //   screen: ChatScreen,
+  // },
   }, {
     initialRouteName: 'User_Family',
     // headerBackTitleVisible: true,
@@ -134,9 +137,9 @@ const ListDoctorsStack = createStackNavigator({
   AddDoctor: {
     screen: AddDoctor,
   },
-  Chat: {
-    screen: ChatScreen,
-  },
+  // Chat: {
+  //   screen: ChatScreen,
+  // },
   }, {
     initialRouteName: 'ListDoctors',
     // headerBackTitleVisible: true,
@@ -155,7 +158,7 @@ const ListProfileStack = createStackNavigator({
     initialRouteName: 'Profile',
 });
 
-const AppNavigator = createMaterialTopTabNavigator({
+const AppMainNavigator = createMaterialTopTabNavigator({
       Tab1: {
           screen: HomeStack,
           navigationOptions: {
@@ -209,6 +212,20 @@ const AppNavigator = createMaterialTopTabNavigator({
       activeTintColor: 'rgba(54, 175, 160, 1)',
     },
   });
+
+  const AppNavigator = createStackNavigator({
+    AppMainNavigator: {
+      screen: AppMainNavigator,
+      navigationOptions: {
+        header: null,
+      }
+    },
+    Chat: {
+      screen: ChatScreen,
+    },
+    }, {
+      initialRouteName: 'AppMainNavigator',
+  })
 
 AppNavigator.navigationOptions = {
   tittle: "testComponent",
