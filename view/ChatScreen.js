@@ -52,20 +52,19 @@ export class RightListItems extends PureComponent {
     }
   
     render() {
+      let _time = this.props.item.NgayGioGui;
       return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-end',}}>
-          <DateTime />
+          <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
+            <Text style={{fontSize: 12, color: 'silver',}}>
+              {_time.getDate()+'/'+(_time.getMonth()+1)+'-'+_time.getHours()+':'+_time.getMinutes()}
+            </Text>
+          </View>
           <View style={[styles.BubbleChat, styles.rightBubbleChat]}>             
             <Text style={{paddingTop: 5, color: 'white', fontSize: 17}}>
               {this.props.item.NoiDung}
             </Text>
           </View>
-          {/* <Avatar
-                size="medium"
-                rounded
-                source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqUifDeYJGapfmg23wf6fEGWG9EHJwYdFRyM-dSTr1PANe6Be9Vg'}}
-                activeOpacity={0.7}
-              /> */}
         </View>
       )
     }
@@ -77,6 +76,7 @@ export class LeftListItems extends PureComponent {
     }
 
     render() {
+        let _time = this.props.item.NgayGioGui;
         return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-start',}}>
             <Avatar
@@ -90,7 +90,11 @@ export class LeftListItems extends PureComponent {
                   {this.props.item.NoiDung}
               </Text>
             </View>
-            {/* <DateTime /> */}
+            <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
+              <Text style={{fontSize: 12, color: 'silver',}}>
+                {_time.getDate()+'/'+(_time.getMonth()+1)+'-'+_time.getHours()+':'+_time.getMinutes()}
+              </Text>
+            </View>
         </View>
         )
     }
@@ -131,7 +135,7 @@ export default class ChatScreen extends Component {
       this.setState({
         myID: userId
       });
-      socket.emit('join room', {
+      this.props.screenProps.socket.emit('join room', {
         MaTaiKhoan: userId,
         LoaiTaiKhoan: 1,
       });
@@ -162,8 +166,8 @@ export default class ChatScreen extends Component {
           chatMessages: [...this.state.chatMessages, ...dataTemp]
         },() => {});
       })
-      // this.socket = io(baseURL); cai nay sua sau cho theo format cua t, h lam de test trc
-      socket.on('chat message', (msg) => {
+
+      this.props.screenProps.socket.on('chat message', (msg) => {
         if(msg!==null){
           this.setState({
             chatMessages: [msg, ...this.state.chatMessages]
@@ -173,7 +177,6 @@ export default class ChatScreen extends Component {
     }
 
     async submitChatMessage() {
-      // alert(this.state.myID)
       let today = new Date();
       let _today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
@@ -188,22 +191,8 @@ export default class ChatScreen extends Component {
         },
         txtInput: '',
       }, async () => {
-      // alert(JSON.stringify(this.state.chatMessage))
-        await socket.emit('chat message', this.state.chatMessage);
+        await this.props.screenProps.socket.emit('chat message', this.state.chatMessage);
       });
-      // alert(this.state.myID)
-
-      // let mess=[{ content: 'reply: ' + this.state.txtInput.toString(), type: 2, key: (this.state.items.length + 1).toString() }]
-      // mess.push({ content: this.state.txtInput.toString(), type: 1 , key: this.state.items.length.toString()});
-      
-      // if (this.state.chatMessage !== '')
-      // {
-      //   //Adding Items To Array.
-      //   this.setState({
-      //     items: [...mess, ...this.state.items],
-      //     txtInput: '',
-      //   });
-      // }
     }
 
     keyExtractor = (item, index) => index.toString()
