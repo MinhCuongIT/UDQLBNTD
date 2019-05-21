@@ -127,7 +127,7 @@ class MyListCards extends PureComponent {
             containerStyle={styles.removeCardBorder}
         >
           <Divider/>
-          <CardItem itemDetail={this.props.profile.GioiTinh.data==1?'Nam':'Nữ'} itemTitle='Giới tính'/>
+          <CardItem itemDetail={this.props.profile.GioiTinh?this.props.profile.GioiTinh.data==1?'Nam':'Nữ':'Chưa rõ'} itemTitle='Giới tính'/>
           <CardItem itemDetail={this.props.profile.CMND} itemTitle='CMND'/>
           <CardItem itemDetail={this.props.profile.BenhVien} itemTitle='Bệnh viện'/>
           <CardItem itemDetail={this.props.profile.Khoa} itemTitle='Khoa'/>
