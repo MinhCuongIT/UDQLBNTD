@@ -67,7 +67,7 @@ export default () => {
     changeBenhNhanPassword: (info) => {
       return axiosPost(baseURL + `patients/change-password`, {
         MaBenhNhan: info.MaBenhNhan,
-        NewPassword: info.Password,
+        NewPassword: info.NewPassword,
         OldPassword: info.OldPassword
       })
       .then((res) => {

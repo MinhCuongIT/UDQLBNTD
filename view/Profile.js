@@ -488,18 +488,19 @@ class MyListCards extends PureComponent {
         <Divider style={{ marginHorizontal: 30 }} />
 
         {/* Doi mat khau */}
-        <ListItem containerStyle={{ marginLeft: 20 }}
+        <TouchableOpacity onPress={() => { this.setState({ isVisiblePasswordScreen: true }) }}>
+          <ListItem containerStyle={{ marginLeft: 20 }}
+            title={
+              <View >
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', }}>Đổi mật khẩu</Text>
+              </View>}
+            leftIcon={
+              <MaterialCommunityIcons name='textbox-password' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
+            }>
+          </ListItem>
+        </TouchableOpacity>
 
-          title={
-            <View >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', }}>Đổi mật khẩu</Text>
-            </View>}
 
-          onPress={() => { this.setState({ isVisiblePasswordScreen: true }) }}
-
-          leftIcon={
-            <MaterialCommunityIcons name='textbox-password' size={25} color='rgba(74, 195, 180, 1)'></MaterialCommunityIcons>
-          }></ListItem>
         {/* Dang xuat */}
         <TouchableOpacity onPress={() => { this.setState({ isLogoutConfirm: true }) }}>
           <ListItem containerStyle={{ marginLeft: 20 }}
@@ -775,20 +776,22 @@ export default class Profile extends Component {
   }
 
   onUpdatePasswordParent = async (newPassword, oldPassword) => {
-    await this.setState({
-      listData: {
-        ...this.props.screenProps.user,
-        taiKhoan: {
-          ...this.props.screenProps.user.taiKhoan,
-          password: newPassword
-        }
-      },
-    })
+    //Không cần thiết phải update lại mật khẩu mới vào trong state
+    // await this.setState({
+    //   listData: {
+    //     ...this.props.screenProps.user,
+    //     taiKhoan: {
+    //       ...this.props.screenProps.user.taiKhoan,
+    //       password: newPassword
+    //     }
+    //   },
+    // })
 
+    // alert(newPassword + "--" + oldPassword);
     //Tạo đối tượng bệnh nhân được cập nhật
     var patient = await {
       MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
-      NewPassword: this.props.screenProps.user.taiKhoan.password,
+      NewPassword: newPassword,
       OldPassword: oldPassword
     };
     //Update xuống DB
@@ -927,7 +930,7 @@ export default class Profile extends Component {
 
   render() {
     return (
-      
+
       <ScrollView>
         <Overlay isVisible={this.state.isVisibleEditNameScreen}
           borderRadius={10}

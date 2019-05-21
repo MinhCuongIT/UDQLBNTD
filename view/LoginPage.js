@@ -112,7 +112,7 @@ export default class LoginPage extends Component {
           this.props.navigation.navigate('AppStack')
         }
         else {
-          this.setState({errorMessage: 'Tài khoản này không tồn tại'})
+          this.setState({errorMessage: 'Tên tài khoản hoặc mật khẩu không đúng.\nVui lòng thử lại.'})
         }
       })
     }
