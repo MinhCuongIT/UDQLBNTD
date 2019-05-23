@@ -51,6 +51,7 @@ export default class Notifications extends Component {
     this.props.screenProps.socket.on('update list notifications', (info, id) => {
       let date = new Date(info.date)
       let temp = [{
+        idNguoiLienQuan: info.MaTaiKhoanLienQuan,
         name: info.TenNguoiLienQuan,
         avatar_url: info.AvatarNguoiLienQuan,
         subtitle: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
@@ -96,11 +97,11 @@ export default class Notifications extends Component {
     }
 
     const message = (
-      <View style={{flexDirection:'row'}}>
+      <Text style={{flexDirection:'row',}}>
         <Text>{message1}</Text>
         <Text style={{fontWeight: 'bold'}}>{item.name} {item.key}</Text>
         <Text>{message2}</Text>
-      </View>
+      </Text>
     )
     return (
     <TouchableOpacity>
@@ -108,15 +109,18 @@ export default class Notifications extends Component {
         title={message}
         subtitle={item.subtitle}
         leftAvatar={{
-          source: item.avatar_url && { uri: item.avatar_url },
+          source: { uri: 'data:image/jpeg;base64,' + item.avatar_url },
           title: item.name[0]
         }}
         containerStyle={{
           backgroundColor: item.isSeen===1? 'white': 'rgba(74, 195, 180, 0.2)'
         }}
-        // titleStyle={{
-        //   fontWeight: item.isSeen===1?'100':'bold',
-        // }}
+        contentContainerStyle={{
+          // paddingRight: 30,
+        }}
+        titleProps={{
+          padding: 10,
+        }}
         subtitleStyle={{
           fontWeight: item.isSeen===1?'100':'bold',
           color: 'rgba(74, 195, 180, 0.7)'
@@ -136,16 +140,38 @@ export default class Notifications extends Component {
 
           // chuyen trang toi trang can thiet
 
-          const info = {
-            MaTaiKhoan: userId,
-            LoaiNguoiChinh: 1,
-            MaTaiKhoanLienQuan: "0123456",
-            TenNguoiLienQuan: 'Lê Thị D',
-            AvatarNguoiLienQuan: 'https://img.pokemondb.net/artwork/large/charizard-mega-y.jpg',
-            LoaiNguoiLienQuan: 2,
-            LoaiThongBao: 1
+          switch(item.typeNotifications) {
+            case 1: {
+              // message2 += ' muốn theo dõi sức khỏe của bạn'
+              if (item.typePeople===1){
+                this.apiService.getBenhNhanInfo({MaBenhNhan: item.idNguoiLienQuan})
+                .then((result) => {
+                  if (result !== null)
+                  {
+                    // alert(JSON.stringify(result))
+                    const data = result[0]
+                    this.props.navigation.navigate('RelativeProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                  }
+                })
+              }
+              break;
+            }
+            case 2:  {
+              // message2 += ' cho bạn lời khuyên'
+              break;
+            }
           }
-          await this.props.screenProps.socket.emit('create notifications', info);
+
+          // const info = {
+          //   MaTaiKhoan: userId,
+          //   LoaiNguoiChinh: 1,
+          //   MaTaiKhoanLienQuan: "0123456",
+          //   TenNguoiLienQuan: 'Lê Thị D',
+          //   AvatarNguoiLienQuan: 'https://img.pokemondb.net/artwork/large/charizard-mega-y.jpg',
+          //   LoaiNguoiLienQuan: 2,
+          //   LoaiThongBao: 1
+          // }
+          // await this.props.screenProps.socket.emit('create notifications', info);
 
         }}
       />
@@ -167,6 +193,7 @@ export default class Notifications extends Component {
           result.notifications.map((item) => {
             let date = new Date(item.ThoiGian)
             let temp = {
+              idNguoiLienQuan: item.MaTaiKhoanLienQuan,
               name: item.TenNguoiLienQuan,
               avatar_url: item.AvatarNguoiLienQuan,
               subtitle: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),

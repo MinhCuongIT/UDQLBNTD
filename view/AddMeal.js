@@ -17,10 +17,12 @@ import {
   View,
   Alert,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
+import { CheckBox } from 'react-native-elements'
 import ApiService from "../services/api";
 
 const instructions = Platform.select({
@@ -32,18 +34,18 @@ const instructions = Platform.select({
 
 type Props = {};
 
-export default class AddBloodPressure extends Component {
+export default class AddMeal extends Component {
   constructor(props){
     super(props);
     const date = new Date();
     this.state = {
       isDateTimePickerVisible: false,
-      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
-      systolicValue: '',
-      diastolicValue: '',
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      mealValue: '',
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
       isNullValue: false,
-      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
       dateState: date,
+      buoi: 1,
     };
 
     this.apiService = ApiService()
@@ -61,42 +63,57 @@ export default class AddBloodPressure extends Component {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
       dateState: date,
-      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
-      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+      dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate(),
     })
     this.hideDateTimePicker();
   };
 
   handleConfirm = async () => {
-    if (this.state.diastolicValue === '' || this.state.systolicValue === ''){
+    // alert(this.props.screenProps.data[0].date)
+    if (this.state.mealValue === ''){
       this.setState({
         isNullValue: true,
       })
     }
     else {
       const userId = await AsyncStorage.getItem('UserId');
-      this.apiService.addHealthValue({
+      this.apiService.addThisMeal({
         MaBenhNhan: userId,
-        Loai: 2.1,
-        ChiSo: this.state.systolicValue,
-        NgayNhap: this.state.dateValue,
-      }).then((result) => {
+        Buoi: this.state.buoi,
+        Ngay: this.state.dateValue,
+        MonAn: this.state.mealValue,
+      }).then(async(result) => {
         if (result !== null) {
-          this.apiService.addHealthValue({
-            MaBenhNhan: userId,
-            Loai: 2.2,
-            ChiSo: this.state.diastolicValue,
-            NgayNhap: this.state.dateValue,
-          }).then(async (result) => {
-            if (result !== null) {
-              await this.props.screenProps.setBloodPressureData({
-                ChiSo1: this.state.systolicValue,
-                ChiSo2: this.state.diastolicValue,
-                NgayNhap: this.state.dateState,
-              })
-              this.props.navigation.navigate('Home')
-            }
+          await this.props.screenProps.editTodayMeals({
+            Ngay: this.state.dateState,
+            Buoi: this.state.buoi,
+            MonAn: this.state.mealValue,
+            id: result.id,
+            isDelete: false,
           })
+          Alert.alert(
+            'Đã thêm món ăn!',
+            ' Bạn có muốn thêm món ăn khác?',
+            [
+              {
+                text: 'Không',
+                onPress: () => {
+                  this.props.navigation.navigate('Home')
+                },
+                style: 'cancel',
+              },
+              {
+                text: 'Có',
+                onPress: () => {
+                  this.setState({
+                    mealValue: ''
+                  })
+                }
+              }
+            ],
+            { cancelable: false },
+          );
         }
       })
     }
@@ -104,8 +121,9 @@ export default class AddBloodPressure extends Component {
 
   render() {
     return (
+      <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.welcome}>Nhập thông tin huyết áp</Text>
+        <Text style={styles.welcome}>Nhập thông tin bữa ăn</Text>
         <View style={{marginTop:20}}>
           <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Ngày ghi</Text>
           <Text style={styles.dateText}>
@@ -121,38 +139,48 @@ export default class AddBloodPressure extends Component {
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this.handleDatePicked}
             onCancel={this.hideDateTimePicker}
-            mode={'datetime'}
           />
         </View>
         <View style={{marginTop:20}}>
-          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Chỉ số "Huyết áp" (mmHg)</Text>
-          <View style={{flexDirection: 'row'}}>
-            <TextInput
-              style={styles.inputText}
-              placeholder={'120'}
-              placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
-              underlineColorAndroid={'transparent'}
-              keyboardType='numeric'
-              maxLength={5}
-              value={this.state.systolicValue}
-              onChangeText={(systolicValue) => {if (systolicValue===''|| !isNaN(systolicValue)) this.setState({systolicValue})}}
+          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Đây là bữa ăn</Text>
+          <View style={{flexDirection: 'row',
+            width: Dimensions.get('window').width - 55,
+            marginHorizontal: 25,}}>
+            <CheckBox
+              title='Sáng'
+              checked={this.state.buoi===1}
+              containerStyle={{backgroundColor: '#F5FCFF', borderWidth: 0}}
+              onPress={() => this.setState({buoi: 1})}
             />
-            <Text style={{alignSelf: 'center', fontSize: 24}}> / </Text>
-            <TextInput
-              style={styles.inputText}
-              placeholder={'80'}
-              placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
-              underlineColorAndroid={'transparent'}
-              keyboardType='numeric'
-              maxLength={5}
-              value={this.state.diastolicValue}
-              onChangeText={(diastolicValue) => {if (diastolicValue===''|| !isNaN(diastolicValue)) this.setState({diastolicValue})}}
+            <CheckBox
+              title='Trưa'
+              checked={this.state.buoi===2}
+              containerStyle={{backgroundColor: '#F5FCFF', borderWidth: 0}}
+              onPress={() => this.setState({buoi: 2})}
+            />
+            <CheckBox
+              title='Tối'
+              checked={this.state.buoi===3}
+              containerStyle={{backgroundColor: '#F5FCFF', borderWidth: 0}}
+              onPress={() => this.setState({buoi: 3})}
             />
           </View>
         </View>
+        <View style={{marginTop:20}}>
+          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Tên món ăn</Text>
+          <TextInput
+            style={styles.inputText}
+            placeholder={'Cơm sườn'}
+            placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
+            underlineColorAndroid={'transparent'}
+            maxLength={20}
+            value={this.state.mealValue}
+            onChangeText={(mealValue) => {this.setState({mealValue})}}
+          />
+        </View>
         {this.state.isNullValue
           ? <View style={{marginTop:10, alignSelf: 'flex-start'}}>
-            <Text style={{marginLeft: 30, color: 'red',}}>Vui lòng nhập chỉ số</Text>
+            <Text style={{marginLeft: 30, color: 'red',}}>Vui lòng nhập món ăn</Text>
           </View>
           : <View/>
         }
@@ -165,6 +193,7 @@ export default class AddBloodPressure extends Component {
           </Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     );
   }
 }
@@ -188,7 +217,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputText: {
-    width: Dimensions.get('window').width / 2 - 55,
+    width: Dimensions.get('window').width - 55,
     height: 45,
     borderRadius: 25,
     borderWidth: 0.2,
@@ -196,7 +225,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     // backgroundColor: 'rgba(0, 0, 0, 0.15)',
     color: 'rgba(0, 0, 0, 1)',
-    marginHorizontal: 19,
+    marginHorizontal: 25,
     // textAlign: 'right',
   },
   dateText: {
