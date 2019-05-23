@@ -181,6 +181,27 @@ export default class Home extends Component {
     for (let i = 0; i < 2; i++) {
       await this.loadDataItem(userId, i)
     }
+    this.apiService.getTodayMeal({MaBenhNhan: userId})
+      .then((result) => {
+        let dataTemp = [
+          [],
+          [],
+          [],
+        ]
+
+        if (result!==null){
+          for (let i = 0; i < result.meals.length; i++){
+            let temp = result.meals[i]
+            dataTemp[temp.Buoi - 1].push({
+              MonAn: temp.MonAn,
+              id: temp.Id,
+            })
+          }
+
+          this.props.screenProps.setTodayMeals(dataTemp)
+        }
+
+      })
   }
 
   loadDataItem = async (userId, i) => {
@@ -189,9 +210,9 @@ export default class Home extends Component {
       MaBenhNhan: userId,
       Loai: i + 1,
     }).then(async (result) => {
-      if (result !== null && result.length > 0) {
+      // if (result !== null && result.length > 0) {
         // alert(result[0].Loai + ' ' + result.length)
-        let getData = result[0].Loai === 1
+        let getData = i + 1 === 1
           //Đường huyết
         ? {
             data: [],
@@ -228,29 +249,29 @@ export default class Home extends Component {
               ]
           },
           date: [],
-          type: result[0].Loai === 1
+          type: i + 1 === 1
             ? 'ĐƯỜNG HUYẾT (mmol/L)'
             : 'HUYẾT ÁP (mmHg)',
-          id: result[0].Loai,
-          highDomain: result[0].Loai === 1
+          id: i + 1,
+          highDomain: i + 1 === 1
             ? 10.2 //Đường huyết
             : 0,   //Huyết áp
-          lowDomain:  result[0].Loai === 1
+          lowDomain:  i + 1 === 1
             ? 3.8 //Đường huyết
             : 0,  //Huyết áp
-          unit: result[0].Loai === 1
+          unit: i + 1 === 1
             ? 'mmol/L' //Đường huyết
             : 'mmHg',  //Huyết áp
         }
 
         const highDomain = valueData.highDomain
         const lowDomain = valueData.lowDomain
-
+      if (result !== null && result.length > 0) {
         for (let index = (result.length - 1); index >= 0;) {
-          const getDate = new Date(result[index].NgayNhap)
-          valueData.date.push(getDate)
           switch (result[0].Loai) {
             case 1: {
+              const getDate = new Date(result[index].NgayNhap)
+              valueData.date.push(getDate)
               valueData.data.datasets[0].data.push(highDomain);
               valueData.data.datasets[1].data.push(lowDomain);
               getData.data.push(result[index].ChiSo)
@@ -260,9 +281,11 @@ export default class Home extends Component {
               break;
             }
             case 2: {
-              getData[0].data.push(result[index].blood_pressure01.ChiSo);
+              const getDate = new Date(result[index].blood_pressure01.NgayNhap)
+              valueData.date.push(getDate)
+              getData[0].data.push(result[index].blood_pressure02.ChiSo);
               // --index;
-              getData[1].data.push(result[index].blood_pressure02.ChiSo);
+              getData[1].data.push(result[index].blood_pressure01.ChiSo);
 
               valueData.data.labels.push(getDate.getDate() + '/' + (getDate.getMonth() + 1))
               index--;
@@ -270,7 +293,8 @@ export default class Home extends Component {
             }
           }
         }
-        switch (result[0].Loai) {
+      }
+        switch (i + 1) {
           case 1: {
             valueData.data.datasets.push(getData);
             break;
@@ -280,19 +304,19 @@ export default class Home extends Component {
             break;
           }
         }
-        dataT.push(valueData);
         // await this.setState(
         //   {
         //     data: [...this.state.data,...dataT],
         //   }
         // );
+      dataT.push(valueData);
         await this.props.screenProps.setData([...this.props.screenProps.data,...dataT])
 
         // this.setState({
         //   haveData: true
         // })
         this.props.screenProps.setHaveData(true)
-      }
+      // }
     })
   }
 
@@ -314,22 +338,22 @@ export default class Home extends Component {
   };
 
   _onRefresh = async () => {
-    // this.setState({refreshing: true});
-    // this.loadItems().then(() => {
-    //   this.setState({refreshing: false});
-    // });
+    this.setState({refreshing: true});
+    this.loadItems().then(() => {
+      this.setState({refreshing: false});
+    });
 
-    const userId = await AsyncStorage.getItem('UserId')
-    const info = {
-      MaTaiKhoan: userId,
-      LoaiNguoiChinh: 1,
-      MaTaiKhoanLienQuan: "0123456",
-      TenNguoiLienQuan: 'Trần Thị B',
-      AvatarNguoiLienQuan: 'https://img.pokemondb.net/artwork/large/charizard-mega-y.jpg',
-      LoaiNguoiLienQuan: 2,
-      LoaiThongBao: 1
-    }
-    await this.props.screenProps.socket.emit('create notifications', info);
+    // const userId = await AsyncStorage.getItem('UserId')
+    // const info = {
+    //   MaTaiKhoan: userId,
+    //   LoaiNguoiChinh: 1,
+    //   MaTaiKhoanLienQuan: "0123456",
+    //   TenNguoiLienQuan: 'Trần Thị B',
+    //   AvatarNguoiLienQuan: 'https://img.pokemondb.net/artwork/large/charizard-mega-y.jpg',
+    //   LoaiNguoiLienQuan: 2,
+    //   LoaiThongBao: 1
+    // }
+    // await this.props.screenProps.socket.emit('create notifications', info);
 
   }
 
@@ -350,14 +374,27 @@ export default class Home extends Component {
 // alert(item.date)
         return (
           <View key={item.type}>
-            <View style={{flexDirection: 'row', margin: 10, marginTop: 20, }}>
-              <Image
-                source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'
-                  ? require('../images/Diabetes.png')
-                  : require('../images/BloodPressure.png')}
-                style={styles.chartTitleIcon}
-              />
-              <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
+            <View style={{flexDirection: 'row', margin: 10, marginTop: 20, justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row', }}>
+                <Image
+                  source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'
+                    ? require('../images/Diabetes.png')
+                    : require('../images/BloodPressure.png')}
+                  style={styles.chartTitleIcon}
+                />
+                <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => item.type==='ĐƯỜNG HUYẾT (mmol/L)'
+                  ? this.props.navigation.navigate('AddDiabetes')
+                  : this.props.navigation.navigate('AddBloodPressure')
+                }
+              >
+                <Image
+                  source={require('../images/plus.png')}
+                  style={styles.chartTitleIcon}
+                />
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity
@@ -383,20 +420,24 @@ export default class Home extends Component {
             </TouchableOpacity>
             <View style={{marginLeft: 20, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
               {/*<View style={item.type==='ĐƯỜNG HUYẾT (mmol/L)'?styles.errorStatus:styles.normalStatus}></View>*/}
-              <TouchableOpacity
-                onPress={async () => {await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')}}
-                style={styles.btnMess}
-              >
-                <Text style={{color: 'white', fontSize: 17}}>
-                  Liên hệ bác sĩ chuyên môn
-                </Text>
-              </TouchableOpacity>
+              {/*<TouchableOpacity*/}
+                {/*onPress={async () => {*/}
+                  {/*// await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')*/}
+                {/*}}*/}
+                {/*style={styles.btnMess}*/}
+              {/*>*/}
+                {/*<Text style={{color: 'white', fontSize: 17}}>*/}
+                  {/*Liên hệ bác sĩ chuyên môn*/}
+                {/*</Text>*/}
+              {/*</TouchableOpacity>*/}
             </View>
           </View>
         )
       })
       : <TouchableOpacity
-        onPress={async () => {await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')}}
+        onPress={async () => {
+          // await AsyncStorage.clear();this.props.navigation.navigate('LoginStack')
+        }}
       ><Text style={{
         margin: 10,
         marginTop: 30,
@@ -405,6 +446,30 @@ export default class Home extends Component {
       }}>
         Chưa có dữ liệu về sức khỏe
       </Text></TouchableOpacity>
+
+    let listMealsBreakfast =
+      this.props.screenProps.todayMeals[0].length > 0
+        ? this.props.screenProps.todayMeals[0].map((item, index) => {
+          return(
+        <Text key={item.id.toString()} style={{ color: 'black' }}>{item.MonAn}</Text>)
+      })
+        : <Text style={{ color: 'black' }}>Chưa có món ăn</Text>
+
+    let listMealsLunch =
+      this.props.screenProps.todayMeals[1].length > 0
+        ? this.props.screenProps.todayMeals[1].map((item, index) => {
+          return(
+            <Text key={item.id.toString()} style={{ color: 'black' }}>{item.MonAn}</Text>)
+        })
+        : <Text style={{ color: 'black' }}>Chưa có món ăn</Text>
+
+    let listMealsDinner =
+      this.props.screenProps.todayMeals[2].length > 0
+        ? this.props.screenProps.todayMeals[2].map((item, index) => {
+          return(
+            <Text key={item.id.toString()} style={{ color: 'black' }}>{item.MonAn}</Text>)
+        })
+        : <Text style={{ color: 'black' }}>Chưa có món ăn</Text>
 
     return (
       <View style={styles.container}>
@@ -430,16 +495,69 @@ export default class Home extends Component {
             </View>
           </View>
           {listChart}
+          <View>
+            <View style={{flexDirection: 'row', margin: 10, marginTop: 20, justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row',}}>
+                <Image
+                  source={require('../images/diet.png')}
+                  style={styles.chartTitleIcon}
+                />
+                <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>THỰC ĐƠN CỦA HÔM NAY</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {this.props.navigation.navigate('AddMeal')}
+                }
+              >
+                <Image
+                  source={require('../images/plus.png')}
+                  style={styles.chartTitleIcon}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('MealDetails')
+              }}
+            >
+              <View style={{ borderRadius: 10, borderColor: '#EFEFEF', margin: 5, borderWidth: 1 }}>
+                <View style={{ flexDirection: 'row', padding: 10 }}>
+                  <View style={{ width: 90, justifyContent: 'center' }}>
+                    <Text style={{ color: 'black' }}>Sáng</Text>
+                  </View>
+                  <View>
+                    {listMealsBreakfast}
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#EFEFEF' }}>
+                  <View style={{ width: 90, justifyContent: 'center' }}>
+                    <Text style={{ color: 'black' }}>Trưa</Text>
+                  </View>
+                  <View>
+                    {listMealsLunch}
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'row', padding: 10 }}>
+                  <View style={{ width: 90, justifyContent: 'center' }}>
+                    <Text style={{ color: 'black' }}>Tối</Text>
+                  </View>
+                  <View>
+                    {listMealsDinner}
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
           <View style={{height: 25}}/>
         </ScrollView>
-        <ActionButton buttonColor="rgba(231,76,60,1)" position={'right'}>
-          <ActionButton.Item buttonColor='rgba(230, 50, 50, 0.9)' size={50} onPress={() => this.props.navigation.navigate('AddDiabetes')}>
-            <Image source={require('../images/Diabetes.png')} style={styles.actionButtonIcon}/>
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='rgba(230, 130, 100, 0.9)' size={50} onPress={() => this.props.navigation.navigate('AddBloodPressure')}>
-            <Image source={require('../images/BloodPressure.png')} style={styles.actionButtonIcon}/>
-          </ActionButton.Item>
-        </ActionButton>
+        {/*<ActionButton buttonColor="rgba(231,76,60,1)" position={'right'}>*/}
+          {/*<ActionButton.Item buttonColor='rgba(230, 50, 50, 0.9)' size={50} onPress={() => this.props.navigation.navigate('AddDiabetes')}>*/}
+            {/*<Image source={require('../images/Diabetes.png')} style={styles.actionButtonIcon}/>*/}
+          {/*</ActionButton.Item>*/}
+          {/*<ActionButton.Item buttonColor='rgba(230, 130, 100, 0.9)' size={50} onPress={() => this.props.navigation.navigate('AddBloodPressure')}>*/}
+            {/*<Image source={require('../images/BloodPressure.png')} style={styles.actionButtonIcon}/>*/}
+          {/*</ActionButton.Item>*/}
+        {/*</ActionButton>*/}
 
       </View>
     );

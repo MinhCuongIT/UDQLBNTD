@@ -25,6 +25,8 @@ import AddDiabetes from "./AddDiabetes";
 import AddBloodPressure from "./AddBloodPressure";
 import AddValuePage from "./AddValuePage";
 import Notifications from './Notifications';
+import MealDetails from './MealDetails';
+import AddMeal from './AddMeal';
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -39,6 +41,19 @@ const HomeStack = createStackNavigator({
   },
   HomeDetails: {
     screen: HomeDetails,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: 'rgba(74, 195, 180, 1)',
+      },
+      headerBackTitleStyle: {
+        fontSize: 25,
+        fontWeight: 'bold',
+      },
+      headerTintColor: 'white',
+    },
+  },
+  MealDetails: {
+    screen: MealDetails,
     navigationOptions: {
       headerStyle: {
         backgroundColor: 'rgba(74, 195, 180, 1)',
@@ -65,6 +80,19 @@ const HomeStack = createStackNavigator({
   },
   AddBloodPressure: {
     screen: AddBloodPressure,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: 'rgba(74, 195, 180, 1)',
+      },
+      headerBackTitleStyle: {
+        fontSize: 25,
+        fontWeight: 'bold',
+      },
+      headerTintColor: 'white',
+    },
+  },
+  AddMeal: {
+    screen: AddMeal,
     navigationOptions: {
       headerStyle: {
         backgroundColor: 'rgba(74, 195, 180, 1)',

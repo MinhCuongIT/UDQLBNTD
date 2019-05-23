@@ -277,6 +277,46 @@ export default () => {
           return null
       })
     },
+    getListMeal: (info) => {
+      return axiosGet(baseURL + `meals?MaBenhNhan=${info.MaBenhNhan}&page=${info.page}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data
+          }
+          return null
+        })
+    },
+    deleteThisMeal: (info) => {
+      return axiosPost(baseURL + `meals/deleteThisMeal`, {
+        MaBenhNhan: info.MaBenhNhan,
+        Id: info.Id,
+      }).then((res) => {
+        if(res.data.status === 'success'){
+          return res.data
+        }
+        return null})
+    },
+    getTodayMeal: (info) => {
+      return axiosGet(baseURL + `meals/todayMeal?MaBenhNhan=${info.MaBenhNhan}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data
+          }
+          return null
+        })
+    },
+    addThisMeal: (info) => {
+      return axiosPost(baseURL + `meals/addThisMeal`, {
+        MaBenhNhan: info.MaBenhNhan,
+        Buoi: info.Buoi,
+        Ngay: info.Ngay,
+        MonAn: info.MonAn,
+      }).then((res) => {
+        if(res.data.status === 'success'){
+          return res.data
+        }
+        return null})
+    },
   }
 
   return services
