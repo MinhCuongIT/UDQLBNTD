@@ -141,6 +141,15 @@ export default class ChatScreen extends Component {
         LoaiTaiKhoan: 1,
       });
       this.loadMessages();
+
+      this.props.screenProps.socket.on('chat message', (msg) => {
+        if(msg!==null){
+          msg.NgayGioGui=msg.DateValue
+          this.setState({
+            chatMessages: [msg, ...this.state.chatMessages]
+          });
+        }
+      });
     }
 
     async submitChatMessage() {
