@@ -27,6 +27,9 @@ import AddValuePage from "./AddValuePage";
 import Notifications from './Notifications';
 import MealDetails from './MealDetails';
 import AddMeal from './AddMeal';
+import RelativeStats from './RelativeStats';
+import MealDetailRelative from './MealDetailRelative';
+import StatsDetailRelative from './StatsDetailRelative';
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -157,6 +160,15 @@ const User_FamilyStack = createStackNavigator({
   },
   RelativeProfile: {
     screen: RelativeProfile,
+  },
+  RelativeStats: {
+    screen: RelativeStats,
+  },
+  StatsDetailRelative: {
+    screen: StatsDetailRelative
+  },
+  MealDetailRelative: {
+    screen: MealDetailRelative,
   },
   }, {
     initialRouteName: 'User_Family',

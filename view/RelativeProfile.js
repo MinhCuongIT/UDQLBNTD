@@ -162,13 +162,7 @@ class IntroCard extends PureComponent {
             size={20}
             color="rgba(74, 195, 180, 1)"
             onPress={() => {
-              // this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBenhNhan, 1)
-              //     .then(async(result1) => {
-              //         if(result1=='success'){
-              //           this.props.handle.handleChangeType('add')
-              //         }
-              //     });
-              alert('xem chỉ số')
+              this.props.navigation.navigate('RelativeStats', { data: this.props.item} )
             }}
           >
             <Text style={styles.customBtnText}>
