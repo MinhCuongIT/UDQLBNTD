@@ -281,7 +281,17 @@ export default () => {
       return axiosGet(baseURL + `meals?MaBenhNhan=${info.MaBenhNhan}&page=${info.page}`)
         .then((res) => {
           if(res.data.status === 'success'){
-            return res.data
+            return res.data 
+          }
+            return null
+          })
+      },
+    // Kiểm tra quan hệ giữa bác sĩ và mình
+    checkRelationshipWithDoctor: (patientID, doctorID) => {
+      return axiosGet(baseURL + `follows/check-relationship-of-patient-with-doctor?MaBenhNhan=${patientID}&MaBacSi=${doctorID}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.typeRelationship
           }
           return null
         })
@@ -315,7 +325,36 @@ export default () => {
         if(res.data.status === 'success'){
           return res.data
         }
-        return null})
+        return null
+      })
+    },
+    // Gửi lời mời bác sĩ follow mình
+    requestFollowToDoctor: (patientID, doctorID, doctorType) => {
+      return axiosPost(baseURL + `follows/wait`, {
+        NguoiTheoDoi: doctorID,
+        NguoiBiTheoDoi: patientID,
+        Type: doctorType
+      })
+      .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.status
+          }
+          return null
+      })
+    },
+    // Hủy follow của bác sĩ với mình
+    unFollowedFromDoctor: (patientID, doctorID, type) => {
+      return axiosPost(baseURL + `follows/unfollowed`, {
+        NguoiTheoDoi: doctorID,
+        NguoiBiTheoDoi: patientID,
+        Type: type
+      })
+      .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.status
+          }
+          return null
+      })
     },
   }
 

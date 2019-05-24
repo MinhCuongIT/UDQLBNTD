@@ -111,7 +111,8 @@ export default class User_Family extends Component {
       this.state = {
         flatListData: [],
         deletedRowKey: null,
-        myID: ''
+        myID: '',
+        refreshing: false
       };
 
       this.apiRelative = ApiRelative();
@@ -160,7 +161,8 @@ export default class User_Family extends Component {
             }
           }
           this.setState({
-                flatListData: arrayholder
+                flatListData: arrayholder,
+                refreshing: false
               });
         });
     }
@@ -176,6 +178,13 @@ export default class User_Family extends Component {
       });
     }
 
+    handleRefresh = () => {
+      this.setState({
+        refreshing: true
+      }, () => {
+        this.getMyListRelatives();
+      })
+    }
     
   
     render() {
@@ -191,6 +200,8 @@ export default class User_Family extends Component {
                 }
                 data={this.state.flatListData}
                 keyExtractor={this.keyExtractor}
+                refreshing={this.state.refreshing}
+                onRefresh={this.handleRefresh}
             ></FlatList>
         </View>
       );
