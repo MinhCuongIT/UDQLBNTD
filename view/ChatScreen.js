@@ -140,42 +140,7 @@ export default class ChatScreen extends Component {
         MaTaiKhoan: userId,
         LoaiTaiKhoan: 1,
       });
-      this.apiChat.getMessages(
-        { id: this.state.myID, type: 1},
-        { id: this.state.receiverID, type: this.props.navigation.getParam('type') },
-        this.state.page
-      ).then((msg) => {
-        let dataTemp = []
-        if(msg!==null){
-          // alert(JSON.parse(JSON.stringify(msg)))   
-          msg.map((item) => {     
-            // alert(JSON.stringify(item))
-            let date = new Date(item.NgayGioGui)
-            let temp = {
-              MaNguoiGui: item.MaNguoiGui,
-              LoaiNguoiGui: item.LoaiNguoiGui,
-              MaNguoiNhan: item.MaNguoiNhan,
-              LoaiNguoiNhan: item.LoaiNguoiNhan, 
-              NoiDung: item.NoiDung,
-              NgayGioGui: date,
-            }
-
-            dataTemp.push(temp)
-          })
-        }
-        this.setState({
-          chatMessages: [...this.state.chatMessages, ...dataTemp]
-        },() => {});
-      })
-
-      this.props.screenProps.socket.on('chat message', (msg) => {
-        if(msg!==null){
-          msg.NgayGioGui=msg.DateValue
-          this.setState({
-            chatMessages: [msg, ...this.state.chatMessages]
-          });
-        }
-      });
+      this.loadMessages();
     }
 
     async submitChatMessage() {
@@ -209,6 +174,42 @@ export default class ChatScreen extends Component {
         return(<LeftListItems item={item} avatar={this.props.navigation.getParam('data').Avatar}/>);
       }
     }
+
+    loadMessages = async () => {
+      await this.apiChat.getMessages(
+        { id: this.state.myID, type: 1},
+        { id: this.state.receiverID, type: this.props.navigation.getParam('type') },
+        this.state.page
+      ).then((msg) => {
+        let dataTemp = []
+        if(msg!==null){
+          msg.map((item) => {     
+            let date = new Date(item.NgayGioGui)
+            let temp = {
+              MaNguoiGui: item.MaNguoiGui,
+              LoaiNguoiGui: item.LoaiNguoiGui,
+              MaNguoiNhan: item.MaNguoiNhan,
+              LoaiNguoiNhan: item.LoaiNguoiNhan, 
+              NoiDung: item.NoiDung,
+              NgayGioGui: date,
+            }
+
+            dataTemp.push(temp)
+          })
+        }
+        this.setState({
+          chatMessages: [...this.state.chatMessages, ...dataTemp]
+        },() => {});
+      })
+    }
+
+    handleLoadMore = () => {
+      this.setState({
+        page: this.state.page + 1
+      }, () => {
+        this.loadMessages();
+      })
+    }
   
     render() {
       return (
@@ -218,6 +219,8 @@ export default class ChatScreen extends Component {
               data={this.state.chatMessages}
               renderItem={this._renderItem}
               keyExtractor={this.keyExtractor}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0.001}
               inverted
           >
           </FlatList> 
