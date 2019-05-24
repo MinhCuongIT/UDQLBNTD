@@ -1,9 +1,9 @@
 import React, {Component, PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView, Alert, AsyncStorage } from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Alert, AsyncStorage, RefreshControl } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Card, ListItem, Divider, Button } from "react-native-elements";
 import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import { DateTime } from './ChatScreen';
@@ -20,7 +20,7 @@ class IntroCard extends PureComponent {
     const buttonRela = this.props.typeRelationship==='add'
       ? 
       <View style={{flexDirection: 'row'}}>
-      <MaterialCommunityIcons.Button
+        <MaterialCommunityIcons.Button
           name="account-plus-outline"
           backgroundColor="transparent"
           borderRadius={0}
@@ -82,8 +82,8 @@ class IntroCard extends PureComponent {
               <Text style={styles.customBtnText}>
                 Chấp nhận
               </Text>
-            </MaterialCommunityIcons.Button>
-          </View>
+          </MaterialCommunityIcons.Button>
+        </View>
         <View style={{flex: 1}}>
           <MaterialCommunityIcons.Button
             name="account-remove-outline"
@@ -133,30 +133,49 @@ class IntroCard extends PureComponent {
 
       :  
       <View style={{flexDirection: 'row'}}>
-        <MaterialCommunityIcons.Button
-          name="account-off-outline"
-          backgroundColor="transparent"
-          borderRadius={0}
-          size={20}
-          color="rgba(74, 195, 180, 1)"
-          onPress={() => {
-            this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBenhNhan, 1)
-                .then(async(result1) => {
-                    if(result1=='success'){
-                      // this.apiFollow.unFollowed(this.props.item.MaBenhNhan, this.props.myID, 1)
-                      //   .then(async(result2) => {
-                      //       if(result2=='success'){
-                              this.props.handle.handleChangeType('add')
-                            // }
-                        // });
-                    }
-                });
-          }}
-        >
-          <Text style={styles.customBtnText}>
-            Bỏ theo dõi
-          </Text>
-        </MaterialCommunityIcons.Button>
+        <View style={{flex: 1}}>
+          <MaterialCommunityIcons.Button
+            name="account-off-outline"
+            backgroundColor="transparent"
+            borderRadius={0}
+            size={20}
+            color="rgba(74, 195, 180, 1)"
+            onPress={() => {
+              this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBenhNhan, 1)
+                  .then(async(result1) => {
+                      if(result1=='success'){
+                        this.props.handle.handleChangeType('add')
+                      }
+                  });
+            }}
+          >
+            <Text style={styles.customBtnText}>
+              Bỏ theo dõi
+            </Text>
+          </MaterialCommunityIcons.Button>
+        </View>
+        <View style={{flex: 1}}>
+          <FontAwesome.Button
+            name="heartbeat"
+            backgroundColor="transparent"
+            borderRadius={0}
+            size={20}
+            color="rgba(74, 195, 180, 1)"
+            onPress={() => {
+              // this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBenhNhan, 1)
+              //     .then(async(result1) => {
+              //         if(result1=='success'){
+              //           this.props.handle.handleChangeType('add')
+              //         }
+              //     });
+              alert('xem chỉ số')
+            }}
+          >
+            <Text style={styles.customBtnText}>
+              Xem chỉ số
+            </Text>
+          </FontAwesome.Button>
+        </View>
       </View>
     
     return (
@@ -182,9 +201,9 @@ class IntroCard extends PureComponent {
                   color="rgba(74, 195, 180, 1)"
                   onPress={()=> console.log("hi")}
                 >
-                  {/* <Text style={styles.customBtnText}>
+                  <Text style={styles.customBtnText}>
                     Gọi
-                  </Text> */}
+                  </Text>
                 </Feather.Button>
               </View>
               <View style={{flex: 1}}>
@@ -198,13 +217,13 @@ class IntroCard extends PureComponent {
                     this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 1 })
                   }}
                 >
-                  {/* <Text style={styles.customBtnText}>
+                  <Text style={styles.customBtnText}>
                     Nhắn tin
-                  </Text> */}
+                  </Text>
                 </Feather.Button>
               </View>
             </View>
-              {buttonRela}
+            {buttonRela}
           </View>
         }
       />
@@ -240,7 +259,6 @@ class MyListCards extends PureComponent {
   }
   
   render () {
-    // alert(JSON.stringify(this.props.profile))
     let birth_dayResponse = new Date(this.props.profile.NgaySinh);
     let _dd = birth_dayResponse.getDate(),
         _mm = birth_dayResponse.getMonth() + 1,
@@ -300,7 +318,8 @@ export default class RelativeProfile extends Component {
       this.state = {
         myID: '',
         profile: this.props.navigation.getParam('data'),
-        typeRelationship: 'add'
+        typeRelationship: 'add',
+        refreshing: false
       };
 
       this.apiFollow = ApiFollow();
@@ -328,7 +347,8 @@ export default class RelativeProfile extends Component {
         .then((result) => {
           if(result!==null){
             this.setState({
-              typeRelationship: result
+              typeRelationship: result,
+              refreshing: false
             })
           }
         });
@@ -340,21 +360,46 @@ export default class RelativeProfile extends Component {
       })
     }
 
+    handleRefresh = () => {
+      this.setState({
+        refreshing: true
+      }, async () => {
+        const userId = await AsyncStorage.getItem('UserId');
+        this.apiFollow.checkMyRelationship(userId, this.state.profile.MaBenhNhan)
+        .then((result) => {
+          if(result!==null){
+            this.setState({
+              typeRelationship: result,
+              refreshing: false
+            })
+          }
+        });
+      })
+    }
+
     render() {
-      // alert(JSON.stringify(this.state.profile))
       return (
         <View style={styles.wrapper}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.handleRefresh}
+              />
+            }>
             <MyListCards 
-            myProfile={this.props.screenProps.user}
-            socket={this.props.screenProps.socket}
-            myID={this.state.myID} 
-            profile={this.state.profile} 
-            navigation={this.props.navigation} 
-            typeRelationship={this.state.typeRelationship} 
-              handle={{
-                handleChangeType: this.handleChangeType
-                }}
+              myProfile={this.props.screenProps.user}
+              socket={this.props.screenProps.socket}
+              myID={this.state.myID} 
+              profile={this.state.profile} 
+              navigation={this.props.navigation} 
+              typeRelationship={this.state.typeRelationship} 
+                handle={{
+                  handleChangeType: this.handleChangeType
+                  }}
             />
+          </ScrollView>
+            
         </View>
       );
     }
@@ -406,11 +451,7 @@ const styles = StyleSheet.create({
   // Custom buttons
   customBtns: {
     flexDirection: 'column',
-    // alignItems: 'center'
   },
-  // customBtnView: {
-  //   flex: 0.5,
-  // },
   customBtnText: {
     fontFamily: 'Arial',
     fontSize: 16,

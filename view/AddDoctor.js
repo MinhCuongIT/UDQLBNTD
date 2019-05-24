@@ -46,7 +46,7 @@ class FindDoctorSearchBar extends PureComponent {
 
 class FlatListItem extends PureComponent {
   constructor (props) {
-    super(props);
+    super(props); 
   }
   
   render () {
@@ -72,7 +72,7 @@ class FlatListItem extends PureComponent {
                 }}
           contentContainerStyle={{height: 40,}}
           onPress={ () => {
-            this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item });
+            this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item, type: this.props.type });
           } }
         />
     )
@@ -86,6 +86,7 @@ export default class AddDoctor extends Component {
         flatListData: [],
         search_DoctorID: '',
         myID: this.props.navigation.getParam('myID'),
+        type: this.props.navigation.getParam('type')
       };
 
       this.apiFindDoctor = ApiDoctor();
@@ -147,7 +148,7 @@ export default class AddDoctor extends Component {
             <FlatList
                 renderItem={
                   ({item, index}) => {
-                    return(<FlatListItem item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} />)
+                    return(<FlatListItem item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} type={this.state.type}/>)
                   }
                 }
                 data={this.state.flatListData}

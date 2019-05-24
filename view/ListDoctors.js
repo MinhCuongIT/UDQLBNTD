@@ -99,7 +99,9 @@ class SectionListItem extends PureComponent {
                 }}
           contentContainerStyle={{height: 40,}}
           onPress={() => {
-                this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item })
+                this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, 
+                                                                  data: this.props.item,
+                                                                  type: this.props.section.title==='Tiểu Đường'?2:3 })
               }}
         />
       // </Swipeout>
@@ -127,7 +129,7 @@ class SectionHeader extends PureComponent {
               size={30}
               color='rgba(74, 195, 180, 1)'
               onPress={() => {
-                this.props.navigation.navigate('AddDoctor', { myID: this.props.myID });
+                this.props.navigation.navigate('AddDoctor', { myID: this.props.myID, type: this.props.type });
               }}
               />
           }
@@ -146,6 +148,7 @@ export default class ListDoctors extends Component {
         deletedRowKey: null,
         search: '',
         myID: '',
+        refreshing: false
       };
       
       this.apiDoctor = ApiDoctor();
@@ -215,7 +218,8 @@ export default class ListDoctors extends Component {
             }
           }
           this.setState({
-            sectionListData: arrayholder
+            sectionListData: arrayholder,
+            refreshing: false
           });
         });
     }
@@ -247,9 +251,9 @@ export default class ListDoctors extends Component {
       switch(section.title) {
    
         case "Tiểu Đường":
-          return(<SectionHeader iconSectionHeader={require('../images/Diabetes.png')} sectionTitle={section.title} navigation={this.props.navigation} myID={this.state.myID} />);
+          return(<SectionHeader iconSectionHeader={require('../images/Diabetes.png')} sectionTitle={section.title} navigation={this.props.navigation} myID={this.state.myID} type={2}/>);
         case 'Huyết Áp':
-          return(<SectionHeader iconSectionHeader={require('../images/BloodPressure.png')} sectionTitle={section.title} navigation={this.props.navigation} myID={this.state.myID} />);
+          return(<SectionHeader iconSectionHeader={require('../images/BloodPressure.png')} sectionTitle={section.title} navigation={this.props.navigation} myID={this.state.myID} type={3}/>);
         default:
           break;
       
@@ -326,6 +330,14 @@ export default class ListDoctors extends Component {
       )
     }
   
+    handleRefresh = () => {
+      this.setState({
+        refreshing: true
+      }, () => {
+        this.getMyListDoctors();
+      })
+    }
+
     render() {
       return (
         <View style={styles.wrapper}>
@@ -343,6 +355,8 @@ export default class ListDoctors extends Component {
                 stickySectionHeadersEnabled={true}
                 // ListFooterComponent={this.footerComponent.bind(this)}
                 ListEmptyComponent={this.emptyListComponent.bind(this)}
+                refreshing={this.state.refreshing}
+                onRefresh={this.handleRefresh}
             ></SectionList>
         </View>
       );
