@@ -40,8 +40,11 @@ class FlatListItem extends PureComponent {
                   marginLeft: 20,
                 }}
           contentContainerStyle={{height: 40,}}
+          containerStyle={{
+            backgroundColor: this.props.item.DaXem===1? 'white': 'rgba(74, 195, 180, 0.2)'
+          }}
           onPress={() => {
-                  this.props.navigation.navigate('RelativeProfile', { myID: this.props.myID, data: this.props.item })
+                  this.props.navigation.navigate('RelativeProfile', { myID: this.props.myID, data: this.props.item, refresh: this.props.refresh })
               }}
         />
     )
@@ -137,7 +140,7 @@ export default class User_Family extends Component {
                 renderItem={
                   ({item, index}) =>{
                     return (
-                      <FlatListItem item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} parentSectionList={this} />
+                      <FlatListItem refresh={this.handleRefresh} item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} parentSectionList={this} />
                     )
                   }
                 }

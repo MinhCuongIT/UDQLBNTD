@@ -107,7 +107,9 @@ export default class ChatScreen extends Component {
       super(props);
       this.state = {
         myID: '',
-        receiverID: this.props.navigation.getParam('data').MaBenhNhan,  
+        receiverID:  this.props.navigation.getParam('type')===1
+        ?this.props.navigation.getParam('data').MaBenhNhan
+        :this.props.navigation.getParam('data').MaBacSi,  
         txtInput: '',
         chatMessage: '',
         chatMessages: [],
@@ -150,6 +152,15 @@ export default class ChatScreen extends Component {
           });
         }
       });
+    }
+
+    componentWillUnmount() {
+      this.apiChat.updateSeeing({
+        MaTaiKhoan: this.state.myID,
+        LoaiTaiKhoan: 1,
+        MaTaiKhoanLienQuan: this.state.receiverID,
+        LoaiTaiKhoanLienQuan: this.props.navigation.getParam('type')
+      })
     }
 
     async submitChatMessage() {
