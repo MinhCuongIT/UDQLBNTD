@@ -9,41 +9,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import ApiDoctor from '../services/api';
 
 
-class FindDoctorSearchBar extends PureComponent {
-    constructor (props) {
-        super(props);
-      }
-
-    render() {
-        const phone_width = Dimensions.get('window').width,
-            btnSeacrh_width = 75;
-        return(
-            <View style={{flexDirection: 'row', justifyContent: 'center', paddingRight: 5}}>
-                <SearchBar
-                    round
-                    lightTheme
-                    containerStyle={{backgroundColor: 'transparent', width: phone_width - btnSeacrh_width, borderBottomWidth: 0, borderRightWidth: 0}}
-                    inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40}}
-                    inputStyle={{color: 'white',}}
-                    underlineColorAndroid='transparent'
-                    placeholder="Nhập số điện thoại..."
-                    searchIcon={null}
-                    placeholderTextColor='white'
-                    onChangeText={this.props.updateSearch}
-                    value={this.props.search}
-                />
-                <MaterialCommunityIcons
-                  name="account-search-outline"
-                  size={30}
-                  color='rgba(74, 195, 180, 1)'
-                  style={{margin: 15}}
-                  onPress={this.props.fetchData}
-                />
-            </View>
-        )
-    }
-}
-
 class FlatListItem extends PureComponent {
   constructor (props) {
     super(props); 
@@ -92,7 +57,7 @@ export default class AddDoctor extends Component {
       this.apiFindDoctor = ApiDoctor();
 
       this.updateSearch = this.updateSearch.bind(this);
-      this.fetchData = this.fetchData.bind(this);
+      // this.fetchData = this.fetchData.bind(this);
     }
 
   
@@ -109,42 +74,39 @@ export default class AddDoctor extends Component {
       }
     };
 
-    // componentWillMount() {
-    //     this.fetchData('0946531215');
-    // }
-    // async componentDidMount(){
-    //   const userID = await AsyncStorage.getItem('UserId');
-    //   this.setState({
-    //     userId: userID
-    //   })
-    // }
-
-    fetchData = () => {
-        this.apiFindDoctor.findDoctorByID(this.state.search_DoctorID)
+    updateSearch = search_DoctorID => {
+      this.setState({ search_DoctorID, flatListData: [] });
+      if (search_DoctorID.length===10){
+        this.apiFindDoctor.findDoctorByID(search_DoctorID)
             .then((result) => {
                 this.setState({
                     flatListData: result
                 });
             });
+      }
     }
-
-    updateSearch = search => {
-      this.setState({
-        search_DoctorID: search,
-      });
-      // this.fetchData
-    }
-
-    // componentDidMount() {
-      
-    // }
 
     keyExtractor = (item, index) => index.toString()
   
     render() {
       return (
         <View style={styles.wrapper}>
-            <FindDoctorSearchBar search={this.state.search_DoctorID} updateSearch={this.updateSearch} fetchData={this.fetchData} />
+            <View style={{flexDirection: 'row', justifyContent: 'center', paddingRight: 5}}>
+                <SearchBar
+                    round
+                    lightTheme
+                    containerStyle={{backgroundColor: 'transparent', width: Dimensions.get('window').width, borderBottomWidth: 0, borderRightWidth: 0}}
+                    inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40}}
+                    inputStyle={{color: 'white',}}
+                    underlineColorAndroid='transparent'
+                    placeholder="Nhập số điện thoại..."
+                    searchIcon={null}
+                    placeholderTextColor='white'
+                    onClear={() => { this.setState({ search_DoctorID: ''}) }}
+                    onChangeText={this.updateSearch}
+                    value={this.state.search_DoctorID}
+                />
+            </View>
             <FlatList
                 renderItem={
                   ({item, index}) => {

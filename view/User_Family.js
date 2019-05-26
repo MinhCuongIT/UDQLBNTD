@@ -19,63 +19,8 @@ class FlatListItem extends PureComponent {
   }
   
   render () {
-    // const swipeoutSetting = {
-    //   autoClose: true,
-    //   onClose: (secId, rowId, direction) => {
-    //     if (this.state.activeRowKey != null)
-    //       this.setState({ activeRowKey: null });
-    //   },
-    //   onOpen: (secId, rowId, direction) => {
-    //     this.setState({
-    //       activeRowKey: this.props.item.key,
-    //     });
-    //     // alert(this.props.item.key);
-    //   },
-    //   right: [
-    //     {
-    //       onPress: () => {
-    //         const deletingRow = this.state.activeRowKey;
-    //         Alert.alert(
-    //           'Xác nhận',
-    //           'Bạn muốn xóa bác sĩ này?',
-    //           [
-    //             { 
-    //               text: 'Không', 
-    //               onPress: () => console.log('Cancel Pressed'),
-    //               style: 'cancel',
-    //             },
-    //             { 
-    //               text: 'Có', 
-    //               onPress: () => {
-    //                 dataSource.splice(this.props.index, 1);
-    //                 this.props.parentSectionList.refreshSectionList(deletingRow);
-    //               }
-    //             }
-    //           ],
-    //           { cancelable: true },
-    //         );
-    //       },
-    //       component: (
-    //         <View
-    //             style={{
-    //               flex: 1,
-    //               alignItems: 'center',
-    //               justifyContent: 'center',
-    //               flexDirection: 'column',
-    //             }}
-    //         >
-    //           <AntDesign name='delete' size={30} color='white' />
-    //         </View>
-    //       ),
-    //       type: 'delete',
-    //     }
-    //   ],
-    //   rowId: this.props.index,
-    //   secId: 1,
-    // }
 
     return (
-      // <Swipeout {...swipeoutSetting}>
         <ListItem
           title={
             <View>
@@ -84,7 +29,6 @@ class FlatListItem extends PureComponent {
               </Text>
             </View>
           }
-          // subtitle={this.props.item.type}
           leftAvatar={{
                   rounded: true,
                   size: "medium",
@@ -100,7 +44,6 @@ class FlatListItem extends PureComponent {
                   this.props.navigation.navigate('RelativeProfile', { myID: this.props.myID, data: this.props.item })
               }}
         />
-      // {/* </Swipeout> */}
     )
   }
 }
