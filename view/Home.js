@@ -376,12 +376,12 @@ export default class Home extends Component {
           <View key={item.type}>
             <View style={{flexDirection: 'row', margin: 10, marginTop: 20, justifyContent: 'space-between'}}>
               <View style={{flexDirection: 'row', }}>
-                <Image
-                  source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'
-                    ? require('../images/Diabetes.png')
-                    : require('../images/BloodPressure.png')}
-                  style={styles.chartTitleIcon}
-                />
+                {/*<Image*/}
+                  {/*source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'*/}
+                    {/*? require('../images/Diabetes.png')*/}
+                    {/*: require('../images/BloodPressure.png')}*/}
+                  {/*style={styles.chartTitleIcon}*/}
+                {/*/>*/}
                 <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
               </View>
               <TouchableOpacity
@@ -498,10 +498,10 @@ export default class Home extends Component {
           <View>
             <View style={{flexDirection: 'row', margin: 10, marginTop: 20, justifyContent: 'space-between'}}>
               <View style={{flexDirection: 'row',}}>
-                <Image
-                  source={require('../images/diet.png')}
-                  style={styles.chartTitleIcon}
-                />
+                {/*<Image*/}
+                  {/*source={require('../images/diet.png')}*/}
+                  {/*style={styles.chartTitleIcon}*/}
+                {/*/>*/}
                 <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>THỰC ĐƠN CỦA HÔM NAY</Text>
               </View>
               <TouchableOpacity

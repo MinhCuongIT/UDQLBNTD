@@ -94,7 +94,7 @@ export default class AddBloodPressure extends Component {
                 ChiSo2: this.state.diastolicValue,
                 NgayNhap: this.state.dateState,
               })
-              this.props.navigation.navigate('Home')
+              this.props.navigation.navigate('HomeDetails', {item: this.props.screenProps.data[1]})
             }
           })
         }

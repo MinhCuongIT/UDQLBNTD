@@ -92,28 +92,29 @@ export default class AddMeal extends Component {
             id: result.id,
             isDelete: false,
           })
-          Alert.alert(
-            'Đã thêm món ăn!',
-            ' Bạn có muốn thêm món ăn khác?',
-            [
-              {
-                text: 'Không',
-                onPress: () => {
-                  this.props.navigation.navigate('Home')
-                },
-                style: 'cancel',
-              },
-              {
-                text: 'Có',
-                onPress: () => {
-                  this.setState({
-                    mealValue: ''
-                  })
-                }
-              }
-            ],
-            { cancelable: false },
-          );
+          // Alert.alert(
+          //   'Đã thêm món ăn!',
+          //   ' Bạn có muốn thêm món ăn khác?',
+          //   [
+          //     {
+          //       text: 'Không',
+          //       onPress: () => {
+          //         this.props.navigation.navigate('Home')
+          //       },
+          //       style: 'cancel',
+          //     },
+          //     {
+          //       text: 'Có',
+          //       onPress: () => {
+          //         this.setState({
+          //           mealValue: ''
+          //         })
+          //       }
+          //     }
+          //   ],
+          //   { cancelable: false },
+          // );
+          this.props.navigation.replace('MealDetails')
         }
       })
     }
