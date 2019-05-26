@@ -69,6 +69,10 @@ export default class MealDetails extends Component {
     await this.handleLoadList();
   }
 
+  componentWillMount(): void {
+    this.handleRefresh()
+  }
+
   componentWillUnmount() {
     this._isMounted = false;
   }
@@ -269,6 +273,16 @@ export default class MealDetails extends Component {
             style={styles.chartTitleIcon}
           />
           <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>CÁC THỰC ĐƠN CỦA BẠN</Text>
+
+          <TouchableOpacity
+            onPress={() => {this.props.navigation.replace('AddMeal')}
+            }
+          >
+            <Image
+              source={require('../images/plus.png')}
+              style={styles.chartTitleIcon}
+            />
+          </TouchableOpacity>
         </View>
         <SectionList
           keyExtractor={this.keyExtractor}

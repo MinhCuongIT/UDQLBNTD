@@ -142,6 +142,17 @@ export default class HomeDetails extends Component {
             ? 'ĐƯỜNG HUYẾT'
             : 'HUYẾT ÁP'}
           </Text>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.state.params.item.id===1
+              ? this.props.navigation.navigate('AddDiabetes')
+              : this.props.navigation.navigate('AddBloodPressure')
+            }
+          >
+            <Image
+              source={require('../images/plus.png')}
+              style={styles.chartTitleIcon}
+            />
+          </TouchableOpacity>
         </View>
 
         <View
