@@ -91,7 +91,8 @@ class CardItem extends PureComponent {
         break;
       //Sua CMND
       case 2:
-        this.setState({ isVisibleCMNDScreen: true });
+        this.setState({ isVisibleCMNDScreen: true, cmnd: oldData === "Chưa có dữ liệu" ? "" : oldData });
+
         break;
       //Sua ngay sinh
       case 3:
@@ -219,7 +220,17 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input onChangeText={(text) => this.setState({ cmnd: text })} placeholder='CMND'>{this.props.itemDetail}</Input>
+            
+              <Input value={this.state.cmnd} maxLength={10} keyboardType='numeric' onChangeText={(text) => {
+                var regex = /^\s*?[0-9]{1,10}\s*$/;
+                if (text === '' || regex.test(text)){
+                 this.setState({ cmnd: text })
+               }
+               
+               
+               }}
+               placeholder='CMND'>
+               </Input>
             </View>
             <Button
               type='outline'
@@ -242,7 +253,7 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input onChangeText={(text) => this.setState({ diaChi: text })} placeholder='Địa chỉ'>{this.props.itemDetail}</Input>
+              <Input autoCapitalize='words' onChangeText={(text) => this.setState({ diaChi: text })} placeholder='Địa chỉ'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
@@ -288,7 +299,7 @@ class CardItem extends PureComponent {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input onChangeText={(text) => this.setState({ nhomMau: text })} placeholder='Nhóm máu'>{this.props.itemDetail}</Input>
+              <Input maxLength={5} autoCapitalize='characters' onChangeText={(text) => this.setState({ nhomMau: text })} placeholder='Nhóm máu'>{this.props.itemDetail}</Input>
             </View>
             <Button
               type='outline'
@@ -589,8 +600,8 @@ export default class Profile extends Component {
           Avatar: this.props.screenProps.user.thongTinChung.avatar,
           HoTen: this.props.screenProps.user.thongTinChung.hoTen,
           GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-          NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-          CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+          NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+          CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
           DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
           Email: this.props.screenProps.user.lienHe.email,
           NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -603,11 +614,11 @@ export default class Profile extends Component {
 
   onUpdateBirthdayParent = async (textDate) => {
     await this.props.screenProps.setUser({
-        ...this.props.screenProps.user,
-        thongTinChung: {
-          ...this.props.screenProps.user.thongTinChung,
-          ngaySinh: textDate
-        }
+      ...this.props.screenProps.user,
+      thongTinChung: {
+        ...this.props.screenProps.user.thongTinChung,
+        ngaySinh: textDate
+      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -616,8 +627,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -630,11 +641,11 @@ export default class Profile extends Component {
 
   onUpdateCmndParent = async (text) => {
     await this.props.screenProps.setUser({
-        ...this.props.screenProps.user,
-        thongTinChung: {
-          ...this.props.screenProps.user.thongTinChung,
-          cmnd: text
-        }
+      ...this.props.screenProps.user,
+      thongTinChung: {
+        ...this.props.screenProps.user.thongTinChung,
+        cmnd: text
+      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -643,8 +654,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -657,11 +668,11 @@ export default class Profile extends Component {
 
   onUpdateDiaChiParent = async (text) => {
     await this.props.screenProps.setUser({
-        ...this.props.screenProps.user,
-        thongTinChung: {
-          ...this.props.screenProps.user.thongTinChung,
-          diaChi: text
-        }
+      ...this.props.screenProps.user,
+      thongTinChung: {
+        ...this.props.screenProps.user.thongTinChung,
+        diaChi: text
+      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -670,8 +681,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -684,11 +695,11 @@ export default class Profile extends Component {
 
   onUpdateNgheNghiepParent = async (text) => {
     await this.props.screenProps.setUser({
-        ...this.props.screenProps.user,
-        thongTinChung: {
-          ...this.props.screenProps.user.thongTinChung,
-          ngheNghiep: text
-        }
+      ...this.props.screenProps.user,
+      thongTinChung: {
+        ...this.props.screenProps.user.thongTinChung,
+        ngheNghiep: text
+      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -697,8 +708,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -711,11 +722,11 @@ export default class Profile extends Component {
 
   onUpdateNhomMauParent = async (text) => {
     await this.props.screenProps.setUser({
-        ...this.props.screenProps.user,
-        thongTinChung: {
-          ...this.props.screenProps.user.thongTinChung,
-          nhomMau: text
-        }
+      ...this.props.screenProps.user,
+      thongTinChung: {
+        ...this.props.screenProps.user.thongTinChung,
+        nhomMau: text
+      }
     })
 
     //Tạo đối tượng bệnh nhân được cập nhật
@@ -724,8 +735,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -751,8 +762,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -817,8 +828,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -846,8 +857,8 @@ export default class Profile extends Component {
       Avatar: this.props.screenProps.user.thongTinChung.avatar,
       HoTen: this.props.screenProps.user.thongTinChung.hoTen,
       GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.ngaySinh,
-      CMND: this.props.screenProps.user.thongTinChung.cmnd==="Chưa có dữ liệu"?null:this.props.screenProps.user.thongTinChung.cmnd,
+      NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+      CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
       DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
       Email: this.props.screenProps.user.lienHe.email,
       NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
@@ -928,7 +939,7 @@ export default class Profile extends Component {
               justifyContent: 'space-between',
               marginHorizontal: 20,
             }}>
-              <Input onChangeText={(text) => this.setState({ fullName: text })} placeholder='Nhập tên của bạn'>{this.props.screenProps.user.thongTinChung.hoTen}</Input>
+              <Input autoCapitalize='words' onChangeText={(text) => this.setState({ fullName: text })} placeholder='Nhập tên của bạn'>{this.props.screenProps.user.thongTinChung.hoTen}</Input>
             </View>
             <Button
               type='outline'
