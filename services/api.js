@@ -128,8 +128,10 @@ export default () => {
     },
     addMyDoctor: (userID, drID) => {
       return axiosPost(baseURL + `follows/wait`, {
-        NguoiBiTheoDoi: userID,
-        NguoiTheoDoi: drID
+        NguoiBiTheoDoi: drID,
+        LoaiNguoiBiTheoDoi: 2,
+        NguoiTheoDoi: userID,
+        LoaiNguoiTheoDoi: 1
       })
       .then((res) => {
         return res.data.status
@@ -208,11 +210,12 @@ export default () => {
         })
     },
     // Gửi request follow tới người khác
-    requestFollow: (userID, rlID, type) => {
+    requestFollow: (userID, rlID, rlType) => {
       return axiosPost(baseURL + `follows/wait`, {
         NguoiTheoDoi: userID,
+        LoaiNguoiTheoDoi: 1,
         NguoiBiTheoDoi: rlID,
-        Type: 1
+        LoaiNguoiBiTheoDoi: rlType
       })
       .then((res) => {
           if(res.data.status === 'success'){
@@ -222,11 +225,12 @@ export default () => {
       })
     },
     // Chấp nhận request follow từ người khác
-    acceptFollowRequest: (userID, rlID, type) => {
+    acceptFollowRequest: (userID, rlID, rlType) => {
       return axiosPost(baseURL + `follows/followed`, {
         NguoiTheoDoi: rlID,
+        LoaiNguoiTheoDoi: rlType,
         NguoiBiTheoDoi: userID,
-        Type: type
+        LoaiNguoiBiTheoDoi: 1
       })
       .then((res) => {
           if(res.data.status === 'success'){
@@ -236,11 +240,12 @@ export default () => {
       })
     },
     // Từ chối request follow từ người khác
-    refuseFollowRequest: (userID, rlID, type) => {
+    refuseFollowRequest: (userID, rlID, rlType) => {
       return axiosPost(baseURL + `follows/unfollowed`, {
         NguoiTheoDoi: rlID,
+        LoaiNguoiTheoDoi: rlType,
         NguoiBiTheoDoi: userID,
-        Type: type
+        LoaiNguoiBiTheoDoi: 1
       })
       .then((res) => {
           if(res.data.status === 'success'){
@@ -264,11 +269,12 @@ export default () => {
     //   })
     // },
     // Hủy follow với người khác / Hủy việc gửi request follow tới người khác
-    unFollowed: (userID, rlID, type) => {
+    unFollowed: (userID, rlID, rlType) => {
       return axiosPost(baseURL + `follows/unfollowed`, {
         NguoiTheoDoi: userID,
+        LoaiNguoiTheoDoi: 1,
         NguoiBiTheoDoi: rlID,
-        Type: 1
+        LoaiNguoiBiTheoDoi: rlType
       })
       .then((res) => {
           if(res.data.status === 'success'){
@@ -328,12 +334,42 @@ export default () => {
         return null
       })
     },
-    // Gửi lời mời bác sĩ follow mình
-    requestFollowToDoctor: (patientID, doctorID, doctorType) => {
-      return axiosPost(baseURL + `follows/wait`, {
-        NguoiTheoDoi: doctorID,
-        NguoiBiTheoDoi: patientID,
-        Type: doctorType
+    // // Gửi lời mời bác sĩ follow mình
+    // requestFollowToDoctor: (patientID, doctorID, doctorType) => {
+    //   return axiosPost(baseURL + `follows/wait`, {
+    //     NguoiTheoDoi: doctorID,
+    //     NguoiBiTheoDoi: patientID,
+    //     Type: doctorType
+    //   })
+    //   .then((res) => {
+    //       if(res.data.status === 'success'){
+    //         return res.data.status
+    //       }
+    //       return null
+    //   })
+    // },
+    // // Hủy follow của bác sĩ với mình
+    // unFollowedFromDoctor: (patientID, doctorID, type) => {
+    //   return axiosPost(baseURL + `follows/unfollowed`, {
+    //     NguoiTheoDoi: doctorID,
+    //     NguoiBiTheoDoi: patientID,
+    //     Type: type
+    //   })
+    //   .then((res) => {
+    //       if(res.data.status === 'success'){
+    //         return res.data.status
+    //       }
+    //       return null
+    //   })
+    // },
+
+    // Chat Notification
+    updateSeeingSeen: (info) => {
+      return axiosPost(baseURL + `chatnotifications/update-seeing-seen-messages`, {
+        MaTaiKhoan: info.MaTaiKhoan,
+        LoaiTaiKhoan: info.LoaiTaiKhoan,
+        MaTaiKhoanLienQuan: info.MaTaiKhoanLienQuan,
+        LoaiTaiKhoanLienQuan: info.LoaiTaiKhoanLienQuan
       })
       .then((res) => {
           if(res.data.status === 'success'){
@@ -342,12 +378,12 @@ export default () => {
           return null
       })
     },
-    // Hủy follow của bác sĩ với mình
-    unFollowedFromDoctor: (patientID, doctorID, type) => {
-      return axiosPost(baseURL + `follows/unfollowed`, {
-        NguoiTheoDoi: doctorID,
-        NguoiBiTheoDoi: patientID,
-        Type: type
+    updateSeeing: (info) => {
+      return axiosPost(baseURL + `chatnotifications/update-seeing-messages`, {
+        MaTaiKhoan: info.MaTaiKhoan,
+        LoaiTaiKhoan: info.LoaiTaiKhoan,
+        MaTaiKhoanLienQuan: info.MaTaiKhoanLienQuan,
+        LoaiTaiKhoanLienQuan: info.LoaiTaiKhoanLienQuan
       })
       .then((res) => {
           if(res.data.status === 'success'){
@@ -356,6 +392,20 @@ export default () => {
           return null
       })
     },
+    updateSeen: (info) => {
+      return axiosPost(baseURL + `chatnotifications/update-seen-messages`, {
+        MaTaiKhoan: info.MaTaiKhoan,
+        LoaiTaiKhoan: info.LoaiTaiKhoan,
+        MaTaiKhoanLienQuan: info.MaTaiKhoanLienQuan,
+        LoaiTaiKhoanLienQuan: info.LoaiTaiKhoanLienQuan
+      })
+      .then((res) => {
+          if(res.data.status === 'success'){
+            return res.data.status
+          }
+          return null
+      })
+    }
   }
 
   return services

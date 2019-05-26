@@ -1,5 +1,5 @@
 import React, {Component, PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView, Alert, AsyncStorage, RefreshControl } from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Alert, AsyncStorage, RefreshControl, Linking } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -193,7 +193,9 @@ class IntroCard extends PureComponent {
                   borderRadius={0}
                   size={20}
                   color="rgba(74, 195, 180, 1)"
-                  onPress={()=> console.log("hi")}
+                  onPress={() => {
+                    Linking.openURL(`tel:${this.props.item.MaBenhNhan}`)
+                  }}
                 >
                   <Text style={styles.customBtnText}>
                     Gọi
@@ -203,11 +205,19 @@ class IntroCard extends PureComponent {
               <View style={{flex: 1}}>
                 <Feather.Button
                   name="message-circle"
-                  backgroundColor="transparent"
+                  backgroundColor={this.props.item.DaXem===1? "transparent" :'rgba(255,0,0,0.2)'}
                   borderRadius={0}
                   size={20}
                   color="rgba(74, 195, 180, 1)"
-                  onPress={() => {
+                  onPress={ async () => {
+                    await this.apiFollow.updateSeeingSeen({
+                      MaTaiKhoan: this.props.myID,
+                      LoaiTaiKhoan: 1,
+                      MaTaiKhoanLienQuan: this.props.item.MaBenhNhan,
+                      LoaiTaiKhoanLienQuan: 1
+                    })
+                    this.props.handle.refresh()
+                    this.props.handle.checkSeen()
                     this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 1 })
                   }}
                 >
@@ -268,7 +278,9 @@ class MyListCards extends PureComponent {
         navigation={this.props.navigation} 
         typeRelationship={this.props.typeRelationship}
         handle={{
-                handleChangeType: this.props.handle.handleChangeType
+                handleChangeType: this.props.handle.handleChangeType,
+                refresh: this.props.handle.refresh,
+                checkSeen: this.props.handle.checkSeen
                 }} />
         <Card title={
           <View style={styles.customTitle}>
@@ -354,6 +366,14 @@ export default class RelativeProfile extends Component {
       })
     }
 
+    checkSeen = () => {
+      let temp = this.state.profile
+      temp.DaXem = 1
+      this.setState({
+        profile: temp
+      })
+    }
+
     handleRefresh = () => {
       this.setState({
         refreshing: true
@@ -389,7 +409,9 @@ export default class RelativeProfile extends Component {
               navigation={this.props.navigation} 
               typeRelationship={this.state.typeRelationship} 
                 handle={{
-                  handleChangeType: this.handleChangeType
+                  handleChangeType: this.handleChangeType,
+                  refresh: this.props.navigation.getParam('refresh'),
+                  checkSeen: this.checkSeen
                   }}
             />
           </ScrollView>

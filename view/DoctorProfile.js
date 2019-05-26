@@ -1,5 +1,5 @@
 import React, {Component, PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView, Alert, AsyncStorage, RefreshControl } from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Alert, AsyncStorage, RefreshControl, Linking } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,20 +26,20 @@ class IntroCard extends PureComponent {
           size={20}
           color="rgba(74, 195, 180, 1)"
           onPress={() => {
-            this.apiFollow.requestFollowToDoctor(this.props.myID, this.props.item.MaBacSi, this.props.type)
+            this.apiFollow.requestFollow(this.props.myID, this.props.item.MaBacSi, 2)
                 .then(async(result) => {
                     if(result==='success'){
                       this.props.handle.handleChangeType('cancel')
-                      // const info = {
-                      //   MaTaiKhoan: this.props.item.MaBacSi, // Người nhận Notif
-                      //   LoaiNguoiChinh: 1,  
-                      //   MaTaiKhoanLienQuan: this.props.myID,    // Người gửi Notif
-                      //   TenNguoiLienQuan: this.props.myProfile.thongTinChung.hoTen,
-                      //   AvatarNguoiLienQuan: this.props.myProfile.thongTinChung.avatar,
-                      //   LoaiNguoiLienQuan: 1,
-                      //   LoaiThongBao: 1                         // Thông báo yêu cầu theo dõi sức khỏe người thân
-                      // }
-                      // await this.props.socket.emit('create notifications', info);
+                      const info = {
+                        MaTaiKhoan: this.props.item.MaBacSi, // Người nhận Notif
+                        LoaiNguoiChinh: 2,  
+                        MaTaiKhoanLienQuan: this.props.myID,    // Người gửi Notif
+                        TenNguoiLienQuan: this.props.myProfile.thongTinChung.hoTen,
+                        AvatarNguoiLienQuan: this.props.myProfile.thongTinChung.avatar,
+                        LoaiNguoiLienQuan: 1,
+                        LoaiThongBao: 1                         // Thông báo yêu cầu theo dõi sức khỏe người thân
+                      }
+                      await this.props.socket.emit('create notifications', info);
                     }
                 });
           }}
@@ -60,20 +60,20 @@ class IntroCard extends PureComponent {
               size={20}
               color="rgba(74, 195, 180, 1)"
               onPress={() => {
-                this.apiFollow.acceptFollowRequest(this.props.myID, this.props.item.MaBacSi, this.props.type)
+                this.apiFollow.acceptFollowRequest(this.props.myID, this.props.item.MaBacSi, 2)
                     .then(async(result) => {
                         if(result==='success'){
                           this.props.handle.handleChangeType('followed')
-                          // const info = {
-                          //   MaTaiKhoan: this.props.item.MaBenhNhan,
-                          //   LoaiNguoiChinh: 1,
-                          //   MaTaiKhoanLienQuan: this.props.myID,
-                          //   TenNguoiLienQuan: this.props.myProfile.thongTinChung.hoTen,
-                          //   AvatarNguoiLienQuan: this.props.myProfile.thongTinChung.avatar,
-                          //   LoaiNguoiLienQuan: 1,
-                          //   LoaiThongBao: 3                         // Thông báo chấp nhận lời yêu cầu theo dõi sức khỏe tù người khác
-                          // }
-                          // await this.props.socket.emit('create notifications', info);
+                          const info = {
+                            MaTaiKhoan: this.props.item.MaBacSi,
+                            LoaiNguoiChinh: 2,
+                            MaTaiKhoanLienQuan: this.props.myID,
+                            TenNguoiLienQuan: this.props.myProfile.thongTinChung.hoTen,
+                            AvatarNguoiLienQuan: this.props.myProfile.thongTinChung.avatar,
+                            LoaiNguoiLienQuan: 1,
+                            LoaiThongBao: 3                         // Thông báo chấp nhận lời yêu cầu theo dõi sức khỏe tù người khác
+                          }
+                          await this.props.socket.emit('create notifications', info);
                         }
                     });
               }}
@@ -91,7 +91,7 @@ class IntroCard extends PureComponent {
             size={20}
             color="rgba(74, 195, 180, 1)"
             onPress={() => {
-              this.apiFollow.refuseFollowRequest(this.props.myID, this.props.item.MaBacSi, this.props.type)
+              this.apiFollow.refuseFollowRequest(this.props.myID, this.props.item.MaBacSi, 2)
                   .then(async(result) => {
                       if(result==='success'){
                         this.props.handle.handleChangeType('add')
@@ -116,7 +116,7 @@ class IntroCard extends PureComponent {
           size={20}
           color="rgba(74, 195, 180, 1)"
           onPress={() => {
-            this.apiFollow.unFollowedFromDoctor(this.props.myID, this.props.item.MaBacSi, this.props.type)
+            this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBacSi, 2)
                   .then(async(result) => {
                       if(result==='success'){
                         this.props.handle.handleChangeType('add')
@@ -139,7 +139,7 @@ class IntroCard extends PureComponent {
           size={20}
           color="rgba(74, 195, 180, 1)"
           onPress={() => {
-            this.apiFollow.unFollowedFromDoctor(this.props.myID, this.props.item.MaBacSi, this.props.type)
+            this.apiFollow.unFollowed(this.props.myID, this.props.item.MaBacSi, 2)
                 .then(async(result1) => {
                     if(result1==='success'){
                       this.props.handle.handleChangeType('add')
@@ -174,7 +174,9 @@ class IntroCard extends PureComponent {
                   borderRadius={0}
                   size={20}
                   color="rgba(74, 195, 180, 1)"
-                  onPress={()=> console.log("hi")}
+                  onPress={() => {
+                    Linking.openURL(`tel:${this.props.item.MaBacSi}`)
+                  }}
                 >
                   <Text style={styles.customBtnText}>
                     Gọi

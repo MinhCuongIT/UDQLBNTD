@@ -103,7 +103,7 @@ export default class Notifications extends Component {
     const message = (
       <Text style={{flexDirection:'row',}}>
         <Text>{message1}</Text>
-        <Text style={{fontWeight: 'bold'}}>{item.name} {item.key}</Text>
+        <Text style={{fontWeight: 'bold'}}>{item.name}</Text>
         <Text>{message2}</Text>
       </Text>
     )
@@ -158,6 +158,17 @@ export default class Notifications extends Component {
                   }
                 })
               }
+              else{
+                this.apiService.findDoctorByID({MaBacSi: item.idNguoiLienQuan})
+                .then((result) => {
+                  if (result !== null)
+                  {
+                    // alert(JSON.stringify(result))
+                    const data = result[0]
+                    this.props.navigation.navigate('DoctorProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                  }
+                })
+              }
               break;
             }
             case 2:  {
@@ -174,6 +185,17 @@ export default class Notifications extends Component {
                     // alert(JSON.stringify(result))
                     const data = result[0]
                     this.props.navigation.navigate('RelativeProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                  }
+                })
+              }
+              else{
+                this.apiService.findDoctorByID({MaBacSi: item.idNguoiLienQuan})
+                .then((result) => {
+                  if (result !== null)
+                  {
+                    // alert(JSON.stringify(result))
+                    const data = result[0]
+                    this.props.navigation.navigate('DoctorProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
                   }
                 })
               }
