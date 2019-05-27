@@ -44,7 +44,7 @@ class FlatListItem extends PureComponent {
             backgroundColor: this.props.item.DaXem===1? 'white': 'rgba(74, 195, 180, 0.2)'
           }}
           onPress={() => {
-                  this.props.navigation.navigate('RelativeProfile', { myID: this.props.myID, data: this.props.item, refresh: this.props.refresh })
+                  this.props.navigation.navigate('RelativeProfile', { myID: this.props.myID, data: this.props.item/*, refresh: this.props.refresh*/ })
               }}
         />
     )
@@ -95,6 +95,11 @@ export default class User_Family extends Component {
         myID: id,
       });
       this.getMyListRelatives();
+      this.props.screenProps.socket.on('update relationship', async (info) => {
+        if (info.LoaiNguoiGui===1 && info.updateList===true){
+          await this.getMyListRelatives()
+        }
+      });
     }
 
     getMyListRelatives = () => {
@@ -116,13 +121,13 @@ export default class User_Family extends Component {
     keyExtractor = (item, index) => index.toString()
 
     // Reload danh sách bác sĩ
-    refreshSectionList = (deletedKey) => {
-      this.setState((prevState) => {
-        return {
-          deletedRowKey: deletedKey,
-        };
-      });
-    }
+    // refreshSectionList = (deletedKey) => {
+    //   this.setState((prevState) => {
+    //     return {
+    //       deletedRowKey: deletedKey,
+    //     };
+    //   });
+    // }
 
     handleRefresh = () => {
       this.setState({
@@ -140,7 +145,7 @@ export default class User_Family extends Component {
                 renderItem={
                   ({item, index}) =>{
                     return (
-                      <FlatListItem refresh={this.handleRefresh} item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} parentSectionList={this} />
+                      <FlatListItem item={item} index={index} navigation={this.props.navigation} myID={this.state.myID} parentSectionList={this} />
                     )
                   }
                 }

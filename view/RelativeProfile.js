@@ -41,6 +41,15 @@ class IntroCard extends PureComponent {
                         LoaiThongBao: 1                         // Thông báo yêu cầu theo dõi sức khỏe người thân
                       }
                       await this.props.socket.emit('create notifications', info);
+
+                      const info2 = {
+                        MaNguoiGui: this.props.myID,
+                        LoaiNguoiGui: 1,
+                        MaNguoiNhan: this.props.item.MaBenhNhan,
+                        LoaiNguoiNhan: 1,
+                        updateList: false,
+                      }
+                      await this.props.socket.emit('update relationship', info2);
                     }
                 });
           }}
@@ -75,6 +84,15 @@ class IntroCard extends PureComponent {
                             LoaiThongBao: 3                         // Thông báo chấp nhận lời yêu cầu theo dõi sức khỏe tù người khác
                           }
                           await this.props.socket.emit('create notifications', info);
+                          //socket list
+                          const info2 = {
+                            MaNguoiGui: this.props.myID,
+                            LoaiNguoiGui: 1,
+                            MaNguoiNhan: this.props.item.MaBenhNhan,
+                            LoaiNguoiNhan: 1,
+                            updateList: true,
+                          }
+                          await this.props.socket.emit('update relationship', info2);
                         }
                     });
               }}
@@ -96,6 +114,15 @@ class IntroCard extends PureComponent {
                   .then(async(result) => {
                       if(result=='success'){
                         this.props.handle.handleChangeType('add')
+
+                        const info2 = {
+                          MaNguoiGui: this.props.myID,
+                          LoaiNguoiGui: 1,
+                          MaNguoiNhan: this.props.item.MaBenhNhan,
+                          LoaiNguoiNhan: 1,
+                          updateList: false,
+                        }
+                        await this.props.socket.emit('update relationship', info2);
                       }
                   });
             }}
@@ -121,6 +148,15 @@ class IntroCard extends PureComponent {
                   .then(async(result) => {
                       if(result=='success'){
                         this.props.handle.handleChangeType('add')
+
+                        const info2 = {
+                          MaNguoiGui: this.props.myID,
+                          LoaiNguoiGui: 1,
+                          MaNguoiNhan: this.props.item.MaBenhNhan,
+                          LoaiNguoiNhan: 1,
+                          updateList: false,
+                        }
+                        await this.props.socket.emit('update relationship', info2);
                       }
                   });
           }}
@@ -145,6 +181,16 @@ class IntroCard extends PureComponent {
                   .then(async(result1) => {
                       if(result1=='success'){
                         this.props.handle.handleChangeType('add')
+
+                        //socket list
+                        const info2 = {
+                          MaNguoiGui: this.props.myID,
+                          LoaiNguoiGui: 1,
+                          MaNguoiNhan: this.props.item.MaBenhNhan,
+                          LoaiNguoiNhan: 1,
+                          updateList: true,
+                        }
+                        await this.props.socket.emit('update relationship', info2);
                       }
                   });
             }}
@@ -216,8 +262,20 @@ class IntroCard extends PureComponent {
                       MaTaiKhoanLienQuan: this.props.item.MaBenhNhan,
                       LoaiTaiKhoanLienQuan: 1
                     })
-                    this.props.handle.refresh()
+                    
                     this.props.handle.checkSeen()
+                    // socket list
+                    const info2 = {
+                      MaNguoiGui: this.props.myID,
+                      LoaiNguoiGui: 1,
+                      MaNguoiNhan: this.props.item.MaBenhNhan,
+                      LoaiNguoiNhan: 1,
+                      updateList: true,
+                    }
+                    await this.props.socket.emit('update relationship', info2);
+
+
+                    // navigate
                     this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 1 })
                   }}
                 >
@@ -279,7 +337,6 @@ class MyListCards extends PureComponent {
         typeRelationship={this.props.typeRelationship}
         handle={{
                 handleChangeType: this.props.handle.handleChangeType,
-                refresh: this.props.handle.refresh,
                 checkSeen: this.props.handle.checkSeen
                 }} />
         <Card title={
@@ -350,14 +407,20 @@ export default class RelativeProfile extends Component {
         myID: userId
       })
       this.apiFollow.checkMyRelationship(userId, this.state.profile.MaBenhNhan)
-        .then((result) => {
-          if(result!==null){
-            this.setState({
-              typeRelationship: result,
-              refreshing: false
-            })
-          }
-        });
+      .then((result) => {
+        if(result!==null){
+          this.setState({
+            typeRelationship: result,
+            refreshing: false
+          })
+        }
+      });
+
+      this.props.screenProps.socket.on('update relationship', async (info) => {
+        if (info.LoaiNguoiGui===1 && info.MaNguoiGui===this.state.profile.MaBenhNhan){
+          await this.handleRefresh()
+        }
+      });
     }
 
     handleChangeType = (type) => {
@@ -410,12 +473,10 @@ export default class RelativeProfile extends Component {
               typeRelationship={this.state.typeRelationship} 
                 handle={{
                   handleChangeType: this.handleChangeType,
-                  refresh: this.props.navigation.getParam('refresh'),
                   checkSeen: this.checkSeen
                   }}
             />
           </ScrollView>
-            
         </View>
       );
     }

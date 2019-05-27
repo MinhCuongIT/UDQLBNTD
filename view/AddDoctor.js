@@ -30,7 +30,7 @@ class FlatListItem extends PureComponent {
                   size: "medium",
                   // title: this.props.item.HoTen[0],
                   imageProps: {resizeMode:'contain'},
-                  source: { uri: this.props.item.Avatar },
+                  source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar },
                   activeOpacity: 0.7,
                   showEditButton: false,
                   marginLeft: 20,

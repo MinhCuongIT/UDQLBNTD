@@ -91,7 +91,7 @@ export default class Notifications extends Component {
         break;
       }
       case 2:  {
-        message2 += ' cho bạn lời khuyên'
+        message2 += ' gửi tin nhắn mới cho bạn'
         break;
       }
       case 3:  {
@@ -172,7 +172,29 @@ export default class Notifications extends Component {
               break;
             }
             case 2:  {
-              // message2 += ' cho bạn lời khuyên'
+              // message2 += ' tin nhắn mới'
+              if (item.typePeople===1){
+                this.apiService.getBenhNhanInfo({MaBenhNhan: item.idNguoiLienQuan})
+                .then((result) => {
+                  if (result !== null)
+                  {
+                    // alert(JSON.stringify(result))
+                    const data = result[0]
+                    this.props.navigation.navigate('RelativeProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                  }
+                })
+              }
+              else{
+                this.apiService.findDoctorByID({MaBacSi: item.idNguoiLienQuan})
+                .then((result) => {
+                  if (result !== null)
+                  {
+                    // alert(JSON.stringify(result))
+                    const data = result[0]
+                    this.props.navigation.navigate('DoctorProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                  }
+                })
+              }
               break;
             }
             case 3: {
