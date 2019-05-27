@@ -102,7 +102,7 @@ export class LeftListItems extends PureComponent {
 } 
   
 export default class ChatScreen extends Component {
-  
+  _isMounted = false;
     constructor(props) {
       super(props);
       this.state = {
@@ -134,27 +134,55 @@ export default class ChatScreen extends Component {
     };
 
     async componentDidMount() {  
+      this._isMounted = true;
       const userId = await AsyncStorage.getItem('UserId');
-      this.setState({
-        myID: userId
-      });
+      
+      if (this._isMounted)
+        this.setState({
+          myID: userId
+        });
       this.props.screenProps.socket.emit('join room', {
         MaTaiKhoan: userId,
         LoaiTaiKhoan: 1,
       });
-      this.loadMessages();
+
+      if (this._isMounted)
+        this.loadMessages();
 
       this.props.screenProps.socket.on('chat message', (msg) => {
         if(msg!==null){
           msg.NgayGioGui=msg.DateValue
-          this.setState({
-            chatMessages: [msg, ...this.state.chatMessages]
-          });
+          if (this._isMounted)
+            this.setState({
+              chatMessages: [msg, ...this.state.chatMessages]
+            });
         }
+      });
+
+      this.props.screenProps.socket.on('not seen message', async () => {
+        const info = {
+          MaTaiKhoan: this.state.receiverID,
+          LoaiNguoiChinh: this.props.navigation.getParam('type'),
+          MaTaiKhoanLienQuan: this.state.myID,
+          TenNguoiLienQuan: this.props.screenProps.user.thongTinChung.hoTen,
+          AvatarNguoiLienQuan: this.props.screenProps.user.thongTinChung.avatar,
+          LoaiNguoiLienQuan: 1,
+          LoaiThongBao: 2    // Thông báo có tin nhắn mới từ người khác
+        }
+        await this.props.screenProps.socket.emit('create notifications', info);
+        const info2 = {
+          MaNguoiGui: this.state.myID,
+          LoaiNguoiGui: 1,
+          MaNguoiNhan: this.state.receiverID,
+          LoaiNguoiNhan: this.props.navigation.getParam('type'),
+          updateList: true,
+        }
+        await this.props.screenProps.socket.emit('update relationship', info2);
       });
     }
 
     componentWillUnmount() {
+      this._isMounted = false;
       this.apiChat.updateSeeing({
         MaTaiKhoan: this.state.myID,
         LoaiTaiKhoan: 1,
@@ -166,21 +194,21 @@ export default class ChatScreen extends Component {
     async submitChatMessage() {
       let today = new Date();
       let _today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-
-      this.setState({
-        chatMessage: {
-          MaNguoiGui: this.state.myID,
-          LoaiNguoiGui: 1,
-          MaNguoiNhan: this.state.receiverID,//ừa
-          LoaiNguoiNhan: this.props.navigation.getParam('type'),// 
-          NoiDung: this.state.txtInput,
-          NgayGioGui: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes(),
-          DateValue: today,
-        },
-        txtInput: '',
-      }, async () => {
-        await this.props.screenProps.socket.emit('chat message', this.state.chatMessage);
-      });
+      if (this._isMounted)
+        this.setState({
+          chatMessage: {
+            MaNguoiGui: this.state.myID,
+            LoaiNguoiGui: 1,
+            MaNguoiNhan: this.state.receiverID,
+            LoaiNguoiNhan: this.props.navigation.getParam('type'),
+            NoiDung: this.state.txtInput,
+            NgayGioGui: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes(),
+            DateValue: today,
+          },
+          txtInput: '',
+        }, async () => {
+          await this.props.screenProps.socket.emit('chat message', this.state.chatMessage);
+        });
     }
 
     keyExtractor = (item, index) => index.toString()
@@ -217,9 +245,10 @@ export default class ChatScreen extends Component {
             dataTemp.push(temp)
           })
         }
-        this.setState({
-          chatMessages: [...this.state.chatMessages, ...dataTemp]
-        },() => {});
+        if (this._isMounted)
+          this.setState({
+            chatMessages: [...this.state.chatMessages, ...dataTemp]
+          },() => {});
       })
     }
 

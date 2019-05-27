@@ -40,6 +40,15 @@ class IntroCard extends PureComponent {
                         LoaiThongBao: 1                         // Thông báo yêu cầu theo dõi sức khỏe người thân
                       }
                       await this.props.socket.emit('create notifications', info);
+
+                      const info2 = {
+                        MaNguoiGui: this.props.myID,
+                        LoaiNguoiGui: 1,
+                        MaNguoiNhan: this.props.item.MaBacSi,
+                        LoaiNguoiNhan: 2,
+                        updateList: false,
+                      }
+                      await this.props.socket.emit('update relationship', info2);
                     }
                 });
           }}
@@ -74,6 +83,16 @@ class IntroCard extends PureComponent {
                             LoaiThongBao: 3                         // Thông báo chấp nhận lời yêu cầu theo dõi sức khỏe tù người khác
                           }
                           await this.props.socket.emit('create notifications', info);
+
+                          //socket list
+                          const info2 = {
+                            MaNguoiGui: this.props.myID,
+                            LoaiNguoiGui: 1,
+                            MaNguoiNhan: this.props.item.MaBacSi,
+                            LoaiNguoiNhan: 2,
+                            updateList: true,
+                          }
+                          await this.props.socket.emit('update relationship', info2);
                         }
                     });
               }}
@@ -95,6 +114,15 @@ class IntroCard extends PureComponent {
                   .then(async(result) => {
                       if(result==='success'){
                         this.props.handle.handleChangeType('add')
+                        
+                        const info2 = {
+                          MaNguoiGui: this.props.myID,
+                          LoaiNguoiGui: 1,
+                          MaNguoiNhan: this.props.item.MaBacSi,
+                          LoaiNguoiNhan: 2,
+                          updateList: false,
+                        }
+                        await this.props.socket.emit('update relationship', info2);
                       }
                   });
             }}
@@ -120,6 +148,15 @@ class IntroCard extends PureComponent {
                   .then(async(result) => {
                       if(result==='success'){
                         this.props.handle.handleChangeType('add')
+                        
+                        const info2 = {
+                          MaNguoiGui: this.props.myID,
+                          LoaiNguoiGui: 1,
+                          MaNguoiNhan: this.props.item.MaBacSi,
+                          LoaiNguoiNhan: 2,
+                          updateList: false,
+                        }
+                        await this.props.socket.emit('update relationship', info2);
                       }
                   });
           }}
@@ -143,6 +180,16 @@ class IntroCard extends PureComponent {
                 .then(async(result1) => {
                     if(result1==='success'){
                       this.props.handle.handleChangeType('add')
+
+                    //socket list
+                    const info2 = {
+                      MaNguoiGui: this.props.myID,
+                      LoaiNguoiGui: 1,
+                      MaNguoiNhan: this.props.item.MaBacSi,
+                      LoaiNguoiNhan: 2,
+                      updateList: true,
+                    }
+                    await this.props.socket.emit('update relationship', info2);
                     }
                 });
           }}
@@ -186,11 +233,28 @@ class IntroCard extends PureComponent {
               <View style={{flex: 1}}>
                 <Feather.Button
                   name="message-circle"
-                  backgroundColor="transparent"
+                  backgroundColor={this.props.item.DaXem===1? "transparent" :'rgba(255,0,0,0.2)'}
                   borderRadius={0}
                   size={20}
                   color="rgba(74, 195, 180, 1)"
-                  onPress={() => {
+                  onPress={ async () => {
+                    await this.apiFollow.updateSeeingSeen({
+                      MaTaiKhoan: this.props.myID,
+                      LoaiTaiKhoan: 1,
+                      MaTaiKhoanLienQuan: this.props.item.MaBacSi,
+                      LoaiTaiKhoanLienQuan: 1
+                    })
+                    this.props.handle.checkSeen()
+                    
+                    const info2 = {
+                      MaNguoiGui: this.props.myID,
+                      LoaiNguoiGui: 1,
+                      MaNguoiNhan: this.props.item.MaBacSi,
+                      LoaiNguoiNhan: 2,
+                      updateList: true,
+                    }
+                    await this.props.socket.emit('update relationship', info2);
+
                     this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 2 })
                   }}
                 >
@@ -246,7 +310,8 @@ class MyListCards extends PureComponent {
         navigation={this.props.navigation} 
         typeRelationship={this.props.typeRelationship}
         handle={{
-                handleChangeType: this.props.handle.handleChangeType
+                handleChangeType: this.props.handle.handleChangeType,
+                checkSeen: this.props.handle.checkSeen
                 }}
         type={this.props.type}        
                  />
@@ -323,11 +388,25 @@ export default class DoctorProfile extends Component {
             })
           }
         });
+
+      this.props.screenProps.socket.on('update relationship', async (info) => {
+        if (info.LoaiNguoiGui===2 && info.MaNguoiGui===this.state.profile.MaBacSi){
+          await this.handleRefresh()
+        }
+      });
     }
 
     handleChangeType = (type) => {
       this.setState({
         typeRelationship: type
+      })
+    }
+
+    checkSeen = () => {
+      let temp = this.state.profile
+      temp.DaXem = 1
+      this.setState({
+        profile: temp
       })
     }
     
@@ -366,7 +445,8 @@ export default class DoctorProfile extends Component {
               navigation={this.props.navigation}
               typeRelationship={this.state.typeRelationship} 
               handle={{
-                handleChangeType: this.handleChangeType
+                handleChangeType: this.handleChangeType,
+                checkSeen: this.checkSeen
                 }}
               type={this.state.type}
             />

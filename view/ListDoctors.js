@@ -42,7 +42,7 @@ class FlatListItem extends PureComponent {
                 }}
           contentContainerStyle={{height: 40,}}
           onPress={() => {
-                  this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item })
+                  this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item, refresh: this.props.refresh })
               }}
         />
     )
@@ -93,6 +93,11 @@ export default class ListDoctors extends Component {
         myID: id,
       });
       this.getMyListDoctors();
+      this.props.screenProps.socket.on('update relationship', async (info) => {
+        if (info.LoaiNguoiGui===2 && info.updateList===true){
+          await this.getMyListDoctors()
+        }
+      });
     }
 
     getMyListDoctors = () => {
@@ -114,13 +119,13 @@ export default class ListDoctors extends Component {
     keyExtractor = (item, index) => index.toString()
 
     // Reload danh sách bác sĩ
-    refreshSectionList = (deletedKey) => {
-      this.setState((prevState) => {
-        return {
-          deletedRowKey: deletedKey,
-        };
-      });
-    }
+    // refreshSectionList = (deletedKey) => {
+    //   this.setState((prevState) => {
+    //     return {
+    //       deletedRowKey: deletedKey,
+    //     };
+    //   });
+    // }
 
     handleRefresh = () => {
       this.setState({
