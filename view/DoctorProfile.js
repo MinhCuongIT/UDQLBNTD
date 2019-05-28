@@ -399,7 +399,7 @@ export default class DoctorProfile extends Component {
         });
 
       this.props.screenProps.socket.on('update relationship', async (info) => {
-        if (info.LoaiNguoiGui===2 && info.MaNguoiGui===this.state.profile.MaBacSi){
+        if ((info.LoaiNguoiGui===2 && info.MaNguoiGui===this.state.profile.MaBacSi) || (info.LoaiNguoiNhan===2 && info.MaNguoiNhan===this.state.profile.MaBacSi)){
           await this.handleRefresh()
         }
       });
