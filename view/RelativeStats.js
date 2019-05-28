@@ -390,7 +390,7 @@ export default class RelativeStats extends Component {
 const styles = StyleSheet.create({
     wrapper: {
       justifyContent: 'flex-start',
-      backgroundColor: 'white',
+      backgroundColor: '#F5FCFF',
       flex: 1,
     },
     titleBorderBottom: {

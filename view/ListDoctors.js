@@ -35,7 +35,7 @@ class FlatListItem extends PureComponent {
                   // title: this.props.item.name[0],
                   subtitle: 'BS',
                   imageProps: {resizeMode:'contain'},
-                  source: { uri: /*'data:image/jpeg;base64,' +*/ this.props.item.Avatar },
+                  source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar },
                   activeOpacity: 0.7,
                   showEditButton: false,
                   marginLeft: 20,
@@ -162,7 +162,7 @@ export default class ListDoctors extends Component {
 const styles = StyleSheet.create({
     wrapper: {
       justifyContent: 'flex-start',
-      backgroundColor: 'white',
+      backgroundColor: '#F5FCFF',
       flex: 1,
     },
     sectionTitle: {
