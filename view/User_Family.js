@@ -164,7 +164,7 @@ export default class User_Family extends Component {
 const styles = StyleSheet.create({
     wrapper: {
       justifyContent: 'flex-start',
-      backgroundColor: 'white',
+      backgroundColor: '#F5FCFF',
       flex: 1,
     },
     sectionTitle: {

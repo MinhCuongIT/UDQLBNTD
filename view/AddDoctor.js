@@ -98,6 +98,7 @@ export default class AddDoctor extends Component {
                     containerStyle={{backgroundColor: 'transparent', width: Dimensions.get('window').width, borderBottomWidth: 0, borderRightWidth: 0}}
                     inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40}}
                     inputStyle={{color: 'white',}}
+                    keyboardType='numeric'
                     underlineColorAndroid='transparent'
                     placeholder="Nhập số điện thoại..."
                     searchIcon={null}
@@ -127,7 +128,7 @@ export default class AddDoctor extends Component {
 const styles = StyleSheet.create({
     wrapper: {
       justifyContent: 'flex-start',
-      backgroundColor: 'white',
+      backgroundColor: '#F5FCFF',
       flex: 1,
     },
     sectionTitle: {
