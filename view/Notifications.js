@@ -159,7 +159,7 @@ export default class Notifications extends Component {
                 })
               }
               else{
-                this.apiService.findDoctorByID({MaBacSi: item.idNguoiLienQuan})
+                this.apiService.findDoctorByID(item.idNguoiLienQuan)
                 .then((result) => {
                   if (result !== null)
                   {
@@ -185,7 +185,7 @@ export default class Notifications extends Component {
                 })
               }
               else{
-                this.apiService.findDoctorByID({MaBacSi: item.idNguoiLienQuan})
+                this.apiService.findDoctorByID(item.idNguoiLienQuan)
                 .then((result) => {
                   if (result !== null)
                   {
@@ -211,7 +211,7 @@ export default class Notifications extends Component {
                 })
               }
               else{
-                this.apiService.findDoctorByID({MaBacSi: item.idNguoiLienQuan})
+                this.apiService.findDoctorByID(item.idNguoiLienQuan)
                 .then((result) => {
                   if (result !== null)
                   {

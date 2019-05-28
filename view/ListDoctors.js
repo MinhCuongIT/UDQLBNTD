@@ -42,7 +42,7 @@ class FlatListItem extends PureComponent {
                 }}
           contentContainerStyle={{height: 40,}}
           onPress={() => {
-                  this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item, refresh: this.props.refresh })
+                  this.props.navigation.navigate('DoctorProfile', { myID: this.props.myID, data: this.props.item })
               }}
         />
     )
@@ -94,7 +94,7 @@ export default class ListDoctors extends Component {
       });
       this.getMyListDoctors();
       this.props.screenProps.socket.on('update relationship', async (info) => {
-        if (info.LoaiNguoiGui===2 && info.updateList===true){
+        if ((info.LoaiNguoiGui===2 && info.updateList===true) || (info.LoaiNguoiNhan===2 && info.updateList===true)){
           await this.getMyListDoctors()
         }
       });
