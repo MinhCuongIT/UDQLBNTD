@@ -11,6 +11,9 @@ import ApiFollow from '../services/api';
 class IntroCard extends PureComponent {
   constructor (props) {
     super(props);
+    this.state = {
+      isAbleToMessage: false
+    }
 
     this.apiFollow = ApiFollow();
   }
@@ -93,6 +96,8 @@ class IntroCard extends PureComponent {
                             updateList: true,
                           }
                           await this.props.socket.emit('update relationship', info2);
+
+                          this.setState({ isAbleToMessage: true })
                         }
                     });
               }}
@@ -190,6 +195,8 @@ class IntroCard extends PureComponent {
                       updateList: true,
                     }
                     await this.props.socket.emit('update relationship', info2);
+
+                    this.setState({ isAbleToMessage: false })
                     }
                 });
           }}
@@ -238,24 +245,26 @@ class IntroCard extends PureComponent {
                   size={20}
                   color="rgba(74, 195, 180, 1)"
                   onPress={ async () => {
-                    await this.apiFollow.updateSeeingSeen({
-                      MaTaiKhoan: this.props.myID,
-                      LoaiTaiKhoan: 1,
-                      MaTaiKhoanLienQuan: this.props.item.MaBacSi,
-                      LoaiTaiKhoanLienQuan: 1
-                    })
-                    this.props.handle.checkSeen()
-                    
-                    const info2 = {
-                      MaNguoiGui: this.props.myID,
-                      LoaiNguoiGui: 1,
-                      MaNguoiNhan: this.props.item.MaBacSi,
-                      LoaiNguoiNhan: 2,
-                      updateList: true,
-                    }
-                    await this.props.socket.emit('update relationship', info2);
+                    if (this.state.isAbleToMessage){
+                        await this.apiFollow.updateSeeingSeen({
+                        MaTaiKhoan: this.props.myID,
+                        LoaiTaiKhoan: 1,
+                        MaTaiKhoanLienQuan: this.props.item.MaBacSi,
+                        LoaiTaiKhoanLienQuan: 1
+                      })
+                      this.props.handle.checkSeen()
+                      
+                      const info2 = {
+                        MaNguoiGui: this.props.myID,
+                        LoaiNguoiGui: 1,
+                        MaNguoiNhan: this.props.item.MaBacSi,
+                        LoaiNguoiNhan: 2,
+                        updateList: true,
+                      }
+                      await this.props.socket.emit('update relationship', info2);
 
-                    this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 2 })
+                      this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 2 })
+                    }
                   }}
                 >
                   <Text style={styles.customBtnText}>
@@ -390,7 +399,7 @@ export default class DoctorProfile extends Component {
         });
 
       this.props.screenProps.socket.on('update relationship', async (info) => {
-        if (info.LoaiNguoiGui===2 && info.MaNguoiGui===this.state.profile.MaBacSi){
+        if ((info.LoaiNguoiGui===2 && info.MaNguoiGui===this.state.profile.MaBacSi) || (info.LoaiNguoiNhan===2 && info.MaNguoiNhan===this.state.profile.MaBacSi)){
           await this.handleRefresh()
         }
       });
