@@ -144,8 +144,8 @@ export default class HomeDetails extends Component {
           </Text>
           <TouchableOpacity
             onPress={() => this.props.navigation.state.params.item.id===1
-              ? this.props.navigation.navigate('AddDiabetes')
-              : this.props.navigation.navigate('AddBloodPressure')
+              ? this.props.navigation.replace('AddDiabetes')
+              : this.props.navigation.replace('AddBloodPressure')
             }
           >
             <Image

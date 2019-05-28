@@ -70,7 +70,7 @@ export default class MealDetails extends Component {
   }
 
   componentWillMount(): void {
-    this.handleRefresh()
+    // this.handleRefresh()
   }
 
   componentWillUnmount() {

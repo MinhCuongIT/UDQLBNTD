@@ -86,7 +86,7 @@ export default class AddDiabetes extends Component {
             ChiSo: this.state.diabeteValue,
             NgayNhap: this.state.dateState,
           })
-          this.props.navigation.navigate('HomeDetails', {item: this.props.screenProps.data[0]})
+          this.props.navigation.replace('HomeDetails', {item: this.props.screenProps.data[0]})
         }
       })
     }

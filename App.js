@@ -215,7 +215,7 @@ export default class Home extends Component {
         for (let i = dataTemp[0].date.length - 1; i >= 0; i--) {
           if (!isMerge) {
             if ((data.NgayNhap.toDateString() !== new Date(dataTemp[0].date[i]).toDateString())
-              && (data.NgayNhap.getTime() > new Date(dataTemp[0].date[i]).getTime())) {
+              && (data.NgayNhap.getTime() >= new Date(dataTemp[0].date[i]).getTime())) {
               dataTemp[0].date[i + 1] = data.NgayNhap;
               dataTemp[0].data.labels[i + 1] = data.NgayNhap.getDate() + '/' + (data.NgayNhap.getMonth() + 1);
               dataTemp[0].data.datasets[2].data[i + 1] = data.ChiSo;
@@ -224,7 +224,7 @@ export default class Home extends Component {
               dataTemp[0].date[i] = new Date(dataTemp[0].date[i]);
               isMerge = true;
             } else if (data.NgayNhap.toDateString() === new Date(dataTemp[0].date[i]).toDateString()) {
-              if (data.NgayNhap.getTime() > new Date(dataTemp[0].date[i]).getTime()) {
+              if (data.NgayNhap.getTime() >= new Date(dataTemp[0].date[i]).getTime()) {
                 dataTemp[0].date[i] = data.NgayNhap;
                 dataTemp[0].data.labels[i] = data.NgayNhap.getDate() + '/' + (data.NgayNhap.getMonth() + 1);
                 dataTemp[0].data.datasets[2].data[i] = data.ChiSo;
@@ -270,9 +270,9 @@ export default class Home extends Component {
       for (let i = dataTemp[0].date.length - 1; i >= 0; i--) {
         if (!isMerge) {
           if (((data.NgayNhap.toDateString() !== new Date(dataTemp[0].date[i]).toDateString())
-            && (data.NgayNhap.getTime() > new Date(dataTemp[0].date[i]).getTime()))
+            && (data.NgayNhap.getTime() >= new Date(dataTemp[0].date[i]).getTime()))
             || ((data.NgayNhap.toDateString() === new Date(dataTemp[0].date[i]).toDateString())
-              && (data.NgayNhap.getTime() > new Date(dataTemp[0].date[i]).getTime()))) {
+              && (data.NgayNhap.getTime() >= new Date(dataTemp[0].date[i]).getTime()))) {
             if (data.NgayNhap.toDateString() !== new Date(dataTemp[0].date[i]).toDateString()) {
               for (let j = 0; j < i; j++) {
                 dataTemp[0].date[j] = new Date(dataTemp[0].date[j + 1]);
@@ -315,7 +315,7 @@ export default class Home extends Component {
         for (let i = dataTemp[1].date.length - 1; i >= 0; i--) {
           if (!isMerge) {
             if ((data.NgayNhap.toDateString() !== new Date(dataTemp[1].date[i]).toDateString())
-              && (data.NgayNhap.getTime() > new Date(dataTemp[1].date[i]).getTime())) {
+              && (data.NgayNhap.getTime() >= new Date(dataTemp[1].date[i]).getTime())) {
               dataTemp[1].date[i + 1] = data.NgayNhap;
               dataTemp[1].data.labels[i + 1] = data.NgayNhap.getDate() + '/' + (data.NgayNhap.getMonth() + 1);
               dataTemp[1].data.datasets[2].data[i + 1] = data.ChiSo2;
@@ -325,7 +325,7 @@ export default class Home extends Component {
               dataTemp[1].date[i] = new Date(dataTemp[1].date[i]);
               isMerge = true;
             } else if (data.NgayNhap.toDateString() === new Date(dataTemp[1].date[i]).toDateString()) {
-              if (data.NgayNhap.getTime() > new Date(dataTemp[1].date[i]).getTime()) {
+              if (data.NgayNhap.getTime() >= new Date(dataTemp[1].date[i]).getTime()) {
                 dataTemp[1].date[i] = data.NgayNhap;
                 dataTemp[1].data.labels[i] = data.NgayNhap.getDate() + '/' + (data.NgayNhap.getMonth() + 1);
                 dataTemp[1].data.datasets[2].data[i] = data.ChiSo2;
@@ -375,9 +375,9 @@ export default class Home extends Component {
       for (let i = dataTemp[1].date.length - 1; i >= 0; i--) {
         if (!isMerge) {
           if (((data.NgayNhap.toDateString() !== new Date(dataTemp[1].date[i]).toDateString())
-            && (data.NgayNhap.getTime() > new Date(dataTemp[1].date[i]).getTime()))
+            && (data.NgayNhap.getTime() >= new Date(dataTemp[1].date[i]).getTime()))
             || ((data.NgayNhap.toDateString() === new Date(dataTemp[1].date[i]).toDateString())
-              && (data.NgayNhap.getTime() > new Date(dataTemp[1].date[i]).getTime()))) {
+              && (data.NgayNhap.getTime() >= new Date(dataTemp[1].date[i]).getTime()))) {
             if (data.NgayNhap.toDateString() !== new Date(dataTemp[1].date[i]).toDateString()) {
               for (let j = 0; j < i; j++) {
                 dataTemp[1].date[j] = new Date(dataTemp[1].date[j + 1]);
