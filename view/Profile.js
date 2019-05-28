@@ -809,6 +809,7 @@ export default class Profile extends Component {
 
   onLogoutParent = async () => {
     await AsyncStorage.clear();
+    await this.apiServices.logout();
     this.props.navigation.navigate('LoginStack');
   }
 

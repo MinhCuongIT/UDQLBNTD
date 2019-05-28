@@ -16,7 +16,7 @@ export default () => {
       })
     },
     logout: () => {
-      return axiosPost(baseURL + 'logout')
+      return axiosPost(baseURL + 'patients/log-out')
     },
     register: (info) => {
       return axiosPost(baseURL + `patients/sign-up`, {
