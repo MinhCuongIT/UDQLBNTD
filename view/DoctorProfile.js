@@ -210,7 +210,7 @@ class IntroCard extends PureComponent {
     return (
       <ListItem
         containerStyle={{marginHorizontal: 10}}
-        leftAvatar={{ source: { uri: this.props.item.Avatar }, size: 'large' }}
+        leftAvatar={{ source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar }, size: 'large' }}
         title={
           <View>
             <Text style={{ fontSize: 25, color: 'black', fontWeight: 'bold' }}>
@@ -336,6 +336,7 @@ class MyListCards extends PureComponent {
           <CardItem itemDetail={this.props.profile.GioiTinh?this.props.profile.GioiTinh.data==1?'Nam':'Nữ':'Chưa rõ'} itemTitle='Giới tính'/>
           <CardItem itemDetail={this.props.profile.CMND} itemTitle='CMND'/>
           <CardItem itemDetail={this.props.profile.BenhVien} itemTitle='Bệnh viện'/>
+          <CardItem itemDetail={this.props.profile.ChuyenMon} itemTitle='Chuyên Môn'/>
         </Card>
         <Card title={
           <View style={styles.customTitle}>

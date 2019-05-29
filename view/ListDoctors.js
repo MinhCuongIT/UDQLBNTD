@@ -29,11 +29,10 @@ class FlatListItem extends PureComponent {
               </Text>
             </View>
           }
+          subtitle={this.props.item.ChuyenMon}
           leftAvatar={{
                   rounded: true,
                   size: "medium",
-                  // title: this.props.item.name[0],
-                  subtitle: 'BS',
                   imageProps: {resizeMode:'contain'},
                   source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar },
                   activeOpacity: 0.7,
