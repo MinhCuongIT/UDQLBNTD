@@ -84,9 +84,9 @@ export default class MealDetails extends Component {
       page: this.state.page,
     })
       .then((result) => {
-        let dataTemp = []
-        let currentDate = ''
-        let currentSection = -1
+        let dataTemp = this.state.data
+        let currentDate = this.state.data.length > 0 ? this.state.data[this.state.data.length - 1].title :''
+        let currentSection = this.state.data.length - 1
 
         if (result !== null) {
           result.meals.map((item) => {
@@ -119,7 +119,7 @@ export default class MealDetails extends Component {
         }
         if (this._isMounted)
           this.setState({
-            data: [...this.state.data, ...dataTemp],
+            data: [...dataTemp],
             refreshing: false,
           })
       })
