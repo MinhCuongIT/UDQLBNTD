@@ -12,9 +12,6 @@ import ApiFollow from '../services/api';
 class IntroCard extends PureComponent {
   constructor (props) {
     super(props);
-    this.state = {
-      isAbleToMessage: false
-    }
 
     this.apiFollow = ApiFollow();
   }
@@ -96,8 +93,6 @@ class IntroCard extends PureComponent {
                             updateList: true,
                           }
                           await this.props.socket.emit('update relationship', info2);
-                          
-                          this.setState({ isAbleToMessage: true })
                         }
                     });
               }}
@@ -196,8 +191,6 @@ class IntroCard extends PureComponent {
                           updateList: true,
                         }
                         await this.props.socket.emit('update relationship', info2);
-                        
-                        this.setState({ isAbleToMessage: true })
                       }
                   });
             }}
@@ -225,7 +218,50 @@ class IntroCard extends PureComponent {
         </View>
       </View>
     
-    return (
+    const buttonChat = this.props.typeRelationship==='followed'
+      ?
+      <View style={{flex: 1}}>
+        <Feather.Button
+          name="message-circle"
+          backgroundColor={this.props.item.DaXem===1? "transparent" :'rgba(255,0,0,0.2)'}
+          borderRadius={0}
+          size={20}
+          color="rgba(74, 195, 180, 1)"
+          onPress={ async () => {
+            if(this.props.typeRelationship==='followed'){
+                await this.apiFollow.updateSeeingSeen({
+                MaTaiKhoan: this.props.myID,
+                LoaiTaiKhoan: 1,
+                MaTaiKhoanLienQuan: this.props.item.MaBenhNhan,
+                LoaiTaiKhoanLienQuan: 1
+              })
+              
+              this.props.handle.checkSeen()
+              // socket list
+              const info2 = {
+                MaNguoiGui: this.props.myID,
+                LoaiNguoiGui: 1,
+                MaNguoiNhan: this.props.item.MaBenhNhan,
+                LoaiNguoiNhan: 1,
+                updateList: true,
+              }
+              await this.props.socket.emit('update relationship', info2);
+
+
+              // navigate
+              this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 1 })
+            }
+          }}
+        >
+          <Text style={styles.customBtnText}>
+            Nhắn tin
+          </Text>
+        </Feather.Button>
+      </View>
+      :
+      <View style={{flex: 1}} />
+    
+      return (
       <ListItem
         containerStyle={{marginHorizontal: 10}}
         leftAvatar={{ source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar }, size: 'large' }}
@@ -255,44 +291,7 @@ class IntroCard extends PureComponent {
                   </Text>
                 </Feather.Button>
               </View>
-              <View style={{flex: 1}}>
-                <Feather.Button
-                  name="message-circle"
-                  backgroundColor={this.props.item.DaXem===1? "transparent" :'rgba(255,0,0,0.2)'}
-                  borderRadius={0}
-                  size={20}
-                  color="rgba(74, 195, 180, 1)"
-                  onPress={ async () => {
-                    if(this.state.isAbleToMessage){
-                        await this.apiFollow.updateSeeingSeen({
-                        MaTaiKhoan: this.props.myID,
-                        LoaiTaiKhoan: 1,
-                        MaTaiKhoanLienQuan: this.props.item.MaBenhNhan,
-                        LoaiTaiKhoanLienQuan: 1
-                      })
-                      
-                      this.props.handle.checkSeen()
-                      // socket list
-                      const info2 = {
-                        MaNguoiGui: this.props.myID,
-                        LoaiNguoiGui: 1,
-                        MaNguoiNhan: this.props.item.MaBenhNhan,
-                        LoaiNguoiNhan: 1,
-                        updateList: true,
-                      }
-                      await this.props.socket.emit('update relationship', info2);
-
-
-                      // navigate
-                      this.props.navigation.navigate('Chat', { myID: this.props.myID, title: this.props.item.HoTen, data: this.props.item, type: 1 })
-                    }
-                  }}
-                >
-                  <Text style={styles.customBtnText}>
-                    Nhắn tin
-                  </Text>
-                </Feather.Button>
-              </View>
+              {buttonChat}
             </View>
             {buttonRela}
           </View>

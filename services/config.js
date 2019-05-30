@@ -1,3 +1,3 @@
 export const config = {
-  baseURL: 'http://172.17.14.109:5500/'
+  baseURL: 'http://192.168.0.8:5500/'
 }
