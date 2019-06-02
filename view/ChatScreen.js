@@ -102,13 +102,14 @@ export default class ChatScreen extends Component {
         this.setState({
           myID: userId
         });
-      this.props.screenProps.socket.emit('join room', {
-        MaTaiKhoan: userId,
-        LoaiTaiKhoan: 1,
-      });
+      // this.props.screenProps.socket.emit('join room', {
+      //   MaTaiKhoan: userId,
+      //   LoaiTaiKhoan: 1,
+      // });
 
       if (this._isMounted)
         this.loadMessages();
+
 
       this.props.screenProps.socket.on('chat message', (msg) => {
         if(msg!==null){
@@ -120,7 +121,8 @@ export default class ChatScreen extends Component {
         }
       });
 
-      this.props.screenProps.socket.on('not seen message', async () => {
+      if (this._isMounted)
+      await this.props.screenProps.socket.on('not seen message', async () => {
         const info = {
           MaTaiKhoan: this.state.receiverID,
           LoaiNguoiChinh: this.props.navigation.getParam('type'),
@@ -130,7 +132,8 @@ export default class ChatScreen extends Component {
           LoaiNguoiLienQuan: 1,
           LoaiThongBao: 2    // Thông báo có tin nhắn mới từ người khác
         }
-        await this.props.screenProps.socket.emit('create notifications', info);
+        if (this._isMounted)
+          await this.props.screenProps.socket.emit('create notifications', info);
         const info2 = {
           MaNguoiGui: this.state.myID,
           LoaiNguoiGui: 1,
@@ -138,7 +141,8 @@ export default class ChatScreen extends Component {
           LoaiNguoiNhan: this.props.navigation.getParam('type'),
           updateList: true,
         }
-        await this.props.screenProps.socket.emit('update relationship', info2);
+        if (this._isMounted)
+          await this.props.screenProps.socket.emit('update relationship', info2);
       });
     }
 
@@ -155,7 +159,7 @@ export default class ChatScreen extends Component {
     async submitChatMessage() {
       let today = new Date();
       let _today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-      if (this._isMounted)
+      if (this._isMounted){
         this.setState({
           chatMessage: {
             MaNguoiGui: this.state.myID,
@@ -167,9 +171,10 @@ export default class ChatScreen extends Component {
             DateValue: today,
           },
           txtInput: '',
-        }, async () => {
-          await this.props.screenProps.socket.emit('chat message', this.state.chatMessage);
-        });
+        }, ()=>
+        this.props.screenProps.socket.emit('chat message', this.state.chatMessage)
+        )
+      }
     }
 
     keyExtractor = (item, index) => index.toString()
