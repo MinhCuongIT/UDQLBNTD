@@ -1,11 +1,6 @@
 import React, {Component, PureComponent} from 'react';
-import { StyleSheet, Text, View, FlatList, SectionList, Dimensions, Alert, AsyncStorage } from 'react-native';
-import { ListItem, SearchBar, Image, Divider, Button } from "react-native-elements";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
-import Swipeout from 'react-native-swipeout';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, FlatList, Dimensions, Alert } from 'react-native';
+import { ListItem, SearchBar } from "react-native-elements";
 import ApiDoctor from '../services/api';
 
 
@@ -57,7 +52,6 @@ export default class AddDoctor extends Component {
       this.apiFindDoctor = ApiDoctor();
 
       this.updateSearch = this.updateSearch.bind(this);
-      // this.fetchData = this.fetchData.bind(this);
     }
 
   
@@ -91,12 +85,11 @@ export default class AddDoctor extends Component {
     render() {
       return (
         <View style={styles.wrapper}>
-            <View style={{flexDirection: 'row', justifyContent: 'center', paddingRight: 5}}>
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                 <SearchBar
-                    round
                     lightTheme
                     containerStyle={{backgroundColor: 'transparent', width: Dimensions.get('window').width, borderBottomWidth: 0, borderRightWidth: 0}}
-                    inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 50, height: 40}}
+                    inputContainerStyle={{backgroundColor: 'rgba(0,0,0,0.1)', height: 40}}
                     inputStyle={{color: 'white',}}
                     keyboardType='numeric'
                     underlineColorAndroid='transparent'

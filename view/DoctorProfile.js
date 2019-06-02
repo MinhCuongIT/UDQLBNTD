@@ -3,9 +3,7 @@ import {StyleSheet, Text, View, ScrollView, Alert, AsyncStorage, RefreshControl,
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { Card, ListItem, Divider, Button } from "react-native-elements";
-import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
+import { Card, ListItem, Divider } from "react-native-elements";
 import ApiFollow from '../services/api';
 
 class IntroCard extends PureComponent {

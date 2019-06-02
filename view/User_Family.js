@@ -1,11 +1,7 @@
 import React, {Component, PureComponent} from 'react';
-import { StyleSheet, Text, View, FlatList, 
-  SectionList, Dimensions, Alert, AsyncStorage } from 'react-native';
-import { ListItem, SearchBar, Image, Divider, Button } from "react-native-elements";
-import AntDesign from 'react-native-vector-icons/AntDesign'
+import { StyleSheet, Text, View, FlatList, Alert, AsyncStorage } from 'react-native';
+import { ListItem } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
-import Swipeout from 'react-native-swipeout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ApiRelative from '../services/api';
 
@@ -13,9 +9,6 @@ import ApiRelative from '../services/api';
 class FlatListItem extends PureComponent {
   constructor (props) {
     super(props);
-    this.state = {
-      activeRowKey: null,
-    }
   }
   
   render () {
@@ -32,7 +25,6 @@ class FlatListItem extends PureComponent {
           leftAvatar={{
                   rounded: true,
                   size: "medium",
-                  // title: this.props.item.name[0],
                   imageProps: {resizeMode:'contain'},
                   source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar },
                   activeOpacity: 0.7,
@@ -78,12 +70,12 @@ export default class User_Family extends Component {
         },
         headerRight: (
           <TouchableOpacity
-            style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 10,}}
+            style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 30}}
             onPress={ () => {
               navigation.navigate('AddRelative');
             } }
           >
-            <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
+            <Ionicons name="md-person-add" size={30} color="white" />
           </TouchableOpacity>
         )
       }
@@ -119,15 +111,6 @@ export default class User_Family extends Component {
     }
 
     keyExtractor = (item, index) => index.toString()
-
-    // Reload danh sách bác sĩ
-    // refreshSectionList = (deletedKey) => {
-    //   this.setState((prevState) => {
-    //     return {
-    //       deletedRowKey: deletedKey,
-    //     };
-    //   });
-    // }
 
     handleRefresh = () => {
       this.setState({

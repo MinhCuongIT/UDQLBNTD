@@ -22,6 +22,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import ApiService from "../services/api";
+import { ScrollView } from 'react-native-gesture-handler';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -104,67 +105,69 @@ export default class AddBloodPressure extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Nhập thông tin huyết áp</Text>
-        <View style={{marginTop:20}}>
-          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Ngày ghi</Text>
-          <Text style={styles.dateText}>
-            {this.state.date}
-          </Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={styles.welcome}>Nhập thông tin huyết áp</Text>
+          <View style={{marginTop:20}}>
+            <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Ngày ghi</Text>
+            <Text style={styles.dateText}>
+              {this.state.date}
+            </Text>
+            <TouchableOpacity
+              style={styles.btnCalendar}
+              onPress={this.showDateTimePicker}
+            >
+              <Icon name="calendar-alt" size={28} color={'rgba(0, 0, 0, 0.7)'}/>
+            </TouchableOpacity>
+            <DateTimePicker
+              isVisible={this.state.isDateTimePickerVisible}
+              onConfirm={this.handleDatePicked}
+              onCancel={this.hideDateTimePicker}
+              mode={'datetime'}
+            />
+          </View>
+          <View style={{marginTop:20}}>
+            <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Chỉ số "Huyết áp" (mmHg)</Text>
+            <View style={{flexDirection: 'row'}}>
+              <TextInput
+                style={styles.inputText}
+                placeholder={'120'}
+                placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
+                underlineColorAndroid={'transparent'}
+                keyboardType='numeric'
+                maxLength={5}
+                value={this.state.systolicValue}
+                onChangeText={(systolicValue) => {if (systolicValue===''|| !isNaN(systolicValue)) this.setState({systolicValue})}}
+              />
+              <Text style={{alignSelf: 'center', fontSize: 24}}> / </Text>
+              <TextInput
+                style={styles.inputText}
+                placeholder={'80'}
+                placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
+                underlineColorAndroid={'transparent'}
+                keyboardType='numeric'
+                maxLength={5}
+                value={this.state.diastolicValue}
+                onChangeText={(diastolicValue) => {if (diastolicValue===''|| !isNaN(diastolicValue)) this.setState({diastolicValue})}}
+              />
+            </View>
+          </View>
+          {this.state.isNullValue
+            ? <View style={{marginTop:10, alignSelf: 'flex-start'}}>
+              <Text style={{marginLeft: 30, color: 'red',}}>Vui lòng nhập chỉ số</Text>
+            </View>
+            : <View/>
+          }
           <TouchableOpacity
-            style={styles.btnCalendar}
-            onPress={this.showDateTimePicker}
+            onPress={() => this.handleConfirm()}
+            style={styles.btnConfirm}
           >
-            <Icon name="calendar-alt" size={28} color={'rgba(0, 0, 0, 0.7)'}/>
+            <Text style={{color: 'white', fontSize: 23, fontWeight: 'bold', padding: 10}}>
+              XÁC NHẬN
+            </Text>
           </TouchableOpacity>
-          <DateTimePicker
-            isVisible={this.state.isDateTimePickerVisible}
-            onConfirm={this.handleDatePicked}
-            onCancel={this.hideDateTimePicker}
-            mode={'datetime'}
-          />
         </View>
-        <View style={{marginTop:20}}>
-          <Text style={{fontSize: 15, marginLeft: 30, marginBottom: 5,}}>Chỉ số "Huyết áp" (mmHg)</Text>
-          <View style={{flexDirection: 'row'}}>
-            <TextInput
-              style={styles.inputText}
-              placeholder={'120'}
-              placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
-              underlineColorAndroid={'transparent'}
-              keyboardType='numeric'
-              maxLength={5}
-              value={this.state.systolicValue}
-              onChangeText={(systolicValue) => {if (systolicValue===''|| !isNaN(systolicValue)) this.setState({systolicValue})}}
-            />
-            <Text style={{alignSelf: 'center', fontSize: 24}}> / </Text>
-            <TextInput
-              style={styles.inputText}
-              placeholder={'80'}
-              placeholderTextColor={'rgba(10, 10, 10, 0.3)'}
-              underlineColorAndroid={'transparent'}
-              keyboardType='numeric'
-              maxLength={5}
-              value={this.state.diastolicValue}
-              onChangeText={(diastolicValue) => {if (diastolicValue===''|| !isNaN(diastolicValue)) this.setState({diastolicValue})}}
-            />
-          </View>
-        </View>
-        {this.state.isNullValue
-          ? <View style={{marginTop:10, alignSelf: 'flex-start'}}>
-            <Text style={{marginLeft: 30, color: 'red',}}>Vui lòng nhập chỉ số</Text>
-          </View>
-          : <View/>
-        }
-        <TouchableOpacity
-          onPress={() => this.handleConfirm()}
-          style={styles.btnConfirm}
-        >
-          <Text style={{color: 'white', fontSize: 23, fontWeight: 'bold', padding: 10}}>
-            XÁC NHẬN
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 }

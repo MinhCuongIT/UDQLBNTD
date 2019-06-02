@@ -1,50 +1,11 @@
 import React, {Component, PureComponent} from 'react';
-import {StyleSheet, Text, View, chatMessage, TouchableOpacity, FlatList, Alert, AsyncStorage } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, FlatList, Alert, AsyncStorage } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar } from "react-native-elements";
-import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
-import socketIOClient from 'socket.io-client';
-import { config } from '../services/config'
 import { TextInput } from 'react-native-gesture-handler';
 import ApiChat from '../services/api';
 
-let { baseURL } = config  
-const socket = socketIOClient(baseURL)
-
-export class DateTime extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-          currDate: '',
-          time: '',
-        }
-    }
-
-    componentDidMount() {
-        // Get current dd/MM/yyyy
-        let today = new Date(),
-            _date = today.getDate(),
-            _month = today.getMonth() + 1,
-            _year = today.getFullYear();
-        let _hr = today.getHours(),
-            _min = today.getMinutes();
-        this.setState({
-        currDate: _date + '-' + _month + '-' + _year,
-        time: _hr + ':' + _min,
-        });
-    }
-
-    render() {
-        return(
-        <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
-            <Text style={{fontSize: 12, color: 'silver',}}>
-            {this.state.time}
-            </Text>
-        </View>
-        )
-    }
-}
   
 export class RightListItems extends PureComponent {
     constructor(props){
@@ -214,7 +175,6 @@ export default class ChatScreen extends Component {
     keyExtractor = (item, index) => index.toString()
   
     _renderItem = ({item}) => {
-      // alert(JSON.stringify(item))
       if(item.MaNguoiGui===this.state.myID){
         return(<RightListItems item={item}/>);
       }

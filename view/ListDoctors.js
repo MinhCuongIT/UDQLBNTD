@@ -1,11 +1,7 @@
 import React, {Component, PureComponent} from 'react';
-import { StyleSheet, Text, View, FlatList, 
-  SectionList, Dimensions, Alert, AsyncStorage } from 'react-native';
-import { ListItem, SearchBar, Image, Divider, Button } from "react-native-elements";
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
-import Swipeout from 'react-native-swipeout';
+import { StyleSheet, Text, View, FlatList, Alert, AsyncStorage } from 'react-native';
+import { ListItem } from "react-native-elements";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ApiDoctor from '../services/api';
 
@@ -71,16 +67,16 @@ export default class ListDoctors extends Component {
           color: 'white',
         },
         headerStyle: {
-          backgroundColor: 'rgba(74, 195, 180, 1)',
+          backgroundColor: 'rgba(74, 195, 180, 1)'
         },
         headerRight: (
           <TouchableOpacity
-            style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 10,}}
+            style={{ backgroundColor: 'transparent', alignItems: 'center', paddingVertical: 20, marginRight: 30}}
             onPress={ () => {
               navigation.navigate('AddDoctor', { type: 2 });
             } }
           >
-            <Text style={{color: 'white', fontSize: 20}}> Thêm </Text>
+            <Ionicons name="md-person-add" size={30} color="white" />
           </TouchableOpacity>
         )
       }
