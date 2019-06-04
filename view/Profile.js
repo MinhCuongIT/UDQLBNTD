@@ -20,6 +20,10 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import ImagePicker from 'react-native-image-picker';
 
+import RNFS from 'react-native-fs';
+import ImageResizer from 'react-native-image-resizer';
+
+
 // Sử dụng thuật toán SHA256
 var SHA256 = require("crypto-js/sha256");
 
@@ -30,6 +34,8 @@ const options = {
   storageOptions: {
     skipBackup: false,
     path: 'images',
+    cameraRoll: true,
+    waitUntilSaved: true
   },
   mediaType: 'photo',
   cancelButtonTitle: 'Hủy',
@@ -575,7 +581,7 @@ export default class Profile extends Component {
   }
 
   handleChange = () => {
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -584,30 +590,31 @@ export default class Profile extends Component {
         // var source = { uri: response.uri };
 
         // You can also display the image using data:
-        var source = response.data;
-
-        this.props.screenProps.setUser({
-          ...this.props.screenProps.user,
-          thongTinChung: {
-            ...this.props.screenProps.user.thongTinChung,
-            avatar: source
-          }
-        });
-
-        //Update xuống DB
-        this.updateBenhNhan({
-          MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
-          Avatar: this.props.screenProps.user.thongTinChung.avatar,
-          HoTen: this.props.screenProps.user.thongTinChung.hoTen,
-          GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
-          NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
-          CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
-          DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
-          Email: this.props.screenProps.user.lienHe.email,
-          NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
-          NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
-          DiUngThuoc: 'Không hỗ trợ',
-        });
+        await ImageResizer.createResizedImage(response.uri, 400, 400, 'JPEG', 50).then((output) => {
+          RNFS.readFile(output.uri, 'base64').then((data) => {
+            this.props.screenProps.setUser({
+              ...this.props.screenProps.user,
+              thongTinChung: {
+                ...this.props.screenProps.user.thongTinChung,
+                avatar: data
+              }
+            });
+            //Update xuống DB
+            this.updateBenhNhan({
+              MaBenhNhan: this.props.screenProps.user.thongTinChung.sdt,
+              Avatar: this.props.screenProps.user.thongTinChung.avatar,
+              HoTen: this.props.screenProps.user.thongTinChung.hoTen,
+              GioiTinh: this.props.screenProps.user.thongTinChung.gioiTinh,
+              NgaySinh: this.props.screenProps.user.thongTinChung.ngaySinh === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.ngaySinh,
+              CMND: this.props.screenProps.user.thongTinChung.cmnd === "Chưa có dữ liệu" ? null : this.props.screenProps.user.thongTinChung.cmnd,
+              DiaChi: this.props.screenProps.user.thongTinChung.diaChi,
+              Email: this.props.screenProps.user.lienHe.email,
+              NgheNghiep: this.props.screenProps.user.thongTinChung.ngheNghiep,
+              NhomMau: this.props.screenProps.user.thongTinChung.nhomMau,
+              DiUngThuoc: 'Không hỗ trợ',
+            });
+          })
+        })
       }
     });
   }
