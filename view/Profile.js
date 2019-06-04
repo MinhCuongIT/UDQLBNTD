@@ -23,6 +23,7 @@ import ImagePicker from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
 import ImageResizer from 'react-native-image-resizer';
 
+import firebase from "react-native-firebase";
 
 // Sử dụng thuật toán SHA256
 var SHA256 = require("crypto-js/sha256");
@@ -815,6 +816,8 @@ export default class Profile extends Component {
   }
 
   onLogoutParent = async () => {
+    const userId = await AsyncStorage.getItem('UserId');
+    await firebase.messaging().unsubscribeFromTopic(`1-${userId}`);
     await AsyncStorage.clear();
     await this.apiServices.logout();
     this.props.navigation.navigate('LoginStack');
