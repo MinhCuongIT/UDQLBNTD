@@ -140,6 +140,10 @@ export default class Home extends Component {
   async componentWillMount() {
     this._isMounted = true;
     const userId = await AsyncStorage.getItem('UserId');
+    await this.props.screenProps.socket.emit('join room', {
+      MaTaiKhoan: userId,
+      LoaiTaiKhoan: 1,
+    });
     this.props.screenProps.socket.emit('get notifications number', {
       MaTaiKhoan: userId,
       LoaiTaiKhoan: 1,

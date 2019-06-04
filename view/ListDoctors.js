@@ -27,9 +27,9 @@ class FlatListItem extends PureComponent {
           }
           subtitle={this.props.item.ChuyenMon}
           leftAvatar={{
-                  rounded: true,
+                  // rounded: true,
                   size: "medium",
-                  imageProps: {resizeMode:'contain'},
+                  // imageProps: {resizeMode:'contain'},
                   source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar },
                   activeOpacity: 0.7,
                   showEditButton: false,
@@ -93,6 +93,10 @@ export default class ListDoctors extends Component {
           await this.getMyListDoctors()
         }
       });
+    }
+
+    componentWillMount() {
+      this.getMyListDoctors();
     }
 
     getMyListDoctors = () => {

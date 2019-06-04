@@ -23,9 +23,9 @@ class FlatListItem extends PureComponent {
             </View>
           }
           leftAvatar={{
-                  rounded: true,
+                  // rounded: true,
                   size: "medium",
-                  imageProps: {resizeMode:'contain'},
+                  // imageProps: {resizeMode:'contain'},
                   source: { uri: 'data:image/jpeg;base64,' + this.props.item.Avatar },
                   activeOpacity: 0.7,
                   showEditButton: false,
@@ -92,6 +92,10 @@ export default class User_Family extends Component {
           await this.getMyListRelatives()
         }
       });
+    }
+
+    componentWillMount() {
+      this.getMyListRelatives();
     }
 
     getMyListRelatives = () => {
