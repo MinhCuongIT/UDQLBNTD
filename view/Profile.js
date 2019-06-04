@@ -841,6 +841,10 @@ export default class Profile extends Component {
     await this.updateBenhNhan(patient);
   }
   updateFullName = async () => {
+    //Kiểm tra ngoại lệ
+    if (this.state.fullName.trim().length === 0) {
+      return;
+    }
     this.setState({ isVisibleEditNameScreen: false });  //Ẩn màn hình sửa tên
 
     await this.props.screenProps.setUser({
