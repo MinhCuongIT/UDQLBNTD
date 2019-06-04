@@ -16,6 +16,7 @@
     "react-native-circular-action-menu": "^0.5.0",
     "react-native-elements": "^1.1.0",
     "react-native-facebook-account-kit": "^1.1.0",
+    "react-native-firebase": "^5.4.2",
     "react-native-gesture-handler": "^1.0.17",
     "react-native-highcharts": "^1.0.2",
     "react-native-image-picker": "^0.28.1",

@@ -20,6 +20,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import ImagePicker from 'react-native-image-picker';
 
+import firebase from "react-native-firebase";
+
 // Sử dụng thuật toán SHA256
 var SHA256 = require("crypto-js/sha256");
 
@@ -574,8 +576,8 @@ export default class Profile extends Component {
     this.apiServices = ApiServices();
   }
 
-  handleChange = () => {
-    ImagePicker.showImagePicker(options, (response) => {
+  handleChange =  () => {
+    ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -586,7 +588,7 @@ export default class Profile extends Component {
         // You can also display the image using data:
         var source = response.data;
 
-        this.props.screenProps.setUser({
+        await this.props.screenProps.setUser({
           ...this.props.screenProps.user,
           thongTinChung: {
             ...this.props.screenProps.user.thongTinChung,
@@ -808,6 +810,8 @@ export default class Profile extends Component {
   }
 
   onLogoutParent = async () => {
+    const userId = await AsyncStorage.getItem('UserId');
+    await firebase.messaging().unsubscribeFromTopic(`1-${userId}`);
     await AsyncStorage.clear();
     await this.apiServices.logout();
     this.props.navigation.navigate('LoginStack');
