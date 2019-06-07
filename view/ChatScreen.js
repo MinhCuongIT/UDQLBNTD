@@ -113,11 +113,14 @@ export default class ChatScreen extends Component {
 
       this.props.screenProps.socket.on('chat message', (msg) => {
         if(msg!==null){
-          msg.NgayGioGui=msg.DateValue
-          if (this._isMounted)
-            this.setState({
-              chatMessages: [msg, ...this.state.chatMessages]
-            });
+          if ((msg.MaNguoiGui===this.state.receiverID && msg.LoaiNguoiGui===this.props.navigation.getParam('type'))
+           || (msg.MaNguoiNhan===this.state.receiverID && msg.LoaiNguoiNhan===this.props.navigation.getParam('type'))){
+            msg.NgayGioGui=msg.DateValue
+            if (this._isMounted)
+              this.setState({
+                chatMessages: [msg, ...this.state.chatMessages]
+              });
+          }
         }
       });
 
