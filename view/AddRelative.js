@@ -1,5 +1,5 @@
 import React, {Component, PureComponent} from 'react';
-import { StyleSheet, Text, View, FlatList, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Dimensions, Alert, TouchableOpacity, Share } from 'react-native';
 import { ListItem, SearchBar } from "react-native-elements";
 import ApiRelative from '../services/api';
 
@@ -44,6 +44,7 @@ export default class AddRelative extends Component {
       super(props);
       this.state = {
         flatListData: [],
+        existRelativeId: true,
         search_RelativeID: '',
       };
 
@@ -66,14 +67,64 @@ export default class AddRelative extends Component {
       }
     };
 
+    onShare = async () => {
+      try {
+        const result = await Share.share({
+          message:
+            'Vui lòng vào link sau: XXX để cài đặt ứng dụng',
+        });
+
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    ListEmpty = () => {
+      if(this.state.existRelativeId===false){
+        return(
+          <View style={{ justifyContent: 'center', flex: 1, margin: 10 }}>
+            <TouchableOpacity
+                style={{ backgroundColor: 'rgba(74, 195, 180, 1)', padding: 10, justifyContent: 'center' }}
+                onPress={ this.onShare } >
+                  <Text style={{ fontSize: 20, color: 'white', textAlign: 'center' }}>Mời {this.state.search_RelativeID} tham gia ứng dụng </Text>
+                </TouchableOpacity>
+          </View>
+        );
+      }
+      else{
+        return (
+          //View to show when list is empty
+          <View style={{ justifyContent: 'center', flex: 1, margin: 10 }}>
+            <Text style={{ textAlign: 'center', fontSize: 20 }}>Hiện không có kết quả nào</Text>
+          </View>
+        );
+      }
+    };
+
     updateSearch = search_RelativeID => {
-      this.setState({ search_RelativeID, flatListData: [] });
-      if (search_RelativeID.length===10){
+      this.setState({ search_RelativeID, flatListData: [], existRelativeId: true });
+      if (search_RelativeID.length===10 && search_RelativeID !== this.props.screenProps.user.thongTinChung.sdt){
         this.apiRelative.findRelativeByID(search_RelativeID)
             .then((result) => {
+              if(result !== null){
                 this.setState({
                     flatListData: result
                 });
+              }
+              else{
+                this.setState({
+                  existRelativeId: false
+              });
+              }
             });
       }
     }
@@ -105,8 +156,10 @@ export default class AddRelative extends Component {
                     return(<FlatListItem item={item} index={index} navigation={this.props.navigation} />)
                   }
                 }
+                ListEmptyComponent={this.ListEmpty}
                 data={this.state.flatListData}
                 keyExtractor={this.keyExtractor}
+                extraData={this.state.existRelativeId}
                 KeyBoardShouldPersistTaps='always'
             ></FlatList>
         </View>
