@@ -818,8 +818,12 @@ export default class Profile extends Component {
   onLogoutParent = async () => {
     const userId = await AsyncStorage.getItem('UserId');
     await firebase.messaging().unsubscribeFromTopic(`1-${userId}`);
+    this.props.screenProps.socket.emit('leave room', {
+      MaTaiKhoan: userId,
+      LoaiTaiKhoan: 1,
+    });
     await AsyncStorage.clear();
-    await this.apiServices.logout();
+    this.apiServices.logout();
     this.props.navigation.navigate('LoginStack');
   }
 

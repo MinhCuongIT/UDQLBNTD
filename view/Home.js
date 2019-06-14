@@ -111,6 +111,13 @@ export default class Home extends Component {
       LoaiTaiKhoan: 1,
     });
 
+    this.props.screenProps.socket.on('rejoin room', () => {
+      this.props.screenProps.socket.emit('join room', {
+        MaTaiKhoan: userId,
+        LoaiTaiKhoan: 1,
+      });
+    });
+
     await this.props.screenProps.socket.emit('get notifications number', {
       MaTaiKhoan: userId,
       LoaiTaiKhoan: 1,
@@ -553,7 +560,7 @@ export default class Home extends Component {
               rounded
               source={{ uri: 'data:image/jpeg;base64,' + this.props.screenProps.user.thongTinChung.avatar }}
             />
-            <View style={{ justifyContent: 'center', width: 0, flexGrow: 1, marginRight:20 }}>
+            <View style={{ justifyContent: 'center', width: 0, flexGrow: 1, marginRight: 20 }}>
               <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: "center" }}> {this.props.screenProps.user.thongTinChung.hoTen} </Text>
             </View>
           </View>
