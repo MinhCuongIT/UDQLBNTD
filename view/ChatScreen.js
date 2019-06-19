@@ -19,7 +19,7 @@ export class RightListItems extends PureComponent {
         <View style={{flexDirection: 'row', alignSelf: 'flex-end',}}>
           <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
             <Text style={{fontSize: 12, color: 'silver',}}>
-              {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+_time.getMinutes()}
+              {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+ (_time.getMinutes()<10?'0':'')+_time.getMinutes()}
             </Text>
           </View>
           <View style={[styles.BubbleChat, styles.rightBubbleChat]}>             
@@ -54,7 +54,7 @@ export class LeftListItems extends PureComponent {
             </View>
             <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
               <Text style={{fontSize: 12, color: 'silver',}}>
-                {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+_time.getMinutes()}
+                {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+ (_time.getMinutes()<10?'0':'')+_time.getMinutes()}
               </Text>
             </View>
         </View>
