@@ -19,7 +19,7 @@ export class RightListItems extends PureComponent {
         <View style={{flexDirection: 'row', alignSelf: 'flex-end',}}>
           <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
             <Text style={{fontSize: 12, color: 'silver',}}>
-              {_time.getDate()+'/'+(_time.getMonth()+1)+'-'+_time.getHours()+':'+_time.getMinutes()}
+              {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+_time.getMinutes()}
             </Text>
           </View>
           <View style={[styles.BubbleChat, styles.rightBubbleChat]}>             
@@ -54,7 +54,7 @@ export class LeftListItems extends PureComponent {
             </View>
             <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
               <Text style={{fontSize: 12, color: 'silver',}}>
-                {_time.getDate()+'/'+(_time.getMonth()+1)+'-'+_time.getHours()+':'+_time.getMinutes()}
+                {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+_time.getMinutes()}
               </Text>
             </View>
         </View>
@@ -232,7 +232,7 @@ export default class ChatScreen extends Component {
       return (
         <View style={styles.wrapper}>
           <FlatList
-              contentContainerStyle={{paddingVertical: 20}}
+              // contentContainerStyle={{paddingVertical: 20}}
               data={this.state.chatMessages}
               renderItem={this._renderItem}
               keyExtractor={this.keyExtractor}
@@ -266,7 +266,7 @@ export default class ChatScreen extends Component {
 const styles = StyleSheet.create({
     wrapper: {
       paddingLeft: 15,
-      paddingRight: 15,
+      // paddingRight: 15,
       paddingBottom: 0,
       justifyContent: 'flex-end',
       backgroundColor: '#F5FCFF',
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   
     // Custom Bubble Chat
     BubbleChat: {
-      maxWidth: scale(250),
+      // maxWidth: scale(250),
       paddingHorizontal: 15,
       paddingTop: 10,
       paddingBottom: 15,
@@ -306,11 +306,13 @@ const styles = StyleSheet.create({
     },
     rightBubbleChat: {
         marginRight: 10,
+        maxWidth: scale(250),
         alignItems: 'flex-end',
         backgroundColor: '#1084ff',
     },
     leftBubbleChat: {
         marginLeft: 10,
+        maxWidth: scale(200),
         alignSelf: 'flex-start',
         backgroundColor: '#ffffff',//white
     },
