@@ -90,6 +90,7 @@ export default class Home extends Component {
       numberNoti: 0,
       refreshing: false,
       // haveData: false,
+      dateToday: new Date(),
     };
 
     this.apiService = ApiService()
@@ -204,6 +205,9 @@ export default class Home extends Component {
     // await this.setState({
     //   data: []
     // })
+    this.setState({
+      dateToday: new Date()
+    })
     this.props.screenProps.setData([]);
     for (let i = 0; i < 2; i++) {
       await this.loadDataItem(userId, i)
@@ -572,7 +576,7 @@ export default class Home extends Component {
                 {/*source={require('../images/diet.png')}*/}
                 {/*style={styles.chartTitleIcon}*/}
                 {/*/>*/}
-                <Text style={{ marginHorizontal: 10, fontSize: 20, fontWeight: 'bold' }}>THỰC ĐƠN CỦA HÔM NAY</Text>
+                <Text style={{ marginHorizontal: 10, fontSize: 20, fontWeight: 'bold' }}>THỰC ĐƠN NGÀY {this.state.dateToday.getDate()} / {this.state.dateToday.getMonth() + 1}</Text>
               </View>
               <TouchableOpacity
                 onPress={() => { this.props.navigation.navigate('AddMeal') }
