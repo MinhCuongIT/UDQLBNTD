@@ -19,7 +19,8 @@ export default class RelativeStats extends Component {
             [],
             [],
             [],
-          ]
+          ],
+        dateToday: new Date(),
       };
 
       this.apiService = ApiService()
@@ -49,7 +50,8 @@ export default class RelativeStats extends Component {
     async loadItems(){
     const userId = this.state.relativeID;
     await this.setState({
-      data: []
+      data: [],
+      dateToday: new Date()
     })
     for (let i = 0; i < 2; i++) {
         await this.loadDataItem(userId, i)
@@ -238,12 +240,12 @@ export default class RelativeStats extends Component {
             <View key={item.type}>
               <View style={{flexDirection: 'row', margin: 10, marginTop: 20, justifyContent: 'space-between'}}>
                 <View style={{flexDirection: 'row', }}>
-                  <Image
-                    source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'
-                      ? require('../images/Diabetes.png')
-                      : require('../images/BloodPressure.png')}
-                    style={styles.chartTitleIcon}
-                  />
+                  {/*<Image*/}
+                    {/*source={item.type==='ĐƯỜNG HUYẾT (mmol/L)'*/}
+                      {/*? require('../images/Diabetes.png')*/}
+                      {/*: require('../images/BloodPressure.png')}*/}
+                    {/*style={styles.chartTitleIcon}*/}
+                  {/*/>*/}
                   <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>{item.type}</Text>
                 </View>
               </View>
@@ -340,11 +342,11 @@ export default class RelativeStats extends Component {
             <View>
             <View style={{flexDirection: 'row', margin: 10, marginTop: 20, justifyContent: 'space-between'}}>
               <View style={{flexDirection: 'row',}}>
-                <Image
-                  source={require('../images/diet.png')}
-                  style={styles.chartTitleIcon}
-                />
-                <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>THỰC ĐƠN CỦA HÔM NAY</Text>
+                {/*<Image*/}
+                  {/*source={require('../images/diet.png')}*/}
+                  {/*style={styles.chartTitleIcon}*/}
+                {/*/>*/}
+                <Text style={{marginHorizontal: 10, fontSize: 20, fontWeight: 'bold'}}>THỰC ĐƠN NGÀY {this.state.dateToday.getDate()} / {this.state.dateToday.getMonth() + 1}</Text>
               </View>
             </View>
             <TouchableOpacity

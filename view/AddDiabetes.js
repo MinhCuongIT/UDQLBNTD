@@ -39,11 +39,12 @@ export default class AddDiabetes extends Component {
     const date = new Date();
     this.state = {
       isDateTimePickerVisible: false,
-      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + (date.getMinutes()<10?'0':'') + date.getMinutes(),
       diabeteValue: '',
       dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
       isNullDiaveteValue: false,
       dateState: date,
+      isDisableButton: false,
     };
 
     this.apiService = ApiService()
@@ -61,7 +62,7 @@ export default class AddDiabetes extends Component {
     // Alert.alert("A date has been picked: ", date.toString());
     this.setState({
       dateState: date,
-      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + date.getMinutes(),
+      date: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' vào lúc ' + date.getHours() + ':' + (date.getMinutes()<10?'0':'') + date.getMinutes(),
       dateValue: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes(),
     })
     this.hideDateTimePicker();
@@ -76,12 +77,18 @@ export default class AddDiabetes extends Component {
     }
     else {
       const userId = await AsyncStorage.getItem('UserId');
+      this.setState({
+        isDisableButton: true
+      })
       this.apiService.addHealthValue({
         MaBenhNhan: userId,
         Loai: 1,
         ChiSo: this.state.diabeteValue,
         NgayNhap: this.state.dateValue,
       }).then(async(result) => {
+        this.setState({
+          isDisableButton: false
+        })
         if (result !== null) {
           await this.props.screenProps.setDiabetesData({
             ChiSo: this.state.diabeteValue,
@@ -137,7 +144,8 @@ export default class AddDiabetes extends Component {
           }
           <TouchableOpacity
             onPress={() => this.handleConfirm()}
-            style={styles.btnConfirm}
+            style={this.state.isDisableButton===false?styles.btnConfirm:styles.btnConfirmDisabled}
+            disabled={this.state.isDisableButton}
           >
             <Text style={{color: 'white', fontSize: 23, fontWeight: 'bold', padding: 10}}>
               XÁC NHẬN
@@ -217,6 +225,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop:30,
     backgroundColor: 'rgba(54, 175, 160, 1)',//'rgba(50, 50, 255, 0.7)',
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginHorizontal: 25,
+  },
+  btnConfirmDisabled: {
+    width: Dimensions.get('window').width - 55,
+    height: 45,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop:30,
+    backgroundColor: 'rgba(54, 175, 160, 0.5)',//'rgba(50, 50, 255, 0.7)',
     color: 'rgba(255, 255, 255, 0.7)',
     marginHorizontal: 25,
   },

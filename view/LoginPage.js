@@ -40,6 +40,7 @@ export default class LoginPage extends Component {
       name: '',
       pass: '',
       errorMessage: '',
+      isDisableButton: false,
     };
 
     this.apiService = ApiService()
@@ -112,10 +113,16 @@ export default class LoginPage extends Component {
     else if (this.state.pass === '')
       this.setState({ errorMessage: 'Vui lòng nhập "Mật khẩu"' })
     else {
+      this.setState({
+        isDisableButton: true
+      })
       this.apiService.login({
         MaBenhNhan: this.state.name,
         Password: this.state.pass,
       }).then(async (data) => {
+        this.setState({
+          isDisableButton: false
+        })
         if (data !== null) {
           await AsyncStorage.setItem('UserId', data.MaBenhNhan)
           // this.props.screenProps.socket.emit('register socket', {
@@ -209,6 +216,7 @@ export default class LoginPage extends Component {
               <TouchableOpacity
                 onPress={() => this.handleLogin()}
                 style={styles.btnLogin}
+                disabled={this.state.isDisableButton}
               >
                 <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold', padding: 10 }}>
                   ĐĂNG NHẬP

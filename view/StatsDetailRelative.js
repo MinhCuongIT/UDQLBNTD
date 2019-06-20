@@ -33,6 +33,7 @@ export default class StatsDetailRelative extends Component {
       lowDomain: props.navigation.state.params.item.lowDomain,
       unit: props.navigation.state.params.item.unit,
       date: props.navigation.state.params.item.date,
+      listItems: props.navigation.state.params.item.data,
     };
 
     this.apiService = ApiService()
@@ -81,18 +82,32 @@ export default class StatsDetailRelative extends Component {
   };
 
   _renderItem = (item, index) => {
-    const date = this.state.date[index]
+    const dateReverse = this.state.date.slice()
+    const date = dateReverse.reverse()[index]
+    const circle = {
+      width: 25,
+      height: 25,
+      borderRadius: 100/2,
+      backgroundColor: this.state.highDomain!==0
+        ? item >= this.state.highDomain
+          ? 'rgba(255, 33, 0, 1)'
+          : item <= this.state.lowDomain
+            ? 'rgba(241, 187, 20, 1)'
+            : 'rgba(106, 194, 89, 1)'
+        : 'white'
+    }
     return(
       <View
         key={index}
         style={{
           backgroundColor: 'white',
-          borderWidth: 3,
+          borderWidth: 1,
           borderColor: '#EFF6F9',//'rgba(0, 0, 0, 0.3)',
           borderRadius: 20,
-          padding: 20,
+          paddingHorizontal: 20,
+          paddingVertical: 5,
           marginHorizontal: 10,
-          marginVertical: 2,
+          marginVertical: 1,
           flexDirection: 'row',
           justifyContent: 'center',
         }}>
@@ -102,7 +117,7 @@ export default class StatsDetailRelative extends Component {
             {date.getDate() + '/' + (date.getMonth() + 1)}
           </Text>
           <Text style={{fontSize: 14, textAlign: 'center', fontWeight: '300'}}>
-            {'lúc ' + date.getHours() + ':' + date.getMinutes()}
+            {date.getHours() + ':' + (date.getMinutes()<10?'0':'') + date.getMinutes()}
           </Text>
         </View>
 
@@ -110,15 +125,10 @@ export default class StatsDetailRelative extends Component {
           <Text style={{fontSize: 17, textAlign: 'center', fontWeight: '500'}}>{item}</Text>
           <Text style={{fontSize: 12, textAlign: 'center',}}>{this.state.unit}</Text>
         </View>
-        <Image
-          source={this.state.highDomain!==0
-            ? item >= this.state.highDomain
-              ? require('../images/up-arrow.png')
-              : item <= this.state.lowDomain
-                ? require('../images/down-arrow.png')
-                : require('../images/checked.png')
-            : require('../images/checked.png')}
-          style={styles.chartTitleIcon}/>
+
+        <View style={{alignSelf: 'center'}}>
+          <View style={circle}/>
+        </View>
       </View>
     );
   }
@@ -132,10 +142,11 @@ export default class StatsDetailRelative extends Component {
     }
     const screenWidth = Dimensions.get('window').width
 
-    let listItems = this.props.navigation.state.params.item.data.datasets[2].data.map((item, index) =>{
+    let listItemsTemp = this.state.listItems.datasets[2].data.slice()
+    let listItems = listItemsTemp.reverse().map((item, index) =>{
       const value = this.props.navigation.state.params.item.id===1
         ? item
-        : this.props.navigation.state.params.item.data.datasets[3].data[index] + '/' + item
+        : this.props.navigation.state.params.item.data.datasets[3].data.slice().reverse()[index] + '/' + item
 
       return (
         this._renderItem(value, index)
@@ -217,5 +228,10 @@ const styles = StyleSheet.create({
   chartTitleIcon: {
     height: 30,
     width: 30,
+  },
+  detailIcon: {
+    height: 25,
+    width: 25,
+    alignSelf: 'center',
   },
 });
