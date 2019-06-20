@@ -125,12 +125,13 @@ export default class MealDetailRelative extends Component {
           key={index}
           style={{
             backgroundColor: 'white',
-            borderWidth: 3,
+            borderWidth: 2,
             borderColor: '#EFF6F9',//'rgba(0, 0, 0, 0.3)',
             borderRadius: 20,
-            padding: 20,
+            paddingHorizontal: 20,
+            paddingVertical: 5,
             marginHorizontal: 10,
-            marginVertical: 2,
+            marginVertical: 1,
             flexDirection: 'row',
             justifyContent: 'center',
           }}>
