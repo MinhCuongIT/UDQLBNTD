@@ -77,6 +77,9 @@ export default class AddBloodPressure extends Component {
     }
     else {
       const userId = await AsyncStorage.getItem('UserId');
+      this.setState({
+        isDisableButton: true
+      })
       this.apiService.addHealthValue({
         MaBenhNhan: userId,
         Loai: 2.1,
@@ -90,6 +93,9 @@ export default class AddBloodPressure extends Component {
             ChiSo: this.state.diastolicValue,
             NgayNhap: this.state.dateValue,
           }).then(async (result) => {
+            this.setState({
+              isDisableButton: false
+            })
             if (result !== null) {
               await this.props.screenProps.setBloodPressureData({
                 ChiSo1: this.state.systolicValue,

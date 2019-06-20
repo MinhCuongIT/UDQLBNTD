@@ -79,12 +79,18 @@ export default class AddMeal extends Component {
     }
     else {
       const userId = await AsyncStorage.getItem('UserId');
+      this.setState({
+        isDisableButton: true
+      })
       this.apiService.addThisMeal({
         MaBenhNhan: userId,
         Buoi: this.state.buoi,
         Ngay: this.state.dateValue,
         MonAn: this.state.mealValue,
       }).then(async(result) => {
+        this.setState({
+          isDisableButton: false
+        })
         if (result !== null) {
           await this.props.screenProps.editTodayMeals({
             Ngay: this.state.dateState,
