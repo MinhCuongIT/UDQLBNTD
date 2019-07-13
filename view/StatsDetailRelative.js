@@ -97,7 +97,7 @@ export default class StatsDetailRelative extends Component {
         : 'white'
     }
     return(
-      <View
+      <TouchableOpacity
         key={index}
         style={{
           backgroundColor: 'white',
@@ -110,7 +110,9 @@ export default class StatsDetailRelative extends Component {
           marginVertical: 1,
           flexDirection: 'row',
           justifyContent: 'center',
-        }}>
+        }}
+        onPress={() => { this.props.navigation.navigate('StatDetailRelativePerDay', { date: date, unit: this.state.unit, type: this.props.navigation.state.params.item.id, name: this.props.navigation.state.params.name, user: this.props.navigation.state.params.user}) }}
+      >
 
         <View style={{flex: 1.5, flexDirection: 'column'}}>
           <Text style={{fontSize: 20, textAlign: 'center', fontWeight: '600'}}>
@@ -129,7 +131,7 @@ export default class StatsDetailRelative extends Component {
         <View style={{alignSelf: 'center'}}>
           <View style={circle}/>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 

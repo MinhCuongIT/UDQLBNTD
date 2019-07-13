@@ -252,7 +252,7 @@ export default class RelativeStats extends Component {
   
               <TouchableOpacity
                 onPress={() => {
-                    this.props.navigation.navigate('StatsDetailRelative', {item: item, name: this.props.navigation.getParam('data').HoTen})
+                    this.props.navigation.navigate('StatsDetailRelative', {item: item, name: this.props.navigation.getParam('data').HoTen, user: this.state.relativeID})
                     }}
               >
                 <LineChart

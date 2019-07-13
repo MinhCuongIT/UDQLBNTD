@@ -30,6 +30,8 @@ import AddMeal from './AddMeal';
 import RelativeStats from './RelativeStats';
 import MealDetailRelative from './MealDetailRelative';
 import StatsDetailRelative from './StatsDetailRelative';
+import HomeDetailsPerDay from "./HomeDetailsPerDay";
+import StatDetailRelativePerDay from "./StatDetailRelativePerDay"
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -44,6 +46,20 @@ const HomeStack = createStackNavigator({
   },
   HomeDetails: {
     screen: HomeDetails,
+    navigationOptions: {
+      headerBackTitle: 'Trở về',
+      headerStyle: {
+        backgroundColor: 'rgba(74, 195, 180, 1)',
+      },
+      headerBackTitleStyle: {
+        fontSize: 25,
+        fontWeight: 'bold',
+      },
+      headerTintColor: 'white',
+    },
+  },
+  HomeDetailsPerDay: {
+    screen: HomeDetailsPerDay,
     navigationOptions: {
       headerStyle: {
         backgroundColor: 'rgba(74, 195, 180, 1)',
@@ -166,6 +182,9 @@ const User_FamilyStack = createStackNavigator({
   },
   StatsDetailRelative: {
     screen: StatsDetailRelative
+  },
+  StatDetailRelativePerDay: {
+    screen: StatDetailRelativePerDay
   },
   MealDetailRelative: {
     screen: MealDetailRelative,
