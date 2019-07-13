@@ -83,7 +83,7 @@ export default class HomeDetails extends Component {
                       : 'white'
     }
     return(
-      <View
+      <TouchableOpacity
         key={index}
         style={{
           backgroundColor: 'white',
@@ -96,7 +96,9 @@ export default class HomeDetails extends Component {
           marginVertical: 1,
           flexDirection: 'row',
           justifyContent: 'center',
-        }}>
+        }}
+        onPress={() => { this.props.navigation.navigate('HomeDetailsPerDay', { date: date, unit: this.state.unit, type: this.props.navigation.state.params.item.id }) }}
+      >
 
         <View style={{flex: 1.5, flexDirection: 'column'}}>
           <Text style={{fontSize: 20, textAlign: 'center', fontWeight: '600'}}>
@@ -124,7 +126,7 @@ export default class HomeDetails extends Component {
                 {/*: require('../images/checked.png')*/}
             {/*: require('../images/checked.png')}*/}
           {/*style={styles.detailIcon}/>*/}
-      </View>
+      </TouchableOpacity>
     );
   }
 

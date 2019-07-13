@@ -33,7 +33,7 @@ export default class Notifications extends Component {
       totalPages: 5,
       data: [],
       numberNoti: 1,
-      refreshing: false,
+      refreshing: true,
       haveData: false,
     };
 

@@ -115,6 +115,24 @@ export default () => {
           return null
         })
     },
+    getHealthValuePerDay: (info) => {
+      return axiosGet(baseURL + `statistics/getPerDay?MaBenhNhan=${info.MaBenhNhan}&Loai=${info.Loai}&Ngay=${info.Ngay}&page=${info.page}`)
+        .then((res) => {
+          if(res.data.status === 'success'){
+            if (info.Loai === 1)
+              return {
+                data: res.data.blood_sugar,
+                totalPages: res.data.total_page
+              }
+            else if (info.Loai === 2)
+              return {
+                data: res.data.blood_pressure,
+                totalPages: res.data.total_page
+              }
+          }
+          return null
+        })
+    },
 
     // Doctor
     findDoctorByID: (ID) => {

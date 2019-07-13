@@ -657,6 +657,7 @@ export default class Home extends Component {
     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
       const { title, body } = notificationOpen.notification;
       this.showAlert(title, body);
+      this.props.navigation.navigate('AddDiabetes')
     });
 
     /*
@@ -665,7 +666,212 @@ export default class Home extends Component {
     const notificationOpen = await firebase.notifications().getInitialNotification();
     if (notificationOpen) {
       const { title, body } = notificationOpen.notification;
+
+      switch(notificationOpen.notification.data.loaiThongBao){
+        case '1': {
+          // message2 += ' muốn theo dõi sức khỏe của bạn'
+          if (notificationOpen.notification.data.loaiTaiKhoanLienQuan==='1'){
+            this.apiService.getBenhNhanInfo({MaBenhNhan: notificationOpen.notification.data.maTaiKhoanLienQuan})
+              .then(async (result) => {
+                if (result !== null)
+                {
+                  // alert(JSON.stringify(result))
+                  const data = result[0]
+
+                  const info2 = {
+                    MaNguoiGui: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiGui: 1,
+                    MaNguoiNhan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiNguoiNhan: 1,
+                    updateList: true,
+                  }
+                  await this.props.screenProps.socket.emit('update relationship', info2);
+                  this.props.screenProps.socket.emit('seen notifications', {
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                  })
+                  this.apiService.seenThisNotification({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiChinh: 1,
+                    Id: parseInt(notificationOpen.notification.data.idNoti)})
+
+                  this.props.navigation.navigate('RelativeProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                }
+              })
+          }
+          else{
+            this.apiService.findDoctorByID(notificationOpen.notification.data.maTaiKhoanLienQuan)
+              .then(async (result) => {
+                if (result !== null)
+                {
+                  // alert(JSON.stringify(result))
+                  const data = result[0]
+
+                  const info2 = {
+                    MaNguoiGui: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiGui: 1,
+                    MaNguoiNhan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiNguoiNhan: 1,
+                    updateList: true,
+                  }
+                  await this.props.screenProps.socket.emit('update relationship', info2);
+                  this.props.screenProps.socket.emit('seen notifications', {
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                  })
+                  this.apiService.seenThisNotification({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiChinh: 1,
+                    Id: parseInt(notificationOpen.notification.data.idNoti)})
+
+                  this.props.navigation.navigate('DoctorProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                }
+              })
+          }
+          break;
+        }
+        case '2':  {
+          // message2 += ' tin nhắn mới'
+          if (notificationOpen.notification.data.loaiTaiKhoanLienQuan==='1'){
+            this.apiService.getBenhNhanInfo({MaBenhNhan: notificationOpen.notification.data.maTaiKhoanLienQuan})
+              .then(async (result) => {
+                if (result !== null)
+                {
+                  // alert(JSON.stringify(result))
+                  const data = result[0]
+                  // this.props.navigation.navigate('RelativeProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                  await this.apiService.updateSeeingSeen({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                    MaTaiKhoanLienQuan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiTaiKhoanLienQuan: 1
+                  })
+
+                  // socket list
+                  const info2 = {
+                    MaNguoiGui: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiGui: 1,
+                    MaNguoiNhan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiNguoiNhan: 1,
+                    updateList: true,
+                  }
+                  await this.props.screenProps.socket.emit('update relationship', info2);
+                  this.props.screenProps.socket.emit('seen notifications', {
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                  })
+                  this.apiService.seenThisNotification({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiChinh: 1,
+                    Id: parseInt(notificationOpen.notification.data.idNoti)})
+                  // navigate
+                  this.props.navigation.navigate('Chat', { myID: this.props.screenProps.user.thongTinChung.sdt, title: data.HoTen, data: data, type: 1 })
+                }
+              })
+          }
+          else{
+            this.apiService.findDoctorByID(notificationOpen.notification.data.maTaiKhoanLienQuan)
+              .then(async (result) => {
+                if (result !== null)
+                {
+                  // alert(JSON.stringify(result))
+                  const data = result[0]
+                  await this.apiService.updateSeeingSeen({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                    MaTaiKhoanLienQuan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiTaiKhoanLienQuan: 2
+                  })
+
+                  // socket list
+                  const info2 = {
+                    MaNguoiGui: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiGui: 1,
+                    MaNguoiNhan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiNguoiNhan: 2,
+                    updateList: true,
+                  }
+                  await this.props.screenProps.socket.emit('update relationship', info2);
+                  this.props.screenProps.socket.emit('seen notifications', {
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                  })
+                  this.apiService.seenThisNotification({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiChinh: 1,
+                    Id: parseInt(notificationOpen.notification.data.idNoti)})
+                  // navigate
+                  this.props.navigation.navigate('Chat', { myID: this.props.screenProps.user.thongTinChung.sdt, title: data.HoTen, data: data, type: 2 })
+                }
+              })
+          }
+          break;
+        }
+        case '3': {
+          // message2 += ' muốn theo dõi sức khỏe của bạn'
+          if (notificationOpen.notification.data.loaiTaiKhoanLienQuan==='1'){
+            this.apiService.getBenhNhanInfo({MaBenhNhan: notificationOpen.notification.data.maTaiKhoanLienQuan})
+              .then(async (result) => {
+                if (result !== null)
+                {
+                  // alert(JSON.stringify(result))
+                  const data = result[0]
+
+                  const info2 = {
+                    MaNguoiGui: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiGui: 1,
+                    MaNguoiNhan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiNguoiNhan: 1,
+                    updateList: true,
+                  }
+                  await this.props.screenProps.socket.emit('update relationship', info2);
+                  this.props.screenProps.socket.emit('seen notifications', {
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                  })
+                  this.apiService.seenThisNotification({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiChinh: 1,
+                    Id: parseInt(notificationOpen.notification.data.idNoti)})
+
+                  this.props.navigation.navigate('RelativeProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                }
+              })
+          }
+          else{
+            this.apiService.findDoctorByID(item.notificationOpen.notification.data.maTaiKhoanLienQuan)
+              .then(async (result) => {
+                if (result !== null)
+                {
+                  // alert(JSON.stringify(result))
+                  const data = result[0]
+
+                  const info2 = {
+                    MaNguoiGui: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiGui: 1,
+                    MaNguoiNhan: notificationOpen.notification.data.maTaiKhoanLienQuan,
+                    LoaiNguoiNhan: 1,
+                    updateList: true,
+                  }
+                  await this.props.screenProps.socket.emit('update relationship', info2);
+                  this.props.screenProps.socket.emit('seen notifications', {
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiTaiKhoan: 1,
+                  })
+                  this.apiService.seenThisNotification({
+                    MaTaiKhoan: this.props.screenProps.user.thongTinChung.sdt,
+                    LoaiNguoiChinh: 1,
+                    Id: parseInt(notificationOpen.notification.data.idNoti)})
+
+                  this.props.navigation.navigate('DoctorProfile', { myID: this.props.screenProps.user.thongTinChung.sdt, data: data })
+                }
+              })
+          }
+          break;
+        }
+      }
       // this.showAlert(title, body);
+      // alert(JSON.stringify(notificationOpen.notification.data))
     }
     /*
     * Triggered for data only payload in foreground
