@@ -205,7 +205,7 @@ export default class ChatScreen extends Component {
 
   submitChatPicture = async () => {
     const options = {
-      title: 'Chọn hình đại diện',
+      title: 'Chọn hình ảnh',
       storageOptions: {
         skipBackup: false,
         path: 'images',
