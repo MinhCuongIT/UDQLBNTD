@@ -108,9 +108,16 @@ export default class StatDetailRelativePerDay extends Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({item, index}) => {
-    const date = this.state.type === 1
-      ? new Date(item.NgayNhap)
-      : new Date(item.blood_pressure01.NgayNhap)
+    var date = this.state.type === 1
+      ? 
+      new Date(item.NgayNhap)//?
+      
+      : 
+      new Date(item.blood_pressure01.NgayNhap)//?
+
+      var timezone = date.getTimezoneOffset() * 60000;
+      date = new Date(date.getTime() + timezone);
+
     // alert(JSON.stringify(item))
     return(
       <View

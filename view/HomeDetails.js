@@ -70,6 +70,7 @@ export default class HomeDetails extends Component {
   _renderItem = (item, index) => {
     const dateReverse = this.state.date.slice()
     const date = dateReverse.reverse()[index]
+    // alert(date)
     const circle = {
       width: 25,
       height: 25,

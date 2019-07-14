@@ -17,18 +17,21 @@ export class RightListItems extends PureComponent {
     }
   
     render() {
-      let _time = new Date(this.props.item.NgayGioGui);
+      let _time = new Date(this.props.item.NgayGioGui);//?
+      var timezone = _time.getTimezoneOffset() * 60000;
+      _time = new Date(_time.getTime() + timezone);
       // alert(this.props.item.NgayGioGui);
       return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-end',}}>
           <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
             <Text style={{fontSize: 12, color: 'silver',}}>
-              {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+ (_time.getMinutes()<10?'0':'')+_time.getMinutes()}
+              {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+ (_time.getMinutes()<10 ? '0':'')+_time.getMinutes()}
             </Text>
           </View>
           <View style={[styles.BubbleChat, styles.rightBubbleChat]}>             
             {
-              this.props.item.LoaiDoanChat===1?
+              this.props.item.LoaiDoanChat===1
+              ?
               <Text style={{paddingTop: 5, color: 'white', fontSize: 17}}>
                 {this.props.item.NoiDung}
               </Text>
@@ -51,7 +54,9 @@ export class LeftListItems extends PureComponent {
     }
 
     render() {
-        let _time = new Date(this.props.item.NgayGioGui);
+        let _time = new Date(this.props.item.NgayGioGui);//?
+        var timezone = _time.getTimezoneOffset() * 60000;
+        _time = new Date(_time.getTime() + timezone);
         return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-start',}}>
             <Avatar
@@ -62,7 +67,8 @@ export class LeftListItems extends PureComponent {
                 />
             <View style={[styles.BubbleChat, styles.leftBubbleChat]}>
               {
-                this.props.item.LoaiDoanChat===1?
+                this.props.item.LoaiDoanChat===1
+                ?
                   <Text style={{paddingTop: 5, color: 'black', fontSize: 17}}>
                     {this.props.item.NoiDung}
                   </Text>
@@ -76,7 +82,7 @@ export class LeftListItems extends PureComponent {
             </View>
             <View style={{justifyContent: 'flex-end', paddingBottom: 7, paddingHorizontal: 10,}}>
               <Text style={{fontSize: 12, color: 'silver',}}>
-                {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+ (_time.getMinutes()<10?'0':'')+_time.getMinutes()}
+                {_time.getDate()+'/'+(_time.getMonth()+1)+' - '+_time.getHours()+':'+ (_time.getMinutes()<10 ? '0':'')+_time.getMinutes()}
               </Text>
             </View>
         </View>
@@ -182,24 +188,26 @@ export default class ChatScreen extends Component {
     }
 
     async submitChatMessage() {
-      let today = new Date();
-      let _today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-      if (this._isMounted){
-        await this.setState({
-          chatMessage: {
-            MaNguoiGui: this.state.myID,
-            LoaiNguoiGui: 1,
-            MaNguoiNhan: this.state.receiverID,
-            LoaiNguoiNhan: this.props.navigation.getParam('type'),
-            NoiDung: this.state.txtInput,
-            NgayGioGui: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes(),
-            DateValue: today,
-            LoaiDoanChat: 1,
-          },
-          txtInput: '',
-        }, ()=>
-        this.props.screenProps.socket.emit('chat message', this.state.chatMessage)
-        )
+      if (this.state.txtInput !== '') {
+        let today = new Date();
+        let _today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        if (this._isMounted){
+          await this.setState({
+            chatMessage: {
+              MaNguoiGui: this.state.myID,
+              LoaiNguoiGui: 1,
+              MaNguoiNhan: this.state.receiverID,
+              LoaiNguoiNhan: this.props.navigation.getParam('type'),
+              NoiDung: this.state.txtInput,
+              NgayGioGui: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes(),
+              DateValue: today,
+              LoaiDoanChat: 1,
+            },
+            txtInput: '',
+          }, ()=>
+          this.props.screenProps.socket.emit('chat message', this.state.chatMessage)
+          )
+        }
       }
     }
 
@@ -270,7 +278,7 @@ export default class ChatScreen extends Component {
         let dataTemp = []
         if(msg!==null){
           msg.map((item) => {     
-            let date = new Date(item.NgayGioGui)
+            let date = new Date(item.NgayGioGui)//?
             let temp = {
               MaNguoiGui: item.MaNguoiGui,
               LoaiNguoiGui: item.LoaiNguoiGui,

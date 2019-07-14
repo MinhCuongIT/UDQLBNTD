@@ -90,7 +90,10 @@ export default class MealDetails extends Component {
 
         if (result !== null) {
           result.meals.map((item) => {
-            let date = new Date(item.Ngay)
+            let date = new Date(item.Ngay)//?
+            var timezone = date.getTimezoneOffset() * 60000;
+            date = new Date(date.getTime() + timezone);
+            
             let dateTemp = 'Ngày ' + date.getDate() + ' tháng ' + (date.getMonth() + 1) + ' năm ' + date.getFullYear()
 
             let temp = {

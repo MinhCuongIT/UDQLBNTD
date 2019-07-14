@@ -301,7 +301,11 @@ export default class Home extends Component {
         for (let index = (result.length - 1); index >= 0;) {
           switch (result[0].Loai) {
             case 1: {
-              const getDate = new Date(result[index].NgayNhap)
+              var getDate = new Date(result[index].NgayNhap)//?
+              var timezone = getDate.getTimezoneOffset() * 60000;
+              getDate = new Date(getDate.getTime() + timezone);
+
+              // alert(new Date('2019-07-14T14:00:00.000'))
               valueData.date.push(getDate)
               valueData.data.datasets[0].data.push(highDomain);
               valueData.data.datasets[1].data.push(lowDomain);
@@ -312,7 +316,10 @@ export default class Home extends Component {
               break;
             }
             case 2: {
-              const getDate = new Date(result[index].blood_pressure01.NgayNhap)
+              var getDate = new Date(result[index].blood_pressure01.NgayNhap)//?
+              var timezone = getDate.getTimezoneOffset() * 60000;
+              getDate = new Date(getDate.getTime() + timezone);
+              
               valueData.date.push(getDate)
               getData[0].data.push(result[index].blood_pressure02.ChiSo);
               // --index;
