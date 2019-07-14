@@ -18,8 +18,8 @@ export class RightListItems extends PureComponent {
   
     render() {
       let _time = new Date(this.props.item.NgayGioGui);//?
-      var timezone = _time.getTimezoneOffset() * 60000;
-      _time = new Date(_time.getTime() + timezone);
+      // var timezone = _time.getTimezoneOffset() * 60000;
+      // _time = new Date(_time.getTime() + timezone);
       // alert(this.props.item.NgayGioGui);
       return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-end',}}>
@@ -55,8 +55,8 @@ export class LeftListItems extends PureComponent {
 
     render() {
         let _time = new Date(this.props.item.NgayGioGui);//?
-        var timezone = _time.getTimezoneOffset() * 60000;
-        _time = new Date(_time.getTime() + timezone);
+        // var timezone = _time.getTimezoneOffset() * 60000;
+        // _time = new Date(_time.getTime() + timezone);
         return (
         <View style={{flexDirection: 'row', alignSelf: 'flex-start',}}>
             <Avatar
