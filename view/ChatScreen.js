@@ -279,6 +279,8 @@ export default class ChatScreen extends Component {
         if(msg!==null){
           msg.map((item) => {     
             let date = new Date(item.NgayGioGui)//?
+            var timezone = date.getTimezoneOffset() * 60000;
+            date = new Date(date.getTime() + timezone);
             let temp = {
               MaNguoiGui: item.MaNguoiGui,
               LoaiNguoiGui: item.LoaiNguoiGui,
